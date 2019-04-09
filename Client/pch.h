@@ -12,6 +12,7 @@
 #include <vector>
 #include <cstdlib>
 #include <conio.h>
+#include <algorithm>
 
 #include "Word.h"
 #include "Player.h"

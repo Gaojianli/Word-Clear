@@ -153,6 +153,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="client.cpp" />
     <ClCompile Include="Committer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="pch.cpp">

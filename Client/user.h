@@ -6,6 +6,7 @@ public:
 	User(std::string username, int id, bool isPlayer, int count, int level) :name(username), id(id), isPlayer(isPlayer), count(count), level(level) {};
 	~User() = default;
 	std::string name;
+	virtual void showStat()=0;
 	bool isPlayer;
 	int count;
 	int level;

@@ -10,6 +10,7 @@ public:
 	static User* getUserByName(string userName);
 	//Add a user, return the new User's id.
 	static User* AddUser(string name, string password, bool isPlayer);
+	static vector<User*>* getAllUsers();
 private:
 	sql(string);
 	static sql* _instance;

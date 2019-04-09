@@ -45,7 +45,6 @@ vector<Word>* sql::getQuestions() {
 	}
 }
 
-
 //queryPassword
 static int queryPassword_callback(void* data, int argc, char** argv, char** azColName) {
 	if (argc == 0)
@@ -77,11 +76,11 @@ bool sql::queryPassword(string username, string password) {
 
 static int getUserByName_callback(void* data, int argc, char** argv, char** azColName) {
 	if (argc == 7) {
-		if (!*(User **)data)
+		if (!*(User * *)data)
 			if (string(argv[3])._Equal("true"))
-				*(User **)data = new Player(argv[1], atoi(argv[0]), atoi(argv[4]), atoi(argv[6]), atoi(argv[5]));
+				* (User * *)data = new Player(argv[1], atoi(argv[0]), atoi(argv[4]), atoi(argv[6]), atoi(argv[5]));
 			else
-				*(User **)data = new Committer(argv[1], atoi(argv[0]), atoi(argv[4]), atoi(argv[6]));
+				*(User * *)data = new Committer(argv[1], atoi(argv[0]), atoi(argv[4]), atoi(argv[6]));
 	}
 	return 0;
 }
@@ -121,3 +120,26 @@ User* sql::AddUser(string name, string password, bool isPlayer) {
 		return sql::getUserByName(name);
 	}
 }
+
+static int getAllUsers_callback(void* data, int argc, char** argv, char** azColName) {
+	if (argc == 7)
+		if (string(argv[3])._Equal("true"))
+			((vector<User*>*)data)->push_back(new Player(argv[1], atoi(argv[0]), atoi(argv[4]), atoi(argv[6]), atoi(argv[5])));
+		else
+			((vector<User*>*)data)->push_back(new Committer(argv[1], atoi(argv[0]), atoi(argv[4]), atoi(argv[6])));
+	return 0;
+}
+vector<User*>* sql::getAllUsers() {
+	auto toReturn = new vector<User*>();
+	char* zErrMsg;
+	auto rc = sqlite3_exec(_instance->db, "select * from user", getAllUsers_callback, (void*)toReturn, &zErrMsg);
+	if (rc != SQLITE_OK) {
+		fprintf(stderr, "SQL error: %s\n", zErrMsg);
+		sqlite3_free(zErrMsg);
+		exit(-1);
+	}
+	else {
+		return toReturn;
+	}
+}
+
