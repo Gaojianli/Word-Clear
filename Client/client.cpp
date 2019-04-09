@@ -82,14 +82,14 @@ SettingRole:
 		goto SettingRole;
 	}
 	if (isPlayer)
-		return sql::AddUser(userName, password, isPlayer);
+		return sql::addUser(userName, password, isPlayer);
 	else
-		return sql::AddUser(userName, password, isPlayer);
+		return sql::addUser(userName, password, isPlayer);
 }
 
 
-void cmdPlayer(Player* currentUser, vector<Word>* questionList){
-	cout << endl << endl << "Welcome, " << currentUser->name << "(UID:" << currentUser->id << ")" << ". You are " <<"Player" << "(Level " << currentUser->level << ")" << endl;
+void cmdPlayer(Player* currentUser, vector<Word>* questionList) {
+	cout << endl << endl << "Welcome, " << currentUser->name << "(UID:" << currentUser->id << ")" << ". You are " << "Player" << "(Level " << currentUser->level << ")" << endl;
 	cout << "You have played " << currentUser->count << " Ranks. Current EXP:" << currentUser->exp << endl;
 	cout << "Type \"help\" for help" << endl;
 	//simple shell implement
@@ -114,13 +114,13 @@ void cmdPlayer(Player* currentUser, vector<Word>* questionList){
 			currentUser->showStat();
 		else if (current._Equal("exit"))
 			exit(0);
-		else 
+		else
 			cout << "Uncongonized command: " << current << " Type \"help\" for help" << endl;
 	}
 }
 
-void cmdCommitter(Committer* currentUser, vector<Word>* questionList){
-	cout << endl << endl << "Welcome, " << currentUser->name << "(UID:" << currentUser->id << ")" << ". You are " <<  "Committer" << "(Level " << currentUser->level << ")" << endl;
+void cmdCommitter(Committer* currentUser, vector<Word>* questionList) {
+	cout << endl << endl << "Welcome, " << currentUser->name << "(UID:" << currentUser->id << ")" << ". You are " << "Committer" << "(Level " << currentUser->level << ")" << endl;
 	cout << "You have commited " << currentUser->count << " Questions." << endl;
 	cout << "Type \"help\" for command list" << endl;
 	while (true) {
@@ -131,14 +131,27 @@ void cmdCommitter(Committer* currentUser, vector<Word>* questionList){
 		if (current._Equal("help")) {
 			//print help
 			cout << endl << "Help:" << endl;
-			cout << "start\t\tStart a game" << endl;
+			cout << "commit\t\commit a word" << endl;
 			cout << "rank\t\tView the Ranking list." << endl;
 			cout << "stat\t\tView my status." << endl;
 			cout << "exit\t\tQuit this game." << endl;
 			cout << endl;
 		}
-		else if (current._Equal("start"))
-			currentUser->commit();
+		else if (current._Equal("commit")) {
+			string toCommit;
+			int difficuty;
+			cout << endl << "Word:";
+			cin >> toCommit;
+		SetDifficuty:
+			cout << "Difficuty(1-10):";
+			cin >> difficuty;
+			if (difficuty > 10 || difficuty < 1) {
+				cout << "Invaild input." << endl;
+				goto SetDifficuty;
+			}
+			currentUser->commit(toCommit,difficuty);
+			cout << "Word added." << endl;
+		}
 		else if (current._Equal("rank"))
 			Committer::showRank();
 		else if (current._Equal("stat"))

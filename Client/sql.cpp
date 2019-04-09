@@ -101,7 +101,7 @@ User* sql::getUserByName(string userName) {
 	}
 }
 
-User* sql::AddUser(string name, string password, bool isPlayer) {
+User* sql::addUser(string name, string password, bool isPlayer) {
 	char* zErrMsg;
 	string sqlCommand = "insert into user (name,password,isPlayer) values(\"";
 	sqlCommand.append(name);
@@ -140,6 +140,30 @@ vector<User*>* sql::getAllUsers() {
 	}
 	else {
 		return toReturn;
+	}
+}
+
+void sql::addWord(string word, int level,int committerID){
+	char* zErrMsg;
+	string sqlCommand = "insert into question (word,level,committer) values(\"";
+	sqlCommand.append(word);
+	sqlCommand.append("\",");
+	char* temp;
+	temp = new char[2];
+	_itoa_s(level, temp, 2, 10);
+	sqlCommand.append(temp);
+	free(temp);
+	sqlCommand.append(",");
+	temp = new char[2];
+	_itoa_s(committerID, temp, 2, 10);
+	sqlCommand.append(temp);
+	delete temp;
+	sqlCommand.append(")");
+	auto rc = sqlite3_exec(_instance->db, sqlCommand.c_str(), nullptr, nullptr, &zErrMsg);
+	if (rc != SQLITE_OK) {
+		fprintf(stderr, "SQL error: %s\n", zErrMsg);
+		sqlite3_free(zErrMsg);
+		exit(-1);
 	}
 }
 

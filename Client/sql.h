@@ -9,8 +9,9 @@ public:
 	static bool queryPassword(string userName, string password);
 	static User* getUserByName(string userName);
 	//Add a user, return the new User's id.
-	static User* AddUser(string name, string password, bool isPlayer);
+	static User* addUser(string name, string password, bool isPlayer);
 	static vector<User*>* getAllUsers();
+	static void addWord(string word, int level, int committerID);
 private:
 	sql(string);
 	static sql* _instance;

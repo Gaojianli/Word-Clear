@@ -9,8 +9,8 @@ Committer::Committer(std::string name, int id) : User(name, id) {
 Committer::Committer(std::string username, int id, int count, int level) : User(username, id, false, count, level) {
 }
 
-void Committer::commit()
-{
+void Committer::commit(std::string word, int level){
+	sql::addWord(word, level, id);
 }
 
 void Committer::showStat(){
