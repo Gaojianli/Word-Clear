@@ -7,6 +7,20 @@
 #ifndef PCH_H
 #define PCH_H
 
-// add headers that you want to pre-compile here
+// add headers that you want to pre-compile hereW
+#include <iostream>
+#include <vector>
+#include <cstdlib>
+#include <conio.h>
+
+#include "Word.h"
+#include "Player.h"
+#include "Committer.h"
+
+#ifdef _MSC_VER
+#include <winsqlite/winsqlite3.h>
+#else
+#include <sqlite3.h>
+#endif // 
 
 #endif //PCH_H
