@@ -70,7 +70,7 @@ bool sql::queryPassword(string username, string password) {
 	}
 	else {
 		bool toReturn = *data;
-		free(data);
+		delete data;
 		return toReturn;
 	}
 }
@@ -164,7 +164,6 @@ void sql::addWord(string word, int level, int committerID) {
 void sql::updateUser(User * const toUpdate) {
 	string sqlCommand = "update user set ";
 	sqlCommand.append("count = ");
-	char* temp;
 	sqlCommand.append(to_string(toUpdate->count));
 	sqlCommand.append(", level= ");
 	sqlCommand.append(to_string(toUpdate->level));

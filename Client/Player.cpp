@@ -35,6 +35,8 @@ void Player::startGame(vector<Word>* questionList) {
 			auto question = find_if(questionList->begin(), questionList->end(), [currentLevel, played](Word const& obj)->bool {
 				if (obj.level == currentLevel)
 					return played.find(obj.str) == string::npos;
+				else
+					return false;
 				});
 			played.append((*question).str);
 			if (distance(question, questionList->end()) == 1)

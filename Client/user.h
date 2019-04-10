@@ -7,7 +7,7 @@ public:
 	~User() = default;
 	std::string name;
 	virtual void showStat()=0;
-	bool isPlayer;
+	bool isPlayer = true;
 	int count;
 	int level;
 	int id;

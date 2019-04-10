@@ -67,7 +67,7 @@ SettingPassword:
 	bool isPlayer;
 SettingRole:
 	cout << "Are you player?(y/n):";
-	getchar();//remove \n
+	ch = getchar();//remove \n
 	switch (ch = getchar(); ch) {
 	case 'Y':
 	case 'y':
