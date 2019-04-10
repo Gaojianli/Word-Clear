@@ -107,7 +107,7 @@ void cmdPlayer(Player* currentUser, vector<Word>* questionList) {
 			cout << "exit\t\tQuit this game." << endl;
 		}
 		else if (current._Equal("start"))
-			currentUser->startGame();
+			currentUser->startGame(questionList);
 		else if (current._Equal("rank"))
 			Player::showRank();
 		else if (current._Equal("stat"))
@@ -115,7 +115,7 @@ void cmdPlayer(Player* currentUser, vector<Word>* questionList) {
 		else if (current._Equal("exit"))
 			exit(0);
 		else
-			cout << "Uncongonized command: " << current << " Type \"help\" for help" << endl;
+			cout << "Unrecognized command: " << current << endl << " Type \"help\" for help" << endl;
 	}
 }
 
@@ -131,7 +131,7 @@ void cmdCommitter(Committer* currentUser, vector<Word>* questionList) {
 		if (current._Equal("help")) {
 			//print help
 			cout << endl << "Help:" << endl;
-			cout << "commit\t\commit a word" << endl;
+			cout << "commit\t\tCommit a word" << endl;
 			cout << "rank\t\tView the Ranking list." << endl;
 			cout << "stat\t\tView my status." << endl;
 			cout << "exit\t\tQuit this game." << endl;
@@ -150,6 +150,7 @@ void cmdCommitter(Committer* currentUser, vector<Word>* questionList) {
 				goto SetDifficuty;
 			}
 			currentUser->commit(toCommit,difficuty);
+			questionList->push_back(Word(toCommit.c_str(), difficuty, currentUser->id));
 			cout << "Word added." << endl;
 		}
 		else if (current._Equal("rank"))

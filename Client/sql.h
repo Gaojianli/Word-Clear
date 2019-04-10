@@ -12,6 +12,7 @@ public:
 	static User* addUser(string name, string password, bool isPlayer);
 	static vector<User*>* getAllUsers();
 	static void addWord(string word, int level, int committerID);
+	static void updateUser(User* const toUpdate);
 private:
 	sql(string);
 	static sql* _instance;

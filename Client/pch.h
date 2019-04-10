@@ -13,6 +13,9 @@
 #include <cstdlib>
 #include <conio.h>
 #include <algorithm>
+#include <Windows.h>
+#include <string>
+#include "curses.h"
 
 #include "Word.h"
 #include "Player.h"

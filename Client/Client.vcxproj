@@ -168,6 +168,7 @@
   <ItemGroup>
     <ClInclude Include="client.h" />
     <ClInclude Include="Committer.h" />
+    <ClInclude Include="curses.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="sql.h" />

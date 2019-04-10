@@ -2,7 +2,7 @@
 class Word
 {
 public:
-	Word(char* word, int level, int committer): level(level), committerID(committer) {
+	Word(const char* word, int level, int committer): level(level), committerID(committer) {
 		str = std::string(word);
 	};
 	~Word()=default;

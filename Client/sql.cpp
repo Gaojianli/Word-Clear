@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "sql.h"
+#pragma comment(lib, "sqlite3.lib")
 
 
 sql::sql(string connections) {
@@ -143,22 +144,37 @@ vector<User*>* sql::getAllUsers() {
 	}
 }
 
-void sql::addWord(string word, int level,int committerID){
+void sql::addWord(string word, int level, int committerID) {
 	char* zErrMsg;
 	string sqlCommand = "insert into question (word,level,committer) values(\"";
 	sqlCommand.append(word);
 	sqlCommand.append("\",");
-	char* temp;
-	temp = new char[2];
-	_itoa_s(level, temp, 2, 10);
-	sqlCommand.append(temp);
-	free(temp);
+	sqlCommand.append(to_string(level));
 	sqlCommand.append(",");
-	temp = new char[2];
-	_itoa_s(committerID, temp, 2, 10);
-	sqlCommand.append(temp);
-	delete temp;
+	sqlCommand.append(to_string(committerID));
 	sqlCommand.append(")");
+	auto rc = sqlite3_exec(_instance->db, sqlCommand.c_str(), nullptr, nullptr, &zErrMsg);
+	if (rc != SQLITE_OK) {
+		fprintf(stderr, "SQL error: %s\n", zErrMsg);
+		sqlite3_free(zErrMsg);
+		exit(-1);
+	}
+}
+
+void sql::updateUser(User * const toUpdate) {
+	string sqlCommand = "update user set ";
+	sqlCommand.append("count = ");
+	char* temp;
+	sqlCommand.append(to_string(toUpdate->count));
+	sqlCommand.append(", level= ");
+	sqlCommand.append(to_string(toUpdate->level));
+	if (toUpdate->isPlayer) {
+		sqlCommand.append(",exp=");
+		sqlCommand.append(to_string(static_cast<Player*>(toUpdate)->exp));
+	}
+	sqlCommand.append(" where id=");
+	sqlCommand.append(to_string(toUpdate->id));
+	char* zErrMsg;
 	auto rc = sqlite3_exec(_instance->db, sqlCommand.c_str(), nullptr, nullptr, &zErrMsg);
 	if (rc != SQLITE_OK) {
 		fprintf(stderr, "SQL error: %s\n", zErrMsg);

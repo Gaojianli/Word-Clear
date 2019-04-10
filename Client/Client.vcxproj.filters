@@ -56,6 +56,9 @@
     <ClInclude Include="Committer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="curses.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="database.db" />

@@ -5,8 +5,6 @@
 #include "client.h"
 #include "sql.h"
 
-#pragma comment(lib, "sqlite3.lib")
-
 int main() {
 	sql::init("database.db");
 	auto questionList = sql::getQuestions();//import data
