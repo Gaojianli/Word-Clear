@@ -13,6 +13,7 @@
 #include <cstdlib>
 #include <conio.h>
 #include <algorithm>
+#include <process.h>
 #include <Windows.h>
 #include <string>
 #include "curses.h"
