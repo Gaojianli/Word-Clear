@@ -25,10 +25,12 @@ void Committer::showRank(){
 		});
 	cout << "Name\t\tLevel\tCommited questions" << endl;
 	for_each(committererList->begin(), committererList->end(), [](User * item)->void {
-		if (item->isPlayer)
+		if (!item->isPlayer)
 			cout << item->name << "\t\t" << item->level << "\t\t" << item->count << endl;
+		delete item;
 		});
 	cout << endl;
+	delete[] committererList;
 }
 
 Committer::~Committer() {

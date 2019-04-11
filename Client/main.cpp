@@ -33,6 +33,7 @@ SignOrLog:
 		cmdPlayer(static_cast<Player*>(currentUser),questionList);
 	else
 		cmdCommitter(static_cast<Committer*>(currentUser),questionList);
-
+	delete currentUser;
+	delete questionList;
 }
 

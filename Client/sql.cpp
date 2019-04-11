@@ -75,7 +75,7 @@ bool sql::queryPassword(string username, string password) {
 	}
 }
 
-static int getUserByName_callback(void* data, int argc, char** argv, char** azColName) {
+static int getSingleUser_callback(void* data, int argc, char** argv, char** azColName) {
 	if (argc == 7) {
 		if (!*(User * *)data)
 			if (string(argv[3])._Equal("true"))
@@ -91,7 +91,7 @@ User* sql::getUserByName(string userName) {
 	string sqlCommand = "select * from User where name like \"";
 	sqlCommand.append(userName);
 	sqlCommand.append("\"");
-	auto rc = sqlite3_exec(_instance->db, sqlCommand.c_str(), getUserByName_callback, (void*)& data, &zErrMsg);
+	auto rc = sqlite3_exec(_instance->db, sqlCommand.c_str(), getSingleUser_callback, (void*)& data, &zErrMsg);
 	if (rc != SQLITE_OK) {
 		fprintf(stderr, "SQL error: %s\n", zErrMsg);
 		sqlite3_free(zErrMsg);
@@ -122,7 +122,7 @@ User* sql::addUser(string name, string password, bool isPlayer) {
 	}
 }
 
-static int getAllUsers_callback(void* data, int argc, char** argv, char** azColName) {
+static int getUsers_callback(void* data, int argc, char** argv, char** azColName) {
 	if (argc == 7)
 		if (string(argv[3])._Equal("true"))
 			((vector<User*>*)data)->push_back(new Player(argv[1], atoi(argv[0]), atoi(argv[4]), atoi(argv[6]), atoi(argv[5])));
@@ -133,7 +133,7 @@ static int getAllUsers_callback(void* data, int argc, char** argv, char** azColN
 vector<User*>* sql::getAllUsers() {
 	auto toReturn = new vector<User*>();
 	char* zErrMsg;
-	auto rc = sqlite3_exec(_instance->db, "select * from user", getAllUsers_callback, (void*)toReturn, &zErrMsg);
+	auto rc = sqlite3_exec(_instance->db, "select * from user", getUsers_callback, (void*)toReturn, &zErrMsg);
 	if (rc != SQLITE_OK) {
 		fprintf(stderr, "SQL error: %s\n", zErrMsg);
 		sqlite3_free(zErrMsg);
@@ -179,6 +179,52 @@ void sql::updateUser(User * const toUpdate) {
 		fprintf(stderr, "SQL error: %s\n", zErrMsg);
 		sqlite3_free(zErrMsg);
 		exit(-1);
+	}
+}
+
+
+vector<User*>* sql::fetchByCondition(property pro, string value, bool isPlayer) {
+	auto toReturn = new vector<User*>();
+	char* zErrMsg;
+	string sqlCommand = "select * from user where isPlayer like \"";
+	sqlCommand.append(isPlayer ? "true" : "false");
+	sqlCommand.append("\" and ");
+	string types[] = { "id","name","count","level","exp" };
+	string proStr = types[static_cast<int>(pro)];
+	sqlCommand.append(proStr);
+	sqlCommand.append(" like \"");
+	sqlCommand.append(value);
+	sqlCommand.append("\"");
+	auto rc = sqlite3_exec(_instance->db, sqlCommand.c_str(), getUsers_callback, (void*)toReturn, &zErrMsg);
+	if (rc != SQLITE_OK) {
+		fprintf(stderr, "SQL error: %s\n", zErrMsg);
+		sqlite3_free(zErrMsg);
+		exit(-1);
+	}
+	else {
+		return toReturn;
+	}
+}
+
+User* sql::getHighest(property pro, bool high, bool isPlayer) {
+	User* data = nullptr;
+	char* zErrMsg;
+	string sqlCommand = "select * from User where isPlayer like \""; 
+	sqlCommand.append(isPlayer ? "true" : "false");
+	sqlCommand.append("\" order by ");
+	string types[] = { "id","name","count","level","exp" };
+	string proStr = types[static_cast<int>(pro)];
+	sqlCommand.append(proStr);
+	sqlCommand.append(high ? " DESC" : " ASC");
+	sqlCommand.append(" limit 1");
+	auto rc = sqlite3_exec(_instance->db, sqlCommand.c_str(), getSingleUser_callback, (void*)& data, &zErrMsg);
+	if (rc != SQLITE_OK) {
+		fprintf(stderr, "SQL error: %s\n", zErrMsg);
+		sqlite3_free(zErrMsg);
+		exit(-1);
+	}
+	else {
+		return data;
 	}
 }
 

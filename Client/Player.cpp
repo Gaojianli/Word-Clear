@@ -120,7 +120,9 @@ void Player::showRank() {
 	for_each(playerList->begin(), playerList->end(), [](User * item)->void {
 		if (item->isPlayer)
 			cout << item->name << "\t" << item->level << "\t" << item->count << "\t\t" << static_cast<Player*>(item)->exp << endl;
+		delete item;
 		});
+	delete[] playerList;
 	cout << endl;
 }
 void Player::showStat() {
