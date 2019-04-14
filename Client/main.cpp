@@ -37,17 +37,20 @@ SignOrLog:
 	delete questionList;
 }
 
+//capture the Ctrl+C event
 bool ctrlhandler(DWORD fdwctrltype) {
-	auto WcharToChar = [](const wchar_t* wp, size_t m_encode = CP_ACP)->string {
+	//local function
+	auto WcharToChar = [](const wchar_t* wp, int m_encode = CP_ACP)->string {
 		string str;
-		int len = WideCharToMultiByte(m_encode, 0, wp, wcslen(wp), NULL, 0, NULL, NULL);
-		char* m_char = new char[len + 1];
-		WideCharToMultiByte(m_encode, 0, wp, wcslen(wp), m_char, len, NULL, NULL);
+		int len = WideCharToMultiByte(m_encode, 0, wp, (int)wcslen(wp), NULL, 0, NULL, NULL);
+		char* m_char = new char[(__int64)len + 1];//assert len as __int64 to avoid overflow 
+		WideCharToMultiByte(m_encode, 0, wp, (int)wcslen(wp), m_char, len, NULL, NULL);
 		m_char[len] = '\0';
 		str = m_char;
-		delete m_char;
+		delete[] m_char;
 		return str;
 	};
+
 	HMODULE hModule = GetModuleHandleW(NULL);
 	WCHAR path[MAX_PATH];
 	const char* argv[] = { "client", nullptr };
