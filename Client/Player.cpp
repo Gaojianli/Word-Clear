@@ -19,7 +19,7 @@ void Player::startGame(vector<Word>* questionList) {
 	raw();
 	noecho();
 	int currentLevel = 1;
-	int currentLevelCorrectCout = 0;//the number of passed ranks with current leve;
+	int currentLevelCorrectCount = 0;//the number of passed ranks with current leve;
 	bool finishFlag = false;//finsih all question flag
 	//draw the border
 	attrset(A_REVERSE);
@@ -39,18 +39,45 @@ void Player::startGame(vector<Word>* questionList) {
 				else
 					return false;
 				});
-			played.append((*question).str);
-			if (distance(question, questionList->end()) == 1)
-				if (finishFlag) {
+			if (question == questionList->end()) {
+				if (currentLevel >= 10) {
 					attrset(A_BOLD);
 					mvprintw(LINES / 2, COLS / 2 - 14, "Congratulations! You have passed all ranks!");
 					attrset(A_NORMAL);
 					mvprintw(LINES / 2, COLS / 2 - 2, "Press any key to quit");
 					refresh();
+					getch();
 					break;
+				}
+				else {
+					currentLevel++;
+					played.clear();
+					finishFlag = false;
+					continue;
+				}
+			}
+			else if (distance(question, questionList->end()) == 1) {
+				if (finishFlag) {
+					if (currentLevel >= 10) {
+						attrset(A_BOLD);
+						mvprintw(LINES / 2, COLS / 2 - 14, "Congratulations! You have passed all ranks!");
+						attrset(A_NORMAL);
+						mvprintw(LINES / 2, COLS / 2 - 2, "Press any key to quit");
+						refresh();
+						getch();
+						break;
+					}
+					else {
+						currentLevel++;
+						played.clear();
+						finishFlag = false;
+						continue;
+					}
 				}
 				else
 					finishFlag = true;
+			}
+			played.append((*question).str);
 			move(LINES / 2, 0);
 			clrtoeol();
 			refresh();
@@ -83,12 +110,12 @@ void Player::startGame(vector<Word>* questionList) {
 				if (exp / 100 > level)
 					level++;//upgrade
 				//increase the difficuty
-				if (currentLevelCorrectCout >= currentLevel) {
+				if (currentLevelCorrectCount >= currentLevel) {
 					currentLevel++;
-					currentLevelCorrectCout = 0;
+					currentLevelCorrectCount = 0;
 				}
 				else
-					currentLevelCorrectCout++;
+					currentLevelCorrectCount++;
 				attrset(A_REVERSE);
 				for (int i = 0; i < COLS; ++i)
 					mvaddch(0, i, ' ');
