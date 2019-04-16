@@ -144,6 +144,7 @@ void cmdCommitter(Committer* currentUser, vector<Word>* questionList) {
 			currentUser->commit(toCommit, difficuty);
 			questionList->push_back(Word(toCommit.c_str(), difficuty, currentUser->id));
 			cout << "Word added." << endl;
+			cin.get();
 		};//commit function
 
 		cout << endl;
