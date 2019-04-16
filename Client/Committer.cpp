@@ -10,6 +10,10 @@ Committer::Committer(std::string username, int id, int count, int level) : User(
 }
 
 void Committer::commit(std::string word, int level){
+	count++;
+	if (count / 10 > level)
+		level++;
+	sql::updateUser(this);
 	sql::addWord(word, level, id);
 }
 

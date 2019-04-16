@@ -104,6 +104,29 @@ void cmdPlayer(Player* currentUser, vector<Word>* questionList) {
 	cout << endl << endl << "Welcome, " << currentUser->name << "(UID:" << currentUser->id << ")" << ". You are " << "Player" << "(Level " << currentUser->level << ")" << endl;
 	cout << "You have played " << currentUser->count << " Ranks. Current EXP:" << currentUser->exp << endl;
 	cout << "Type \"help\" for help" << endl;
+	/*-------------local method-------------*/
+	auto logout = [currentUser, questionList]()->void {
+		//do some cleaning
+		delete currentUser;
+		delete questionList;
+		auto WcharToChar = [](const wchar_t* wp, int m_encode = CP_ACP)->string {
+			string str;
+			int len = WideCharToMultiByte(m_encode, 0, wp, (int)wcslen(wp), NULL, 0, NULL, NULL);
+			char* m_char = new char[(__int64)len + 1];//assert len as __int64 to avoid overflow 
+			WideCharToMultiByte(m_encode, 0, wp, (int)wcslen(wp), m_char, len, NULL, NULL);
+			m_char[len] = '\0';
+			str = m_char;
+			delete[] m_char;
+			return str;
+		};
+		HMODULE hModule = GetModuleHandleW(NULL);
+		WCHAR path[MAX_PATH];
+		const char* argv[] = { "client", nullptr };
+		system("cls");
+		GetModuleFileNameW(hModule, path, MAX_PATH);
+		_execvp(WcharToChar(path).c_str(), argv);
+	};
+	/*-------------local method-------------*/
 	//simple shell implement
 	while (true) {
 		cout << endl;
@@ -119,6 +142,7 @@ void cmdPlayer(Player* currentUser, vector<Word>* questionList) {
 			cout << "rank\t\tView the Ranking list." << endl;
 			cout << "stat\t\tView my status." << endl;
 			cout << "find\t\tfind a user." << endl;
+			cout << "logout\t\tSign Out." << endl;
 			cout << "exit\t\tQuit this game." << endl;
 		}
 		else if (command._Equal("start"))
@@ -129,6 +153,8 @@ void cmdPlayer(Player* currentUser, vector<Word>* questionList) {
 			currentUser->showStat();
 		else if (command.find("find") != string::npos)
 			find(command);
+		else if (command.find("logout") != string::npos)
+			logout();
 		else if (command._Equal("exit"))
 			exit(0);
 		else
@@ -140,6 +166,29 @@ void cmdCommitter(Committer* currentUser, vector<Word>* questionList) {
 	cout << endl << endl << "Welcome, " << currentUser->name << "(UID:" << currentUser->id << ")" << ". You are " << "Committer" << "(Level " << currentUser->level << ")" << endl;
 	cout << "You have commited " << currentUser->count << " Questions." << endl;
 	cout << "Type \"help\" for command list" << endl;
+	/*-------------local method-------------*/
+	auto logout = [currentUser, questionList]()->void {
+		//do some cleaning
+		delete currentUser;
+		delete questionList;
+		auto WcharToChar = [](const wchar_t* wp, int m_encode = CP_ACP)->string {
+			string str;
+			int len = WideCharToMultiByte(m_encode, 0, wp, (int)wcslen(wp), NULL, 0, NULL, NULL);
+			char* m_char = new char[(__int64)len + 1];//assert len as __int64 to avoid overflow 
+			WideCharToMultiByte(m_encode, 0, wp, (int)wcslen(wp), m_char, len, NULL, NULL);
+			m_char[len] = '\0';
+			str = m_char;
+			delete[] m_char;
+			return str;
+		};
+		HMODULE hModule = GetModuleHandleW(NULL);
+		WCHAR path[MAX_PATH];
+		const char* argv[] = { "client", nullptr };
+		system("cls");
+		GetModuleFileNameW(hModule, path, MAX_PATH);
+		_execvp(WcharToChar(path).c_str(), argv);
+	};
+	/*-------------local method-------------*/
 	while (true) {
 		auto commit = [currentUser, questionList]()->void {
 			string toCommit;
@@ -171,6 +220,7 @@ void cmdCommitter(Committer* currentUser, vector<Word>* questionList) {
 			cout << "commit\t\tCommit a word" << endl;
 			cout << "rank\t\tView the Ranking list." << endl;
 			cout << "stat\t\tView my status." << endl;
+			cout << "logout\t\tSign Out." << endl;
 			cout << "exit\t\tQuit this game." << endl;
 			cout << endl;
 		}
@@ -183,6 +233,8 @@ void cmdCommitter(Committer* currentUser, vector<Word>* questionList) {
 			currentUser->showStat();
 		else if (command.find("find") != string::npos)
 			find(command);
+		else if (command.find("logout") != string::npos)
+			logout();
 		else if (command._Equal("exit"))
 			exit(0);
 		else

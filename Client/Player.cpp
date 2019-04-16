@@ -19,6 +19,7 @@ void Player::startGame(vector<Word>* questionList) {
 	raw();
 	noecho();
 	int currentLevel = 1;
+	int currentLevelCorrectCount = 0;//the number of passed ranks with current leve;
 	bool finishFlag = false;//finsih all question flag
 	//draw the border
 	attrset(A_REVERSE);
@@ -38,25 +39,53 @@ void Player::startGame(vector<Word>* questionList) {
 				else
 					return false;
 				});
-			played.append((*question).str);
-			if (distance(question, questionList->end()) == 1)
-				if (finishFlag) {
+			if (question == questionList->end()) {
+				if (currentLevel >= 10) {
 					attrset(A_BOLD);
 					mvprintw(LINES / 2, COLS / 2 - 14, "Congratulations! You have passed all ranks!");
 					attrset(A_NORMAL);
 					mvprintw(LINES / 2, COLS / 2 - 2, "Press any key to quit");
 					refresh();
+					getch();
 					break;
+				}
+				else {
+					currentLevel++;
+					played.clear();
+					finishFlag = false;
+					continue;
+				}
+			}
+			else if (distance(question, questionList->end()) == 1) {
+				if (finishFlag) {
+					if (currentLevel >= 10) {
+						attrset(A_BOLD);
+						mvprintw(LINES / 2, COLS / 2 - 14, "Congratulations! You have passed all ranks!");
+						attrset(A_NORMAL);
+						mvprintw(LINES / 2, COLS / 2 - 2, "Press any key to quit");
+						refresh();
+						getch();
+						break;
+					}
+					else {
+						currentLevel++;
+						played.clear();
+						finishFlag = false;
+						continue;
+					}
 				}
 				else
 					finishFlag = true;
+			}
+			played.append((*question).str);
 			move(LINES / 2, 0);
 			clrtoeol();
 			refresh();
 			attrset(A_BOLD);
 			mvprintw(LINES / 2 - 1, COLS / 2 - 4, (*question).str.c_str());
 			attrset(A_NORMAL);
-			for (int i = 5; i >= 0; i--) {
+			int showTime = 5 - currentLevel / 5; //time decrease 1 sec per 5 levels
+			for (int i = showTime; i >= 0; i--) {
 				mvprintw(LINES / 2 + 4, COLS / 2 - 15, "Word will disapper in %d seconds", i);
 				refresh();
 				Sleep(1000);
@@ -80,6 +109,13 @@ void Player::startGame(vector<Word>* questionList) {
 				count++;
 				if (exp / 100 > level)
 					level++;//upgrade
+				//increase the difficuty
+				if (currentLevelCorrectCount >= currentLevel) {
+					currentLevel++;
+					currentLevelCorrectCount = 0;
+				}
+				else
+					currentLevelCorrectCount++;
 				attrset(A_REVERSE);
 				for (int i = 0; i < COLS; ++i)
 					mvaddch(0, i, ' ');
