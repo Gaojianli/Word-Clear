@@ -19,6 +19,7 @@ void Player::startGame(vector<Word>* questionList) {
 	raw();
 	noecho();
 	int currentLevel = 1;
+	int currentLevelCorrectCout = 0;//the number of passed ranks with current leve;
 	bool finishFlag = false;//finsih all question flag
 	//draw the border
 	attrset(A_REVERSE);
@@ -56,7 +57,8 @@ void Player::startGame(vector<Word>* questionList) {
 			attrset(A_BOLD);
 			mvprintw(LINES / 2 - 1, COLS / 2 - 4, (*question).str.c_str());
 			attrset(A_NORMAL);
-			for (int i = 5; i >= 0; i--) {
+			int showTime = 5 - currentLevel / 5; //time decrease 1 sec per 5 levels
+			for (int i = showTime; i >= 0; i--) {
 				mvprintw(LINES / 2 + 4, COLS / 2 - 15, "Word will disapper in %d seconds", i);
 				refresh();
 				Sleep(1000);
@@ -79,6 +81,13 @@ void Player::startGame(vector<Word>* questionList) {
 				count++;
 				if (exp / 100 > level)
 					level++;//upgrade
+				//increase the difficuty
+				if (currentLevelCorrectCout >= currentLevel) {
+					currentLevel++;
+					currentLevelCorrectCout = 0;
+				}
+				else
+					currentLevelCorrectCout++;
 				attrset(A_REVERSE);
 				for (int i = 0; i < COLS; ++i)
 					mvaddch(0, i, ' ');
