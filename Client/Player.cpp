@@ -70,6 +70,7 @@ void Player::startGame(vector<Word>* questionList) {
 			curs_set(1);//show the curs
 			echo();
 			auto answer = new char[20];
+			flushinp();//flush the input
 			getnstr(answer, 20);
 			move(LINES / 2 + 4, 0);
 			clrtoeol();
