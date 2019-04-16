@@ -11,8 +11,12 @@ login:
 	cin >> userName;
 	cout << "Password:";
 	while ((ch = _getch()) != 13) {
-		if (ch == '\b')
-			cout << "\b \b";
+		if (ch == '\b') {
+			if (password.length() > 0) {
+				cout << "\b \b";
+				password.pop_back();
+			}
+		}
 		else {
 			password += ch;
 			cout << "*";
@@ -40,8 +44,12 @@ SettingPassword:
 	cout << "Setting password for " << userName << "." << endl;
 	cout << "Password:";
 	while ((ch = _getch()) != 13) {
-		if (ch == '\b')
-			cout << "\b \b";
+		if (ch == '\b') {
+			if (password.length() > 0) {
+				cout << "\b \b";
+				password.pop_back();
+			}
+		}
 		else {
 			password += ch;
 			cout << "*";
@@ -49,8 +57,12 @@ SettingPassword:
 	}
 	cout << endl << "Retype Password:";
 	while ((ch = _getch()) != 13) {
-		if (ch == '\b')
-			cout << "\b \b";
+		if (ch == '\b') {
+			if (comfirmPassword.length() > 0) {
+				cout << "\b \b";
+				comfirmPassword.pop_back();
+			}
+		}
 		else {
 			comfirmPassword += ch;
 			cout << "*";
@@ -149,7 +161,7 @@ void cmdCommitter(Committer* currentUser, vector<Word>* questionList) {
 
 		cout << endl;
 		cout << ">";
-		auto buffer=new char[50];
+		auto buffer = new char[50];
 		cin.getline(buffer, 50);
 		string command(buffer);
 		delete[] buffer;
@@ -200,7 +212,7 @@ void find(string cmd) {
 		cout << "\t find player count --highest" << endl;
 	};
 	auto opt = cmd.substr(5);
-	if ((opt.find("--help") != string::npos || cmd.find("-h") != string::npos)&& cmd.find("--highest") == string::npos) {//"--highest" include "-h"
+	if ((opt.find("--help") != string::npos || cmd.find("-h") != string::npos) && cmd.find("--highest") == string::npos) {//"--highest" include "-h"
 		printHelp(true);
 		return;
 	}
