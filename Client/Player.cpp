@@ -123,7 +123,7 @@ void Player::showRank() {
 			cout << item->name << "\t" << item->level << "\t" << item->count << "\t\t" << static_cast<Player*>(item)->exp << endl;
 		delete item;
 		});
-	delete[] playerList;
+	delete playerList;
 	cout << endl;
 }
 void Player::showStat() {
