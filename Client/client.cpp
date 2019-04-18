@@ -153,9 +153,14 @@ void cmdCommitter(Committer* currentUser, vector<Word>* questionList) {
 				cout << "Invaild input." << endl;
 				goto SetDifficuty;
 			}
-			currentUser->commit(toCommit, difficuty);
-			questionList->push_back(Word(toCommit.c_str(), difficuty, currentUser->id));
-			cout << "Word added." << endl;
+			//check duplicate
+			if (find_if(questionList->begin(), questionList->end(), [toCommit](Word const& obj) {	return obj.str._Equal(toCommit); }) == questionList->end()) {
+				currentUser->commit(toCommit, difficuty);
+				questionList->push_back(Word(toCommit.c_str(), difficuty, currentUser->id));
+				cout << "Word added." << endl;
+			}
+			else
+				cout << "Word \"" << toCommit << "\" existed!" << endl;
 			cin.get();
 		};//commit function
 
