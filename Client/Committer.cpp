@@ -30,7 +30,7 @@ void Committer::showRank(){
 		delete item;
 		});
 	cout << endl;
-	delete[] committererList;
+	delete committererList;
 }
 
 Committer::~Committer() {
