@@ -25,9 +25,13 @@ sql::sql(string connections) {
 	}
 }
 sql* sql::_instance = nullptr;
+vector<Word>* sql::_questionListCache = nullptr;
+
 sql::~sql() {
 	sqlite3_close(db);
 	free(_instance);
+	if (_questionListCache)
+		delete _questionListCache;
 }
 
 void sql::init(string dbConnection) {
@@ -44,7 +48,7 @@ static int getQuestion_callback(void* data, int argc, char** argv, char** azColN
 	else
 		return 0;
 }
-vector<Word>* sql::getQuestions() {
+vector<Word>* sql::fetchQuestions() {
 	auto toReturn = new vector<Word>();
 	char* zErrMsg;
 	auto rc = sqlite3_exec(_instance->db, "select * from question", getQuestion_callback, (void*)toReturn, &zErrMsg);
@@ -56,6 +60,29 @@ vector<Word>* sql::getQuestions() {
 	else {
 		return toReturn;
 	}
+}
+
+vector<Word>* sql::fetchQuestions(int difficulty) {
+	if (_questionListCache == nullptr)
+		_questionListCache = new vector<Word>();
+	//cache failed
+	if (_questionListCache->size() == 0 || _questionListCache->at(0).level != difficulty) {
+		_questionListCache->clear();
+		char* zErrMsg;
+		string sqlCommand = "select * from question where level like ";
+		sqlCommand.append(to_string(difficulty));
+		auto rc = sqlite3_exec(_instance->db, sqlCommand.c_str(), getQuestion_callback, (void*)_questionListCache, &zErrMsg);
+		if (rc != SQLITE_OK) {
+			fprintf(stderr, "SQL error: %s\n", zErrMsg);
+			sqlite3_free(zErrMsg);
+			exit(-1);
+		}
+		else {
+			return _questionListCache;
+		}
+	}
+	else
+		return _questionListCache;
 }
 
 //queryPassword
@@ -97,7 +124,7 @@ static int getSingleUser_callback(void* data, int argc, char** argv, char** azCo
 	}
 	return 0;
 }
-User* sql::getUserByName(string userName) {
+User* sql::fetchUserByName(string userName) {
 	char* zErrMsg;
 	User* data = nullptr;
 	string sqlCommand = "select * from User where name like \"";
@@ -130,7 +157,7 @@ User* sql::addUser(string name, string password, bool isPlayer) {
 		exit(-1);
 	}
 	else {
-		return sql::getUserByName(name);
+		return sql::fetchUserByName(name);
 	}
 }
 
@@ -173,7 +200,7 @@ void sql::addWord(string word, int level, int committerID) {
 	}
 }
 
-void sql::updateUser(User * const toUpdate) {
+void sql::updateUser(User* const toUpdate) {
 	string sqlCommand = "update user set ";
 	sqlCommand.append("count = ");
 	sqlCommand.append(to_string(toUpdate->count));
@@ -218,10 +245,10 @@ vector<User*>* sql::fetchByCondition(property pro, string value, bool isPlayer) 
 	}
 }
 
-User* sql::getHighest(property pro, bool high, bool isPlayer) {
+User* sql::fetchHighest(property pro, bool high, bool isPlayer) {
 	User* data = nullptr;
 	char* zErrMsg;
-	string sqlCommand = "select * from User where isPlayer like \""; 
+	string sqlCommand = "select * from User where isPlayer like \"";
 	sqlCommand.append(isPlayer ? "true" : "false");
 	sqlCommand.append("\" order by ");
 	string types[] = { "id","name","count","level","exp" };
