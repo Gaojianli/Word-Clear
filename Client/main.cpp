@@ -10,6 +10,7 @@ int main() {
 	auto questionList = sql::getQuestions();//import data
 	User* currentUser;
 	SetConsoleCtrlHandler((PHANDLER_ROUTINE)ctrlhandler, true);
+	system("cls");
 SignOrLog:
 	cout << "Login/Sign up? (L/S):";
 	switch (char signUpFlag = getchar(); signUpFlag) {

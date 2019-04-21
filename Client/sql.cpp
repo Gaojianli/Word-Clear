@@ -11,6 +11,18 @@ sql::sql(string connections) {
 		fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
 		exit(-1);
 	}
+	//create table user
+	rc = sqlite3_exec(db, "CREATE TABLE IF NOT EXISTS user(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, name STRING UNIQUE NOT NULL, password STRING NOT NULL, isPlayer BOOLEAN NOT NULL DEFAULT true, count INTEGER DEFAULT (0), exp INTEGER DEFAULT (0), level INTEGER DEFAULT (1) NOT NULL)", nullptr, nullptr, &zErrMsg);
+	if (rc) {
+		fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+		exit(-1);
+	}
+	//create table question
+	rc = sqlite3_exec(db, "CREATE TABLE IF NOT EXISTS question (word STRING UNIQUE NOT NULL PRIMARY KEY, level INTEGER NOT NULL, committer INTEGER NOT NULL REFERENCES user (id) ON DELETE CASCADE)", nullptr, nullptr, &zErrMsg);
+	if (rc) {
+		fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+		exit(-1);
+	}
 }
 sql* sql::_instance = nullptr;
 sql::~sql() {
