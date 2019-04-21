@@ -17,6 +17,5 @@
 #include <rapidjson/stringbuffer.h>
 #include <list>
 #include <iostream>
-
-
+#include <mysql+++.h>
 #endif //PCH_H

@@ -9,17 +9,17 @@
 #pragma comment(lib,"Socketd.lib")
 #else
 #pragma comment(lib,"Socket.lib")
-#endif // DEBUG
-
+#endif
+bool ctrlhandler(DWORD fdwctrltype);
 std::list<Socket*> globalConnections;
 using namespace std;
 using namespace rapidjson;
 
-int main(){
-	const int port = 3000;
-	SocketServer in(port, 5);
+int main() {
+	SetConsoleCtrlHandler((PHANDLER_ROUTINE)ctrlhandler, true);
+	const int port = 4000;
+	SocketServer in(port, 5, BlockingSocket);
 	cout << "listen at port:" << port << endl;
-	auto threadPool = new list<thread*>();
 	while (true) {
 		auto connect = in.Accept();
 		auto a = new thread([connect]()->unsigned {
@@ -56,7 +56,24 @@ int main(){
 			delete connect;
 			return 0;
 			});
-		threadPool->push_back(a);
 	}
 }
 
+//capture the Ctrl+C event
+bool ctrlhandler(DWORD fdwctrltype) {
+	switch (fdwctrltype) {
+	case CTRL_C_EVENT:
+	case CTRL_CLOSE_EVENT:
+	case CTRL_SHUTDOWN_EVENT:
+		cout << "Captured " << fdwctrltype << " Events,exitting..." << endl;
+		for (auto i : globalConnections) {
+			i->Close();
+			delete i;
+		}
+		globalConnections.clear();
+		exit(fdwctrltype);
+		return(false);
+	default:
+		return false;
+	}
+}
