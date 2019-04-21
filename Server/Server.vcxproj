@@ -176,12 +176,15 @@
     </ClCompile>
     <ClCompile Include="schema.cpp" />
     <ClCompile Include="Server.cpp" />
+    <ClCompile Include="sql.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="handler.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="schema.h" />
     <ClInclude Include="Socket.h" />
+    <ClInclude Include="sql.h" />
+    <ClInclude Include="user.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

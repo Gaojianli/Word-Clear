@@ -18,4 +18,5 @@
 #include <list>
 #include <iostream>
 #include <mysql+++.h>
+#include "user.h"
 #endif //PCH_H

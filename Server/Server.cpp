@@ -4,19 +4,24 @@
 #include "pch.h"
 #include "schema.h"
 #include "handler.h"
+#include "sql.h"
+
 #pragma comment(lib,"ws2_32.lib")
 #ifdef _DEBUG
 #pragma comment(lib,"Socketd.lib")
 #else
 #pragma comment(lib,"Socket.lib")
 #endif
+
 bool ctrlhandler(DWORD fdwctrltype);
 std::list<Socket*> globalConnections;
+
 using namespace std;
 using namespace rapidjson;
 
 int main() {
 	SetConsoleCtrlHandler((PHANDLER_ROUTINE)ctrlhandler, true);
+	sql::init();
 	const int port = 4000;
 	SocketServer in(port, 5, BlockingSocket);
 	cout << "listen at port:" << port << endl;
@@ -71,6 +76,7 @@ bool ctrlhandler(DWORD fdwctrltype) {
 			delete i;
 		}
 		globalConnections.clear();
+		sql::close();
 		exit(fdwctrltype);
 		return(false);
 	default:
