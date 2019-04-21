@@ -9,12 +9,12 @@ Committer::Committer(std::string name, int id) : User(name, id) {
 Committer::Committer(std::string username, int id, int count, int level) : User(username, id, false, count, level) {
 }
 
-void Committer::commit(std::string word, int level){
+void Committer::commit(std::string word, int difficulty){
 	count++;
 	if (count / 10 > level)
 		level++;
 	sql::updateUser(this);
-	sql::addWord(word, level, id);
+	sql::addWord(word, difficulty, id);
 }
 
 void Committer::showStat(){
@@ -34,7 +34,7 @@ void Committer::showRank(){
 		delete item;
 		});
 	cout << endl;
-	delete[] committererList;
+	delete committererList;
 }
 
 Committer::~Committer() {

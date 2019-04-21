@@ -7,7 +7,7 @@
 bool ctrlhandler(DWORD fdwctrltype);
 int main() {
 	sql::init("database.db");
-	auto questionList = sql::getQuestions();//import data
+	auto questionList = sql::fetchQuestions();//import data
 	User* currentUser;
 	SetConsoleCtrlHandler((PHANDLER_ROUTINE)ctrlhandler, true);
 SignOrLog:

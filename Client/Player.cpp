@@ -14,18 +14,18 @@ Player::~Player() {
 
 Player::Player(std::string username, int id, int count, int level, int exp) :User(username, id, true, count, level), exp(exp) {
 }
-void Player::startGame(vector<Word>* questionList) {
+void Player::startGame() {
+	
 	initscr();
 	raw();
 	noecho();
-	int currentLevel = 1;
+	int currentDifficulty = 1;
 	int currentLevelCorrectCount = 0;//the number of passed ranks with current leve;
-	bool finishFlag = false;//finsih all question flag
 	//draw the border
 	attrset(A_REVERSE);
 	for (int i = 0; i < COLS; ++i)
 		mvaddch(0, i, ' ');
-	mvprintw(0, COLS / 2 - 16, "Level:%d   Exp:%d   Passed Ranks:%d", currentLevel, exp, count);
+	mvprintw(0, COLS / 2 - 16, "Level:%d   Exp:%d   Passed Ranks:%d", currentDifficulty, exp, count);
 	attrset(A_NORMAL);
 	curs_set(0);//disable cursor
 	mvprintw(LINES / 2, COLS / 2 - 27, "Press ENTER to start, press any other key to quit.");
@@ -33,14 +33,9 @@ void Player::startGame(vector<Word>* questionList) {
 	string played;
 	if (auto ch = getch(); ch == 13)
 		while (true) {
-			auto question = find_if(questionList->begin(), questionList->end(), [currentLevel, played](Word const& obj)->bool {
-				if (obj.level == currentLevel)
-					return played.find(obj.str) == string::npos;
-				else
-					return false;
-				});
-			if (question == questionList->end()) {
-				if (currentLevel >= 10) {
+			auto questionList = sql::fetchQuestions(currentDifficulty);
+			if (questionList->empty()) {
+				if (currentDifficulty >= 10) {
 					attrset(A_BOLD);
 					mvprintw(LINES / 2, COLS / 2 - 14, "Congratulations! You have passed all ranks!");
 					attrset(A_NORMAL);
@@ -50,41 +45,21 @@ void Player::startGame(vector<Word>* questionList) {
 					break;
 				}
 				else {
-					currentLevel++;
+					currentDifficulty++;
 					played.clear();
-					finishFlag = false;
 					continue;
 				}
 			}
-			else if (distance(question, questionList->end()) == 1) {
-				if (finishFlag) {
-					if (currentLevel >= 10) {
-						attrset(A_BOLD);
-						mvprintw(LINES / 2, COLS / 2 - 14, "Congratulations! You have passed all ranks!");
-						attrset(A_NORMAL);
-						mvprintw(LINES / 2, COLS / 2 - 2, "Press any key to quit");
-						refresh();
-						getch();
-						break;
-					}
-					else {
-						currentLevel++;
-						played.clear();
-						finishFlag = false;
-						continue;
-					}
-				}
-				else
-					finishFlag = true;
-			}
-			played.append((*question).str);
+			int random = rand() % questionList->size();
+			auto question = questionList->at(random);
+			questionList->erase(questionList->begin() + random);//remove selected word
 			move(LINES / 2, 0);
 			clrtoeol();
 			refresh();
 			attrset(A_BOLD);
-			mvprintw(LINES / 2 - 1, COLS / 2 - 4, (*question).str.c_str());
+			mvprintw(LINES / 2 - 1, COLS / 2 - 4, question.str.c_str());
 			attrset(A_NORMAL);
-			int showTime = 5 - currentLevel / 5; //time decrease 1 sec per 5 levels
+			int showTime = 5 - currentDifficulty / 5; //time decrease 1 sec per 5 levels
 			for (int i = showTime; i >= 0; i--) {
 				mvprintw(LINES / 2 + 4, COLS / 2 - 15, "Word will disapper in %d seconds", i);
 				refresh();
@@ -104,14 +79,14 @@ void Player::startGame(vector<Word>* questionList) {
 			move(LINES / 2 + 4, 0);
 			clrtoeol();
 			refresh();
-			if ((*question).str._Equal(answer)) {
+			if (question.str._Equal(answer)) {
 				exp += 10;
 				count++;
 				if (exp / 100 > level)
 					level++;//upgrade
 				//increase the difficuty
-				if (currentLevelCorrectCount >= currentLevel) {
-					currentLevel++;
+				if (currentLevelCorrectCount >= currentDifficulty) {
+					currentDifficulty++;
 					currentLevelCorrectCount = 0;
 				}
 				else
@@ -119,7 +94,7 @@ void Player::startGame(vector<Word>* questionList) {
 				attrset(A_REVERSE);
 				for (int i = 0; i < COLS; ++i)
 					mvaddch(0, i, ' ');
-				mvprintw(0, COLS / 2 - 20, "Level:%d\tExp:%d\tPassed Ranks:%d", currentLevel, exp, count);
+				mvprintw(0, COLS / 2 - 20, "Level:%d\tExp:%d\tPassed Ranks:%d", currentDifficulty, exp, count);
 				attrset(A_NORMAL);
 				mvprintw(LINES / 2, COLS / 2 - 21, "Press any key to continue, press q to quit.");
 				refresh();
@@ -136,7 +111,7 @@ void Player::startGame(vector<Word>* questionList) {
 				attrset(A_BOLD);
 				mvprintw(LINES / 2 - 4, COLS / 2 - 6, "Game Over!");
 				attrset(A_NORMAL);
-				mvprintw(LINES / 2 - 3, COLS / 2 - 18, "Current answer: %s, you answer is %s", (*question).str.c_str(), answer);
+				mvprintw(LINES / 2 - 3, COLS / 2 - 18, "Current answer: %s, you answer is %s", question.str.c_str(), answer);
 				mvprintw(LINES / 2 - 2, COLS / 2 - 8, "Current Exp: %d", exp);
 				mvprintw(LINES / 2, COLS / 2 - 2, "Press any key to quit");
 				refresh();
@@ -159,7 +134,7 @@ void Player::showRank() {
 			cout << item->name << "\t" << item->level << "\t" << item->count << "\t\t" << static_cast<Player*>(item)->exp << endl;
 		delete item;
 		});
-	delete[] playerList;
+	delete playerList;
 	cout << endl;
 }
 void Player::showStat() {

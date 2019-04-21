@@ -28,7 +28,7 @@ login:
 		cout << "Access denied, try again." << endl << endl;
 		goto login;
 	}
-	return sql::getUserByName(userName);
+	return sql::fetchUserByName(userName);
 
 }
 
@@ -146,7 +146,7 @@ void cmdPlayer(Player* currentUser, vector<Word>* questionList) {
 			cout << "exit\t\tQuit this game." << endl;
 		}
 		else if (command._Equal("start"))
-			currentUser->startGame(questionList);
+			currentUser->startGame();
 		else if (command._Equal("rank"))
 			Player::showRank();
 		else if (command._Equal("stat"))
@@ -202,9 +202,14 @@ void cmdCommitter(Committer* currentUser, vector<Word>* questionList) {
 				cout << "Invaild input." << endl;
 				goto SetDifficuty;
 			}
-			currentUser->commit(toCommit, difficuty);
-			questionList->push_back(Word(toCommit.c_str(), difficuty, currentUser->id));
-			cout << "Word added." << endl;
+			//check duplicate
+			if (find_if(questionList->begin(), questionList->end(), [toCommit](Word const& obj) {	return obj.str._Equal(toCommit); }) == questionList->end()) {
+				currentUser->commit(toCommit, difficuty);
+				questionList->push_back(Word(toCommit.c_str(), difficuty, currentUser->id));
+				cout << "Word added." << endl;
+			}
+			else
+				cout << "Word \"" << toCommit << "\" existed!" << endl;
 			cin.get();
 		};//commit function
 
@@ -356,7 +361,7 @@ void find(string cmd) {
 		return;
 	}
 	else {
-		auto result = sql::getHighest(queryType, highestFlag == 1 ? true : false, playerFlag);
+		auto result = sql::fetchHighest(queryType, highestFlag == 1 ? true : false, playerFlag);
 		if (!result) {
 			cout << "NO suitable user found!" << endl;
 			return;
