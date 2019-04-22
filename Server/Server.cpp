@@ -13,23 +13,25 @@ using namespace rapidjson;
 
 void listen(uvw::Loop& loop, int port) {
 	std::shared_ptr<uvw::TCPHandle> tcp = loop.resource<uvw::TCPHandle>();
-	tcp->on<uvw::ErrorEvent>([](const uvw::ErrorEvent& event, uvw::TCPHandle&) {
+	auto ErrorEventEmitter = tcp->on<uvw::ErrorEvent>([](const uvw::ErrorEvent & event, uvw::TCPHandle&) {
 		cout << "error occurred:" << event.what() << endl;
 		});
-	tcp->once<uvw::ListenEvent>([](const uvw::ListenEvent&, uvw::TCPHandle & srv) {
+	auto ListenEventEmitter = tcp->on<uvw::ListenEvent>([](const uvw::ListenEvent&, uvw::TCPHandle & srv) {
 		std::shared_ptr<uvw::TCPHandle> client = srv.loop().resource<uvw::TCPHandle>();
-
-		client->on<uvw::CloseEvent>([ptr = srv.shared_from_this()](const uvw::CloseEvent&, uvw::TCPHandle&) {
-			std::cout << "Server closed." << std::endl;
-			ptr->close(); });
-		client->on<uvw::EndEvent>([](const uvw::EndEvent&, uvw::TCPHandle & client) { client.close(); });
-		client->on<uvw::ErrorEvent>([](const uvw::ErrorEvent& event, uvw::TCPHandle&) {
-			cout << "error occurred:" << event.what() << endl;
-			});
 		srv.accept(*client);
 		uvw::Addr remote = client->peer();
 		std::cout << remote.ip << ":" << remote.port << " Connected" << std::endl;
-		client->on<uvw::DataEvent>([](const uvw::DataEvent & event, uvw::TCPHandle& client) {
+		auto CloseEventEmitter = client->on<uvw::CloseEvent>([remote](const uvw::CloseEvent&, uvw::TCPHandle&) {
+			std::cout << "Connection from " << remote.ip << " closed." << std::endl;
+		});
+		auto EndEventEmitter = client->on<uvw::EndEvent>([](const uvw::EndEvent&, uvw::TCPHandle & client) { 
+			client.close(); 
+			});
+		auto ErrorEventEmitter = client->on<uvw::ErrorEvent>([](const uvw::ErrorEvent & event, uvw::TCPHandle& client) {
+			cout << "error occurred:" << event.what() << endl;
+			client.close();
+			});
+		auto DataEventEmitter = client->on<uvw::DataEvent>([](const uvw::DataEvent & event, uvw::TCPHandle & client) {
 			if (event.length == 0)
 				return;
 			Document dc;
@@ -43,6 +45,7 @@ void listen(uvw::Loop& loop, int port) {
 				string operation = dc["operation"].GetString();
 				if (operation._Equal("close")) {//close connection
 					client.close();
+					return;
 				}
 				else if (operation._Equal("login")) {
 					response = handler::login(dc);
@@ -61,7 +64,6 @@ void listen(uvw::Loop& loop, int port) {
 			});
 		client->read();
 		});
-	
 	tcp->bind("127.0.0.1", port);
 	tcp->listen();
 }
