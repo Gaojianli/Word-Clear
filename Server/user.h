@@ -10,7 +10,7 @@ public:
 	int count;
 	int level;
 	int id;
-	int exp;
+	int exp = 0;
 };
 
 enum class property {
