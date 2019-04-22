@@ -19,4 +19,5 @@
 #include <iostream>
 #include <mysql+++.h>
 #include "user.h"
+#include "md5.h"
 #endif //PCH_H

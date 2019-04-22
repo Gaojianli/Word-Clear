@@ -61,9 +61,8 @@ void sql::updateSession(std::string session, int id) {
 }
 template<typename T>
 void sql::updateUserOneCol(const char* column, const T& toUpdate, int id) {
-	std::string sqlCommand = "update user set %s = ";
+	std::string sqlCommand = "update user set %s = '";
 	sqlCommand += toUpdate;
-	sqlCommand.append(" where id=%d");
-	std::cout << sqlCommand;
-	//_instance->con.exec(sqlCommand.c_str(), column, id);
+	sqlCommand.append("' where id=%d");
+	_instance->con.exec(sqlCommand.c_str(), column, id);
 }

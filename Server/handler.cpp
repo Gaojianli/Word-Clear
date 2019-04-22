@@ -14,7 +14,7 @@ std::string handler::login(Document& dc) {
 	std::string password = passwordItem->value.GetString();
 	if (sql::queryPassword(username, password)) {
 		auto user = sql::fetchUserByName(username);
-		auto session = username + password + std::to_string(time(nullptr));
+		auto session = MD5(username + password + std::to_string(time(nullptr))).toStr();
 		StringBuffer s;
 		Writer<StringBuffer, Document::EncodingType, ASCII<>> response(s);
 		response.StartObject();
