@@ -5,8 +5,6 @@
 #include "schema.h"
 #include "handler.h"
 #include "sql.h"
-
-#pragma comment(lib,"ws2_32.lib")
 #ifdef _DEBUG
 #pragma comment(lib,"Socketd.lib")
 #else
