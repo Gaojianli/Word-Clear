@@ -38,7 +38,6 @@ std::string handler::login(Document& dc) {
 		response.Key("level");
 		response.Int(user->level);
 		response.EndObject();
-
 		response.EndObject();
 		sql::updateSession(session, user->id);
 		delete user;
