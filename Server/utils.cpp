@@ -1,7 +1,7 @@
 #include "pch.h"
-#include "schema.h"
+#include "utils.h"
 using namespace rapidjson;
-std::string schema::throwError(std::string msg,int code=500){
+std::string utils::throwInfo(std::string msg,int code=500){
 	StringBuffer s;
 	Writer<StringBuffer,Document::EncodingType,ASCII<>> response(s);
 	response.StartObject();
@@ -12,3 +12,4 @@ std::string schema::throwError(std::string msg,int code=500){
 	response.EndObject();
 	return s.GetString();
 }
+
