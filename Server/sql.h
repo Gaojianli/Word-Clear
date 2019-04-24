@@ -23,7 +23,7 @@ private:
 	static sql* _instance;
 	daotk::mysql::connection con;
 };
-
+/*-----------inline methods-----------*/
 template<typename T>
 inline std::vector<User>* sql::fetchUsersByCondition(std::string properties, const T& value) {
 	std::vector<User>* toReturn = nullptr;
@@ -34,7 +34,7 @@ inline std::vector<User>* sql::fetchUsersByCondition(std::string properties, con
 	if constexpr (std::is_same<std::decay<T>::type, bool>::value)
 		sqlCommand += value ? "true" : "false";
 	else
-		sqlCommand += value;
+		sqlCommand += std::to_string((int)value);
 	if constexpr (std::is_same<std::decay<T>::type, string>::value
 		|| std::is_same<std::decay<T>::type, char*>::value)
 		sqlCommand.append("'");
@@ -46,4 +46,23 @@ inline std::vector<User>* sql::fetchUsersByCondition(std::string properties, con
 		});
 	return toReturn;
 }
+
+template<typename T>
+inline void sql::updateUserOneCol(const char* column, const T& toUpdate, int id) {
+	std::string sqlCommand;
+	if constexpr (std::is_same<std::decay<T>::type, string>::value) {
+		sqlCommand = "update user set %s = '";
+		sqlCommand += toUpdate;
+	}
+	else {
+		sqlCommand = "update user set %s = ";
+		sqlCommand += std::to_string((int)toUpdate);
+	}
+	if constexpr (std::is_same<std::decay<T>::type, string>::value)
+		sqlCommand.append("' where id=%d");
+	else
+		sqlCommand.append(" where id=%d");
+	_instance->con.exec(sqlCommand.c_str(), column, id);
+}
+
 #endif // !SQL_H

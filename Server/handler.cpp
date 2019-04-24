@@ -60,6 +60,8 @@ std::string handler::sessionOperationRouter(Document& dc, string& operation) {
 			return getUsers(NULL);
 		else if (operation._Equal("commit"))
 			return commit(user, dc);
+		else if (operation._Equal("updateUser"))
+			return updateUser(user, dc);
 		else {
 			return utils::throwInfo("Operation can't be recognized", 404);
 		}
@@ -172,10 +174,28 @@ std::string handler::commit(user_ptr user, Document& dc) {
 		return utils::throwInfo("Not acceptable!", 406);
 	auto wordDC = data->value.FindMember("word");
 	auto difficultyDC = data->value.FindMember("difficulty");
-	if(wordDC==data->value.MemberEnd()||difficultyDC==data->value.MemberEnd())
+	if (wordDC == data->value.MemberEnd() || difficultyDC == data->value.MemberEnd())
 		return utils::throwInfo("Not acceptable!", 406);
 	auto word = wordDC->value.GetString();
 	auto difficulty = difficultyDC->value.GetInt();
 	sql::addWord(word, difficulty, user->id);
 	return utils::throwInfo("Created", 201);
+}
+
+//One can only update himself
+template<typename user_ptr>
+std::string handler::updateUser(user_ptr user, Document& dc) {
+	auto data = dc.FindMember("data");
+	if (data == dc.MemberEnd())
+		return utils::throwInfo("Not acceptable!", 406);
+	//only these properties can be updated
+	auto countDC = data->value.FindMember("count");
+	if (countDC != data->value.MemberEnd())
+		sql::updateUserOneCol("count", countDC->value.GetInt(), user->id);
+	auto expDC = data->value.FindMember("exp");
+	if (expDC != data->value.MemberEnd())
+		sql::updateUserOneCol("exp", expDC->value.GetInt(), user->id);
+	if (auto exp = expDC->value.GetInt(); exp >= (user->level - 1) * 100)
+		sql::updateUserOneCol("level", exp / 100 + 1, user->id);
+	return utils::throwInfo("Accepted", 202);
 }

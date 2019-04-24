@@ -3,7 +3,7 @@
 using namespace daotk;
 using namespace mysql;
 
-std::vector<User>* sql::fetchUsersByCondition(){
+std::vector<User>* sql::fetchUsersByCondition() {
 	std::vector<User>* toReturn = nullptr;
 	_instance->con.query("select id,name,isPlayer,count,exp,level from user").each([&toReturn](int id, string name, bool isPlayer, int count, int exp, int level) {
 		if (toReturn == nullptr)
@@ -14,7 +14,7 @@ std::vector<User>* sql::fetchUsersByCondition(){
 	return toReturn;
 }
 
-void sql::addWord(const char* word, int difficulty, int committerID){
+void sql::addWord(const char* word, int difficulty, int committerID) {
 	_instance->con.exec("INSERT INTO question(word, level, committer) VALUES('%s', %d, %d)", word, difficulty, committerID);
 }
 
@@ -87,7 +87,7 @@ User sql::fetchUserBySession(const std::string& session) {
 		return User(name, id, isPlayer, count, exp, level);
 	}
 	else
-		return User("",-1);
+		return User("", -1);
 }
 std::vector<Word>* sql::fetchQestion(const int difficulty) {
 	std::vector<Word>* toReturn = nullptr;
@@ -105,10 +105,4 @@ std::vector<Word>* sql::fetchQestion(const int difficulty) {
 	_instance->con.query(sqlCommand.c_str(), difficulty).each(pushFunc);
 	return toReturn;
 }
-template<typename T>
-void sql::updateUserOneCol(const char* column, const T& toUpdate, int id) {
-	std::string sqlCommand = "update user set %s = '";
-	sqlCommand += toUpdate;
-	sqlCommand.append("' where id=%d");
-	_instance->con.exec(sqlCommand.c_str(), column, id);
-}
+
