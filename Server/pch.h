@@ -16,6 +16,8 @@
 #include <list>
 #include <iostream>
 #include <mysql+++.h>
+#include <vector>
 #include "user.h"
+#include "Word.h"
 #include "md5.h"
 #endif //PCH_H

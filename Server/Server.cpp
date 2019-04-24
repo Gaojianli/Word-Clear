@@ -2,9 +2,9 @@
 //
 
 #include "pch.h"
-#include "schema.h"
-#include "handler.h"
+#include "utils.h"
 #include "sql.h"
+#include "handler.h"
 
 bool ctrlhandler(DWORD fdwctrltype);
 
@@ -40,7 +40,7 @@ void listen(uvw::Loop& loop, int port) {
 			temp[event.length] = '\0';
 			string response;
 			if (dc.Parse(temp).HasParseError() || !dc.IsObject())
-				response = schema::throwError("Invaild Request", 406);
+				response = utils::throwInfo("Invaild Request", 406);
 			else if (dc.HasMember("operation")) {
 				string operation = dc["operation"].GetString();
 				if (operation._Equal("close")) {//close connection
@@ -50,12 +50,16 @@ void listen(uvw::Loop& loop, int port) {
 				else if (operation._Equal("login")) {
 					response = handler::login(dc);
 				}
+				else if (dc.HasMember("session")) {
+					response = handler::sessionOperationRouter(dc,operation);
+				}
 				else {
-					response = schema::throwError("Operation can't be recognized", 404);
+					response = utils::throwInfo("Forbidden", 403);
+
 				}
 			}
 			else
-				response = schema::throwError("Invaild operation", 406);
+				response = utils::throwInfo("Invaild operation", 406);
 			auto toWrite = new char[response.size()];
 			memcpy_s(toWrite, response.size(), response.c_str(), response.size());
 			client.tryWrite(toWrite, (unsigned)response.size());
@@ -64,7 +68,7 @@ void listen(uvw::Loop& loop, int port) {
 			});
 		client->read();
 		});
-	tcp->bind("127.0.0.1", port);
+	tcp->bind("0.0.0.0", port);
 	tcp->listen();
 }
 std::shared_ptr<uvw::Loop> loop;
@@ -75,7 +79,7 @@ int main() {
 	loop = uvw::Loop::getDefault();
 	const int port = 4000;
 	listen(*loop, port);
-	cout << "listen at 127.0.0.1:" << port << endl;
+	cout << "listen at 0.0.0.0:" << port << endl;
 	loop->run();
 }
 

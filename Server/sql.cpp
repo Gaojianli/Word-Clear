@@ -3,6 +3,21 @@
 using namespace daotk;
 using namespace mysql;
 
+std::vector<User>* sql::fetchUsersByCondition(){
+	std::vector<User>* toReturn = nullptr;
+	_instance->con.query("select id,name,isPlayer,count,exp,level from user").each([&toReturn](int id, string name, bool isPlayer, int count, int exp, int level) {
+		if (toReturn == nullptr)
+			toReturn = new std::vector<User>();
+		toReturn->push_back(User(name, id, isPlayer, count, exp, level));
+		return true;
+		});
+	return toReturn;
+}
+
+void sql::addWord(const char* word, int difficulty, int committerID){
+	_instance->con.exec("INSERT INTO question(word, level, committer) VALUES('%s', %d, %d)", word, difficulty, committerID);
+}
+
 sql::sql() {
 	con.open({ "localhost","wordclear","lazybones+each","word_clear_game" });
 	if (!con) {
@@ -11,6 +26,7 @@ sql::sql() {
 	}
 	std::cout << "Connect to database successfully!" << std::endl;
 }
+
 
 sql::~sql() {
 	if (con.is_open())
@@ -58,6 +74,36 @@ User* sql::fetchUserByName(const std::string name) {
 
 void sql::updateSession(std::string session, int id) {
 	updateUserOneCol("session", session, id);
+}
+User sql::fetchUserBySession(const std::string& session) {
+	int id;
+	std::string name;
+	bool isPlayer;
+	int count;
+	int exp;
+	int level;
+	auto result = _instance->con.query("select id,name,isPlayer,count,exp,level from user where session like '%s'", session.c_str());
+	if (result.fetch(id, name, isPlayer, count, exp, level)) {
+		return User(name, id, isPlayer, count, exp, level);
+	}
+	else
+		return User("",-1);
+}
+std::vector<Word>* sql::fetchQestion(const int difficulty) {
+	std::vector<Word>* toReturn = nullptr;
+	auto pushFunc = [&toReturn](std::string word, int level, int committer) {
+		if (toReturn == nullptr)
+			toReturn = new std::vector<Word>();
+		toReturn->push_back(Word(word.c_str(), level, committer));
+		return true;
+	};
+	string sqlCommand;
+	if (difficulty < 0)
+		sqlCommand = "select word,level,committer from question";
+	else
+		sqlCommand = "select word,level,committer from question where level=%d";
+	_instance->con.query(sqlCommand.c_str(), difficulty).each(pushFunc);
+	return toReturn;
 }
 template<typename T>
 void sql::updateUserOneCol(const char* column, const T& toUpdate, int id) {
