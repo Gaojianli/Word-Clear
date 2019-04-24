@@ -118,12 +118,13 @@ std::string handler::getQuesiontList(Document& dc) {
 		return utils::throwInfo("Not found", 404);
 }
 
-template<typename ...T>
+template<typename ...T>//we don't need overload function!
 std::string handler::getUsers(const char* condition, T ...args) {
 	std::vector<User>* result;
 	if constexpr (sizeof...(args) == 0)
 		result = sql::fetchUsersByCondition();
 	else
+		//expand the args pack
 		int temp[] = { (result = sql::fetchUsersByCondition(condition, args), 0)... };
 	StringBuffer s;
 	Writer<StringBuffer, Document::EncodingType, ASCII<>> response(s);
