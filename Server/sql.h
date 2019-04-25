@@ -16,6 +16,7 @@ public:
 	template<typename T>
 	static std::vector<User>* fetchUsersByCondition(std::string properties, const T& value);
 	static std::vector<User>* fetchUsersByCondition();
+	static User fetchUserByPropertiesExtremum(std::string properties, bool highest, bool isPlayer);
 	static void addWord(const char* word, int difficulty, int committerID);
 private:
 	sql();
@@ -28,15 +29,15 @@ template<typename T>
 inline std::vector<User>* sql::fetchUsersByCondition(std::string properties, const T& value) {
 	std::vector<User>* toReturn = nullptr;
 	string sqlCommand = "select id,name,isPlayer,count,exp,level from user where %s like ";
-	if constexpr (std::is_same<std::decay<T>::type, string>::value
-		|| std::is_same<std::decay<T>::type, char*>::value)
+	if constexpr (std::is_same_v<std::decay_t<T>, string>
+		|| std::is_same_v<std::decay_t<T>, char*>)
 		sqlCommand.append("'");
-	if constexpr (std::is_same<std::decay<T>::type, bool>::value)
+	if constexpr (std::is_same_v<std::decay_t<T>, bool>)
 		sqlCommand += value ? "true" : "false";
 	else
 		sqlCommand += std::to_string((int)value);
-	if constexpr (std::is_same<std::decay<T>::type, string>::value
-		|| std::is_same<std::decay<T>::type, char*>::value)
+	if constexpr (std::is_same_v<std::decay_t<T>, string>
+		|| std::is_same_v<std::decay_t<T>, char*>)
 		sqlCommand.append("'");
 	_instance->con.query(sqlCommand.c_str(), properties.c_str()).each([&toReturn](int id, string name, bool isPlayer, int count, int exp, int level) {
 		if (toReturn == nullptr)
@@ -50,7 +51,7 @@ inline std::vector<User>* sql::fetchUsersByCondition(std::string properties, con
 template<typename T>
 inline void sql::updateUserOneCol(const char* column, const T& toUpdate, int id) {
 	std::string sqlCommand;
-	if constexpr (std::is_same<std::decay<T>::type, string>::value) {
+	if constexpr (std::is_same_v<std::decay_t<T>, string>) {
 		sqlCommand = "update user set %s = '";
 		sqlCommand += toUpdate;
 	}
@@ -58,7 +59,7 @@ inline void sql::updateUserOneCol(const char* column, const T& toUpdate, int id)
 		sqlCommand = "update user set %s = ";
 		sqlCommand += std::to_string((int)toUpdate);
 	}
-	if constexpr (std::is_same<std::decay<T>::type, string>::value)
+	if constexpr (std::is_same_v<std::decay_t<T>, string>)
 		sqlCommand.append("' where id=%d");
 	else
 		sqlCommand.append(" where id=%d");
