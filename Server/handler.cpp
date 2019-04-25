@@ -62,6 +62,8 @@ std::string handler::sessionOperationRouter(Document& dc, string& operation) {
 			return commit(user, dc);
 		else if (operation._Equal("updateUser"))
 			return updateUser(user, dc);
+		else if (operation._Equal("fetchExtremum"))
+			return fetchExtremum(user, dc);
 		else {
 			return utils::throwInfo("Operation can't be recognized", 404);
 		}
@@ -118,6 +120,63 @@ std::string handler::getQuesiontList(Document& dc) {
 	}
 	else
 		return utils::throwInfo("Not found", 404);
+}
+
+template<typename user_ptr>
+std::string handler::fetchExtremum(user_ptr user, Document& dc) {
+	auto data = dc.FindMember("data");
+	if (data == dc.MemberEnd())
+		return utils::throwInfo("Not acceptable!", 406);
+	auto roleDC = data->value.FindMember("role");
+	auto propertiesDC = data->value.FindMember("property");
+	auto typeDC = data->value.FindMember("type");
+	if (typeDC == data->value.MemberEnd() || propertiesDC == data->value.MemberEnd())
+		return utils::throwInfo("Not acceptable!", 406);
+	string type = typeDC->value.GetString();
+	bool highestFlag;
+	if (type._Equal("highest"))
+		highestFlag = true;
+	else if (type._Equal("lowest"))
+		highestFlag = false;
+	else
+		return utils::throwInfo("Unrecognizable type!", 406);
+	bool isPlayer;//role
+	if (roleDC == data->value.MemberEnd())
+		isPlayer = user->isPlayer;
+	string role = roleDC->value.GetString();
+	if (role._Equal("player"))
+		isPlayer = true;
+	else if (role._Equal("committer"))
+		isPlayer = false;
+	else
+		isPlayer = user->isPlayer;
+	auto&& fetchResult = sql::fetchUserByPropertiesExtremum(propertiesDC->value.GetString(), highestFlag, isPlayer);
+	if (fetchResult.id == -1)
+		return utils::throwInfo("Not found", 404);
+	StringBuffer s;
+	Writer<StringBuffer, Document::EncodingType, ASCII<>> response(s);
+	response.StartObject();
+	response.Key("code");
+	response.Int(200);
+	response.Key("data");
+	response.StartObject();
+	response.Key("id");
+	response.Int(fetchResult.id);
+	response.Key("name");
+	response.String(fetchResult.name.c_str(), fetchResult.name.size(), false);
+	response.Key("isPlayer");
+	response.Bool(fetchResult.isPlayer);
+	response.Key("count");
+	response.Int(fetchResult.count);
+	if (fetchResult.isPlayer) {
+		response.Key("exp");
+		response.Int(fetchResult.exp);
+	}
+	response.Key("level");
+	response.Int(fetchResult.level);
+	response.EndObject();
+	response.EndObject();
+	return s.GetString();
 }
 
 template<typename ...T>//we don't need overload function!

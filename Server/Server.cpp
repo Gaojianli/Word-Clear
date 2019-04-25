@@ -40,7 +40,7 @@ void listen(uvw::Loop& loop, int port) {
 			temp[event.length] = '\0';
 			string response;
 			if (dc.Parse(temp).HasParseError() || !dc.IsObject())
-				response = utils::throwInfo("Invaild Request", 406);
+				response = utils::throwInfo("Invaild JSON data", 406);
 			else if (dc.HasMember("operation")) {
 				string operation = dc["operation"].GetString();
 				if (operation._Equal("close")) {//close connection
