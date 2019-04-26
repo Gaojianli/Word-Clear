@@ -93,6 +93,8 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies />
+      <SubSystem>Windows</SubSystem>
+      <EntryPointSymbol>main</EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -121,6 +123,8 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies />
+      <SubSystem>Windows</SubSystem>
+      <EntryPointSymbol>main</EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -134,19 +138,37 @@
     <ClCompile Include="client.cpp" />
     <ClCompile Include="login.cpp" />
     <ClCompile Include="MainForm.cpp" />
+    <ClCompile Include="registe.cpp" />
+    <ClCompile Include="socketMgnt.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Committer.h" />
     <ClInclude Include="login.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="MainForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="registe.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="socketMgnt.h" />
+    <ClInclude Include="user.h" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="login.resx">
+      <DependentUpon>login.h</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.h</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="registe.resx">
+      <DependentUpon>registe.h</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="app.manifest" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

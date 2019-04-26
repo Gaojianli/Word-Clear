@@ -1,5 +1,7 @@
 ﻿#pragma once
-
+#include "login.h"
+#include "user.h"
+#include "socketMgnt.h"
 namespace ClientGUI {
 
 	using namespace System;
@@ -8,16 +10,24 @@ namespace ClientGUI {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
-
 	/// <summary>
 	/// Summary for MainForm
 	/// </summary>
 	public ref class MainForm : public System::Windows::Forms::Form
 	{
+	public: User^ globalUser;
+	public: socketMgnt^ socketManager;
 	public:
 		MainForm(void)
 		{
 			InitializeComponent();
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
+			socketManager = socketMgnt::getInstance();
+			auto login =gcnew ClientGUI::login(this,socketManager);
+			login->init(globalUser);
+			if (login->ShowDialog() != System::Windows::Forms::DialogResult::OK) {
+				this->Close();
+			}
 			//
 			//TODO: Add the constructor code here
 			//
@@ -57,9 +67,12 @@ namespace ClientGUI {
 			this->ClientSize = System::Drawing::Size(474, 449);
 			this->Name = L"MainForm";
 			this->Text = L"MainForm";
+			this->Load += gcnew System::EventHandler(this, &MainForm::MainForm_Load);
 			this->ResumeLayout(false);
 
 		}
 #pragma endregion
+	private: System::Void MainForm_Load(System::Object^ sender, System::EventArgs^ e) {
+	}
 	};
 }

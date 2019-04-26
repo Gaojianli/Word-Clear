@@ -16,6 +16,9 @@
     <Filter Include="Header Files\Forms">
       <UniqueIdentifier>{3c8049e2-d94d-4f7c-ae49-3e603436d45c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\UserControl">
+      <UniqueIdentifier>{0436c19d-27e5-4e32-8de6-5657d9b39e47}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainForm.h">
@@ -23,6 +26,21 @@
     </ClInclude>
     <ClInclude Include="login.h">
       <Filter>Header Files\Forms</Filter>
+    </ClInclude>
+    <ClInclude Include="registe.h">
+      <Filter>Header Files\UserControl</Filter>
+    </ClInclude>
+    <ClInclude Include="Committer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="user.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="socketMgnt.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -35,5 +53,14 @@
     <ClCompile Include="login.cpp">
       <Filter>Header Files\Forms</Filter>
     </ClCompile>
+    <ClCompile Include="registe.cpp">
+      <Filter>Header Files\UserControl</Filter>
+    </ClCompile>
+    <ClCompile Include="socketMgnt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="app.manifest" />
   </ItemGroup>
 </Project>
