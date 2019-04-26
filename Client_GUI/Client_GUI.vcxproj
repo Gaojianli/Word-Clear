@@ -128,6 +128,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -153,6 +156,7 @@
     <ClInclude Include="registe.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="schema.h" />
     <ClInclude Include="socketMgnt.h" />
     <ClInclude Include="user.h" />
   </ItemGroup>

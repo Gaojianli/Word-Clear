@@ -3,9 +3,7 @@
 public ref class Player : public User
 {
 public:
-	Player(String^ name,int id);
-	Player(String^username, int id, int count, int level,int exp);
-	int exp;
-	~Player();
+	Player(String^ username, int id, String^ session, int count, int level, int exp) :User(username, id, session, true, count, level), exp(exp) {};
+	int exp = 0;
 };
 

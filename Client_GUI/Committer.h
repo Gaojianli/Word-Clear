@@ -4,8 +4,6 @@ public ref class Committer :
 	public User
 {
 public:
-	Committer(String name,int id);
-	Committer(String username, int id, int count, int level);
-	~Committer();
+	Committer(String^ username, int id, String^ session, int count, int level) :User(username, id, session, false, count, level) {};
 };
 

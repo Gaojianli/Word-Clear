@@ -201,7 +201,8 @@ namespace ClientGUI {
 		}
 #pragma endregion
 	private: System::Void passwordBox_TextChanged(System::Object^ sender, System::EventArgs^ e) {
-		button1->Enabled = true;
+		if (usernameBox->Text != String::Empty && passwordBox->Text != String::Empty)
+			button1->Enabled = true;
 	}
 private: System::Void Button1_Click(System::Object^ sender, System::EventArgs^ e) {
 	

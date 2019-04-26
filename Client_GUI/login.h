@@ -23,6 +23,7 @@ namespace ClientGUI {
 		login(System::Windows::Forms::Form^ parent, socketMgnt^ socketManager):parent(parent), socketManager(socketManager){
 			InitializeComponent();
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
+			loginButton->Enabled = false;
 			//
 			//TODO: Add the constructor code here
 			//
@@ -41,11 +42,14 @@ namespace ClientGUI {
 				delete components;
 			}
 		}
-	private: System::Windows::Forms::TextBox^ textBox1;
+	private: System::Windows::Forms::TextBox^ userNameBox;
+	protected:
+
 	protected:
 	private: System::Windows::Forms::Label^ label1;
 	private: System::Windows::Forms::Label^ label2;
-	private: System::Windows::Forms::TextBox^ textBox2;
+	private: System::Windows::Forms::TextBox^ passwordBox;
+
 	private: System::Windows::Forms::Button^ loginButton;
 	private: System::Windows::Forms::Button^ signButton;
 
@@ -62,20 +66,20 @@ namespace ClientGUI {
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
+			this->userNameBox = (gcnew System::Windows::Forms::TextBox());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->label2 = (gcnew System::Windows::Forms::Label());
-			this->textBox2 = (gcnew System::Windows::Forms::TextBox());
+			this->passwordBox = (gcnew System::Windows::Forms::TextBox());
 			this->loginButton = (gcnew System::Windows::Forms::Button());
 			this->signButton = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
 			// 
-			// textBox1
+			// userNameBox
 			// 
-			this->textBox1->Location = System::Drawing::Point(133, 48);
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(222, 26);
-			this->textBox1->TabIndex = 0;
+			this->userNameBox->Location = System::Drawing::Point(133, 48);
+			this->userNameBox->Name = L"userNameBox";
+			this->userNameBox->Size = System::Drawing::Size(222, 26);
+			this->userNameBox->TabIndex = 0;
 			// 
 			// label1
 			// 
@@ -95,13 +99,14 @@ namespace ClientGUI {
 			this->label2->TabIndex = 2;
 			this->label2->Text = L"Password:";
 			// 
-			// textBox2
+			// passwordBox
 			// 
-			this->textBox2->Location = System::Drawing::Point(133, 95);
-			this->textBox2->Name = L"textBox2";
-			this->textBox2->PasswordChar = '*';
-			this->textBox2->Size = System::Drawing::Size(222, 26);
-			this->textBox2->TabIndex = 3;
+			this->passwordBox->Location = System::Drawing::Point(133, 95);
+			this->passwordBox->Name = L"passwordBox";
+			this->passwordBox->PasswordChar = '*';
+			this->passwordBox->Size = System::Drawing::Size(222, 26);
+			this->passwordBox->TabIndex = 3;
+			this->passwordBox->TextChanged += gcnew System::EventHandler(this, &login::PasswordBox_TextChanged);
 			// 
 			// loginButton
 			// 
@@ -111,6 +116,7 @@ namespace ClientGUI {
 			this->loginButton->TabIndex = 4;
 			this->loginButton->Text = L"Sign in";
 			this->loginButton->UseVisualStyleBackColor = true;
+			this->loginButton->Click += gcnew System::EventHandler(this, &login::LoginButton_Click);
 			// 
 			// signButton
 			// 
@@ -129,10 +135,10 @@ namespace ClientGUI {
 			this->ClientSize = System::Drawing::Size(454, 207);
 			this->Controls->Add(this->signButton);
 			this->Controls->Add(this->loginButton);
-			this->Controls->Add(this->textBox2);
+			this->Controls->Add(this->passwordBox);
 			this->Controls->Add(this->label2);
 			this->Controls->Add(this->label1);
-			this->Controls->Add(this->textBox1);
+			this->Controls->Add(this->userNameBox);
 			this->Name = L"login";
 			this->Text = L"Login";
 			this->ResumeLayout(false);
@@ -150,5 +156,16 @@ namespace ClientGUI {
 			this->Show();
 		}
 	}
+private: System::Void LoginButton_Click(System::Object^ sender, System::EventArgs^ e) {
+	auto username = userNameBox->Text;
+	auto password = passwordBox->Text;
+	user = socketManager->login(username, password);
+	parent->Show();
+	this->Close();
+}
+private: System::Void PasswordBox_TextChanged(System::Object^ sender, System::EventArgs^ e) {
+	if (userNameBox->Text != String::Empty && passwordBox->Text != String::Empty)
+		loginButton->Enabled = true;
+}
 };
 }
