@@ -50,6 +50,9 @@ void listen(uvw::Loop& loop, int port) {
 				else if (operation._Equal("login")) {
 					response = handler::login(dc);
 				}
+				else if (operation._Equal("register")) {
+					response = handler::signUP(dc);
+				}
 				else if (dc.HasMember("session")) {
 					response = handler::sessionOperationRouter(dc,operation);
 				}

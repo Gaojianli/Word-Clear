@@ -47,6 +47,51 @@ std::string handler::login(Document& dc) {
 		return utils::throwInfo("Invaild credential", 403);
 }
 
+std::string handler::signUP(Document& dc) {
+	auto data = dc.FindMember("data");
+	if (data == dc.MemberEnd())
+		return utils::throwInfo("Not acceptable!", 406);
+	auto usernameItem = data->value.FindMember("username");
+	auto passwordItem = data->value.FindMember("password");
+	auto isPlayerDC = data->value.FindMember("isPlayer");
+	if (usernameItem == data->value.MemberEnd() || passwordItem == data->value.MemberEnd() || isPlayerDC == data->value.MemberEnd())
+		return utils::throwInfo("Not acceptable!", 406);
+	if (sql::checkDuplicate(usernameItem->value.GetString()))
+		return utils::throwInfo("User existed!", 401);
+	auto password = passwordItem->value.GetString();
+	auto username = usernameItem->value.GetString();
+	auto user = sql::addUser(username, password, isPlayerDC->value.GetBool());
+	auto session = std::move(MD5(user->name + password + std::to_string(time(nullptr))).toStr());
+	StringBuffer s;
+	Writer<StringBuffer, Document::EncodingType, ASCII<>> response(s);
+	response.StartObject();
+	response.Key("code");
+	response.Int(200);
+	response.Key("data");
+	//start data object
+	response.StartObject();
+	response.Key("id");
+	response.Int(user->id);
+	response.Key("username");
+	response.String(username);
+	response.Key("session");
+	response.String(session.c_str());
+	response.Key("isPlayer");
+	response.Bool(user->isPlayer);
+	response.Key("count");
+	response.Int(user->count);
+	response.Key("exp");
+	response.Int(user->exp);
+	response.Key("level");
+	response.Int(user->level);
+	response.EndObject();
+	response.EndObject();
+	sql::updateSession(session, user->id);
+	delete user;
+	return s.GetString();
+}
+
+
 std::string handler::sessionOperationRouter(Document& dc, string& operation) {
 	auto user = std::make_shared<User>(std::move(sql::fetchUserBySession(dc["session"].GetString())));
 	if (user == nullptr)

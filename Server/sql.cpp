@@ -38,6 +38,11 @@ void sql::addWord(const char* word, int difficulty, int committerID) {
 	_instance->con.exec("INSERT INTO question(word, level, committer) VALUES('%s', %d, %d)", word, difficulty, committerID);
 }
 
+User* sql::addUser(const std::string& username, const std::string& password, bool isPlayer) {
+	_instance->con.exec("insert into user(name,password,isPlayer) values('%s','%s',%s)", username.c_str(), password.c_str(), isPlayer ? "true" : "false");
+	return fetchUserByName(username);
+}
+
 sql::sql() {
 	con.open({ "localhost","wordclear","lazybones+each","word_clear_game" });
 	if (!con) {
@@ -70,6 +75,18 @@ bool sql::queryPassword(const std::string username, const std::string password) 
 	prepared_stmt stmt(_instance->con, "select id from user where name like ? and password like ?");
 	int id = -1;//invaild id
 	stmt.bind_param(username, password);
+	stmt.bind_result(id);//if user existed, the id will be override
+	stmt.execute();
+	if (stmt.fetch() && id != -1)
+		return true;
+	else
+		return false;
+}
+
+bool sql::checkDuplicate(const std::string& username) {
+	prepared_stmt stmt(_instance->con, "select id from user where name like ?");
+	int id = -1;//invaild id
+	stmt.bind_param(username);
 	stmt.bind_result(id);//if user existed, the id will be override
 	stmt.execute();
 	if (stmt.fetch() && id != -1)
