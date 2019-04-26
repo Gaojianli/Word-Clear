@@ -9,6 +9,7 @@ public ref class socketMgnt
 public:
 	static socketMgnt^ getInstance();
 	User^ login(String^ username, String^ password);
+	User^ signup(String^ username, String^ password, bool isPlayer);
 private:
 	static socketMgnt^ _instance;
 	String^ sendAndRec(String^ toSend);

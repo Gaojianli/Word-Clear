@@ -18,16 +18,18 @@ namespace ClientGUI {
 	{
 	private: User^ user;
 	private: socketMgnt^ socketManager;
+	private: System::Windows::Forms::Form^ parent;
 	public:
-		registe(User^ userPtr, socketMgnt^ socketManager):user(userPtr),socketManager(socketManager)
+		registe(User^ userPtr, socketMgnt^ socketManager) :user(userPtr), socketManager(socketManager)
 		{
 			InitializeComponent();
-			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			//
 			//TODO: Add the constructor code here
 			//
 		}
-
+	public:void setParent(System::Windows::Forms::Form^ p) {
+		parent = p;
+	}
 	protected:
 		/// <summary>
 		/// Clean up any resources being used.
@@ -44,10 +46,14 @@ namespace ClientGUI {
 	private: System::Windows::Forms::Label^ label2;
 	private: System::Windows::Forms::Label^ label3;
 	private: System::Windows::Forms::GroupBox^ groupBox1;
-	private: System::Windows::Forms::Button^ button2;
-	private: System::Windows::Forms::Button^ button1;
-	private: System::Windows::Forms::RadioButton^ radioButton2;
-	private: System::Windows::Forms::RadioButton^ radioButton1;
+	private: System::Windows::Forms::Button^ cancelButton;
+
+	private: System::Windows::Forms::Button^ signButton;
+	private: System::Windows::Forms::RadioButton^ playerRadio;
+
+
+	private: System::Windows::Forms::RadioButton^ committerRadio;
+
 	private: System::Windows::Forms::TextBox^ passwordBox;
 	private: System::Windows::Forms::TextBox^ usernameBox;
 
@@ -57,7 +63,7 @@ namespace ClientGUI {
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		System::ComponentModel::Container ^components;
+		System::ComponentModel::Container^ components;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -70,10 +76,10 @@ namespace ClientGUI {
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
-			this->button2 = (gcnew System::Windows::Forms::Button());
-			this->button1 = (gcnew System::Windows::Forms::Button());
-			this->radioButton2 = (gcnew System::Windows::Forms::RadioButton());
-			this->radioButton1 = (gcnew System::Windows::Forms::RadioButton());
+			this->cancelButton = (gcnew System::Windows::Forms::Button());
+			this->signButton = (gcnew System::Windows::Forms::Button());
+			this->playerRadio = (gcnew System::Windows::Forms::RadioButton());
+			this->committerRadio = (gcnew System::Windows::Forms::RadioButton());
 			this->passwordBox = (gcnew System::Windows::Forms::TextBox());
 			this->usernameBox = (gcnew System::Windows::Forms::TextBox());
 			this->groupBox1->SuspendLayout();
@@ -108,10 +114,10 @@ namespace ClientGUI {
 			// 
 			// groupBox1
 			// 
-			this->groupBox1->Controls->Add(this->button2);
-			this->groupBox1->Controls->Add(this->button1);
-			this->groupBox1->Controls->Add(this->radioButton2);
-			this->groupBox1->Controls->Add(this->radioButton1);
+			this->groupBox1->Controls->Add(this->cancelButton);
+			this->groupBox1->Controls->Add(this->signButton);
+			this->groupBox1->Controls->Add(this->playerRadio);
+			this->groupBox1->Controls->Add(this->committerRadio);
 			this->groupBox1->Controls->Add(this->passwordBox);
 			this->groupBox1->Controls->Add(this->usernameBox);
 			this->groupBox1->Controls->Add(this->label1);
@@ -120,52 +126,52 @@ namespace ClientGUI {
 			this->groupBox1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->groupBox1->Location = System::Drawing::Point(0, 0);
 			this->groupBox1->Name = L"groupBox1";
-			this->groupBox1->Size = System::Drawing::Size(426, 206);
+			this->groupBox1->Size = System::Drawing::Size(402, 206);
 			this->groupBox1->TabIndex = 5;
 			this->groupBox1->TabStop = false;
 			// 
-			// button2
+			// cancelButton
 			// 
-			this->button2->Location = System::Drawing::Point(245, 152);
-			this->button2->Name = L"button2";
-			this->button2->Size = System::Drawing::Size(77, 32);
-			this->button2->TabIndex = 11;
-			this->button2->Text = L"Cancel";
-			this->button2->UseVisualStyleBackColor = true;
-			this->button2->Click += gcnew System::EventHandler(this, &registe::Button2_Click);
+			this->cancelButton->Location = System::Drawing::Point(245, 152);
+			this->cancelButton->Name = L"cancelButton";
+			this->cancelButton->Size = System::Drawing::Size(77, 32);
+			this->cancelButton->TabIndex = 11;
+			this->cancelButton->Text = L"Cancel";
+			this->cancelButton->UseVisualStyleBackColor = true;
+			this->cancelButton->Click += gcnew System::EventHandler(this, &registe::cancelButton_Click);
 			// 
-			// button1
+			// signButton
 			// 
-			this->button1->Enabled = false;
-			this->button1->Location = System::Drawing::Point(136, 152);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(77, 32);
-			this->button1->TabIndex = 10;
-			this->button1->Text = L"Confirm";
-			this->button1->UseVisualStyleBackColor = true;
-			this->button1->Click += gcnew System::EventHandler(this, &registe::Button1_Click);
+			this->signButton->Enabled = false;
+			this->signButton->Location = System::Drawing::Point(136, 152);
+			this->signButton->Name = L"signButton";
+			this->signButton->Size = System::Drawing::Size(77, 32);
+			this->signButton->TabIndex = 10;
+			this->signButton->Text = L"Confirm";
+			this->signButton->UseVisualStyleBackColor = true;
+			this->signButton->Click += gcnew System::EventHandler(this, &registe::signButton_Click);
 			// 
-			// radioButton2
+			// playerRadio
 			// 
-			this->radioButton2->AutoSize = true;
-			this->radioButton2->Location = System::Drawing::Point(240, 109);
-			this->radioButton2->Name = L"radioButton2";
-			this->radioButton2->Size = System::Drawing::Size(77, 24);
-			this->radioButton2->TabIndex = 9;
-			this->radioButton2->Text = L"Player";
-			this->radioButton2->UseVisualStyleBackColor = true;
+			this->playerRadio->AutoSize = true;
+			this->playerRadio->Location = System::Drawing::Point(240, 109);
+			this->playerRadio->Name = L"playerRadio";
+			this->playerRadio->Size = System::Drawing::Size(77, 24);
+			this->playerRadio->TabIndex = 9;
+			this->playerRadio->Text = L"Player";
+			this->playerRadio->UseVisualStyleBackColor = true;
 			// 
-			// radioButton1
+			// committerRadio
 			// 
-			this->radioButton1->AutoSize = true;
-			this->radioButton1->Checked = true;
-			this->radioButton1->Location = System::Drawing::Point(140, 109);
-			this->radioButton1->Name = L"radioButton1";
-			this->radioButton1->Size = System::Drawing::Size(94, 24);
-			this->radioButton1->TabIndex = 8;
-			this->radioButton1->TabStop = true;
-			this->radioButton1->Text = L"Comitter";
-			this->radioButton1->UseVisualStyleBackColor = true;
+			this->committerRadio->AutoSize = true;
+			this->committerRadio->Checked = true;
+			this->committerRadio->Location = System::Drawing::Point(140, 109);
+			this->committerRadio->Name = L"committerRadio";
+			this->committerRadio->Size = System::Drawing::Size(94, 24);
+			this->committerRadio->TabIndex = 8;
+			this->committerRadio->TabStop = true;
+			this->committerRadio->Text = L"Comitter";
+			this->committerRadio->UseVisualStyleBackColor = true;
 			// 
 			// passwordBox
 			// 
@@ -188,11 +194,15 @@ namespace ClientGUI {
 			// 
 			// registe
 			// 
+			this->AcceptButton = this->signButton;
 			this->AutoScaleDimensions = System::Drawing::SizeF(9, 20);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(426, 206);
+			this->ClientSize = System::Drawing::Size(402, 206);
 			this->Controls->Add(this->groupBox1);
+			this->MaximizeBox = false;
+			this->MinimizeBox = false;
 			this->Name = L"registe";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->Text = L"Sign Up";
 			this->groupBox1->ResumeLayout(false);
 			this->groupBox1->PerformLayout();
@@ -202,13 +212,22 @@ namespace ClientGUI {
 #pragma endregion
 	private: System::Void passwordBox_TextChanged(System::Object^ sender, System::EventArgs^ e) {
 		if (usernameBox->Text != String::Empty && passwordBox->Text != String::Empty)
-			button1->Enabled = true;
+			signButton->Enabled = true;
+		else
+			signButton->Enabled = false;
 	}
-private: System::Void Button1_Click(System::Object^ sender, System::EventArgs^ e) {
-	
-}
-private: System::Void Button2_Click(System::Object^ sender, System::EventArgs^ e) {
-	this->DialogResult = Windows::Forms::DialogResult::Cancel;
-}
-};
+	private: System::Void signButton_Click(System::Object^ sender, System::EventArgs^ e) {
+		user = socketManager->signup(usernameBox->Text, passwordBox->Text, playerRadio->Checked);
+		if (user) {
+			//set parent's user by using reflection 
+			auto t = parent->GetType();
+			auto parentUser = t->GetProperty("user");
+			parentUser->SetValue(parent, user);
+			this->DialogResult = Windows::Forms::DialogResult::OK;
+		}
+	}
+	private: System::Void cancelButton_Click(System::Object^ sender, System::EventArgs^ e) {
+		this->DialogResult = Windows::Forms::DialogResult::Cancel;
+	}
+	};
 }

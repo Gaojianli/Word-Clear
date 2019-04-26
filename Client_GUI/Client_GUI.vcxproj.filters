@@ -45,6 +45,12 @@
     <ClInclude Include="schema.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PlayerMainControl.h">
+      <Filter>Header Files\UserControl</Filter>
+    </ClInclude>
+    <ClInclude Include="CommitterMainControl.h">
+      <Filter>Header Files\UserControl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainForm.cpp">
@@ -53,14 +59,11 @@
     <ClCompile Include="client.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="login.cpp">
-      <Filter>Header Files\Forms</Filter>
-    </ClCompile>
-    <ClCompile Include="registe.cpp">
-      <Filter>Header Files\UserControl</Filter>
-    </ClCompile>
     <ClCompile Include="socketMgnt.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerMainControl.cpp">
+      <Filter>Header Files\UserControl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

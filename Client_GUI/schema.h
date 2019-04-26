@@ -14,3 +14,10 @@ public:
 	String^ username;
 	String^ password;
 };
+public ref class signUpSchema {
+public:
+	signUpSchema(String^ username, String^ password, bool isPlayer) :username(username), password(password), isPlayer(isPlayer){};
+	String^ username;
+	String^ password;
+	bool isPlayer;
+ };

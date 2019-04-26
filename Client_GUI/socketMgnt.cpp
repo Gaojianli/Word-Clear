@@ -40,11 +40,51 @@ User^ socketMgnt::login(String^ username, String^ password) {
 	int exp;
 	try {
 		jo = JObject::Parse(response);
-		if ((int)jo["code"]==200) {
-			auto data = jo["data"];
+		auto data = jo["data"];
+		switch (int code = (int)jo["code"];code){
+		case 200:
 			name = (String^)data["username"];
 			session = (String^)data["session"];
 			isPlayer = (bool)data["isPlayer"];
+			count = (int)data["count"];
+			level = (int)data["level"];
+			id = (int)data["id"];
+			if (isPlayer)
+				exp = (int)data["exp"];
+			break;
+		default:
+			System::Windows::Forms::MessageBox::Show((String^)jo["msg"], "Error " + code.ToString());
+			return nullptr;
+		}
+	}
+	catch (Exception^ e) {
+		System::Windows::Forms::MessageBox::Show("Invaild response" + e->ToString(), "Error");
+		System::Environment::Exit(255);
+	}
+	User^ user;
+	if (isPlayer)
+		user = gcnew Player(name, id, session, count, level, exp);
+	else
+		user = gcnew Committer(name, id, session, count, level);
+	return user;
+}
+
+User^ socketMgnt::signup(String^ username, String^ password, bool isPlayer) {
+	auto json = JsonConvert::SerializeObject(gcnew schema("register", gcnew signUpSchema(username, password, isPlayer)));
+	auto response = sendAndRec(json);
+	JObject^ jo;
+	String^ name;
+	String^ session;
+	int count;
+	int level;
+	int id;
+	int exp;
+	try {
+		jo = JObject::Parse(response);
+		if ((int)jo["code"] == 200) {
+			auto data = jo["data"];
+			name = (String^)data["username"];
+			session = (String^)data["session"];
 			count = (int)data["count"];
 			level = (int)data["level"];
 			id = (int)data["id"];
@@ -65,6 +105,7 @@ User^ socketMgnt::login(String^ username, String^ password) {
 		user = gcnew Committer(name, id, session, count, level);
 	return user;
 }
+
 String^ socketMgnt::sendAndRec(String^ toSend) {
 	auto sendByte = Encoding::Default->ASCII->GetBytes(toSend);
 	connection->Send(sendByte);

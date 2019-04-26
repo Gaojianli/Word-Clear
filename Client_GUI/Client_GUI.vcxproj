@@ -90,6 +90,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalDependencies />
@@ -120,6 +121,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalDependencies />
@@ -139,13 +141,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="client.cpp" />
-    <ClCompile Include="login.cpp" />
     <ClCompile Include="MainForm.cpp" />
-    <ClCompile Include="registe.cpp" />
+    <ClCompile Include="PlayerMainControl.cpp" />
     <ClCompile Include="socketMgnt.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Committer.h" />
+    <ClInclude Include="CommitterMainControl.h">
+      <FileType>CppControl</FileType>
+    </ClInclude>
     <ClInclude Include="login.h">
       <FileType>CppForm</FileType>
     </ClInclude>
@@ -153,6 +157,9 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerMainControl.h">
+      <FileType>CppControl</FileType>
+    </ClInclude>
     <ClInclude Include="registe.h">
       <FileType>CppForm</FileType>
     </ClInclude>
