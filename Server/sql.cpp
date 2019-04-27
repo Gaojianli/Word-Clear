@@ -34,8 +34,19 @@ User sql::fetchUserByPropertiesExtremum(std::string properties, bool highest, bo
 		return User("", -1);
 }
 
-void sql::addWord(const char* word, int difficulty, int committerID) {
-	_instance->con.exec("INSERT INTO question(word, level, committer) VALUES('%s', %d, %d)", word, difficulty, committerID);
+bool sql::addWord(const char* word, int difficulty, int committerID) {
+	//check for duplicate
+	prepared_stmt stmt(_instance->con, "select committer from question where word like ?");
+	int committer = -1;//invaild id
+	stmt.bind_param(word);
+	stmt.bind_result(committer);//if word existed, the id will be override
+	stmt.execute();
+	if (stmt.fetch() || committer != -1) 
+		return false;
+	else {
+		_instance->con.exec("INSERT INTO question(word, level, committer) VALUES('%s', %d, %d)", word, difficulty, committerID);
+		return true;
+	}
 }
 
 User* sql::addUser(const std::string& username, const std::string& password, bool isPlayer) {
@@ -83,7 +94,7 @@ bool sql::queryPassword(const std::string username, const std::string password) 
 		return false;
 }
 
-bool sql::checkDuplicate(const std::string& username) {
+bool sql::checkDuplicateUser(const std::string& username) {
 	prepared_stmt stmt(_instance->con, "select id from user where name like ?");
 	int id = -1;//invaild id
 	stmt.bind_param(username);

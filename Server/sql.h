@@ -8,7 +8,7 @@ public:
 	static void close();
 	static User* fetchUserByName(const std::string name);
 	static bool queryPassword(const std::string username, const std::string password);
-	static bool checkDuplicate(const std::string& username);
+	static bool checkDuplicateUser(const std::string& username);
 	template<typename T>
 	static void updateUserOneCol(const char* column, const T& toUpdate, int id);
 	static void updateSession(std::string session, int id);
@@ -18,7 +18,7 @@ public:
 	static std::vector<User>* fetchUsersByCondition(std::string properties, const T& value);
 	static std::vector<User>* fetchUsersByCondition();
 	static User fetchUserByPropertiesExtremum(std::string properties, bool highest, bool isPlayer);
-	static void addWord(const char* word, int difficulty, int committerID);
+	static bool addWord(const char* word, int difficulty, int committerID);
 	static User* addUser(const std::string& username, const std::string& password, bool isPlayer);
 private:
 	sql();

@@ -56,7 +56,7 @@ std::string handler::signUP(Document& dc) {
 	auto isPlayerDC = data->value.FindMember("isPlayer");
 	if (usernameItem == data->value.MemberEnd() || passwordItem == data->value.MemberEnd() || isPlayerDC == data->value.MemberEnd())
 		return utils::throwInfo("Not acceptable!", 406);
-	if (sql::checkDuplicate(usernameItem->value.GetString()))
+	if (sql::checkDuplicateUser(usernameItem->value.GetString()))
 		return utils::throwInfo("User existed!", 401);
 	auto password = passwordItem->value.GetString();
 	auto username = usernameItem->value.GetString();
