@@ -283,6 +283,7 @@ std::string handler::commit(user_ptr user, Document& dc) {
 	auto word = wordDC->value.GetString();
 	auto difficulty = difficultyDC->value.GetInt();
 	sql::addWord(word, difficulty, user->id);
+	sql::updateUserOneCol("count", user->count + 1, user->id);
 	return utils::throwInfo("Created", 201);
 }
 
