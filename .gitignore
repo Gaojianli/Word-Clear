@@ -341,3 +341,4 @@ healthchecksdb
 
 Client/database.db
 *.db
+*.exe
