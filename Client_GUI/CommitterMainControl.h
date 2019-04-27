@@ -17,6 +17,18 @@ namespace ClientGUI {
 	public ref class CommitterMainControl : public System::Windows::Forms::UserControl
 	{
 	public: Committer^ user;
+	private: System::Windows::Forms::Label^ countLabel;
+	public:
+	private: System::Windows::Forms::Label^ label3;
+	private: System::Windows::Forms::Label^ levelLabel;
+	private: System::Windows::Forms::Label^ label2;
+	private: System::Windows::Forms::Label^ userNameLabel;
+	private: System::Windows::Forms::Label^ label1;
+	private: System::Windows::Forms::GroupBox^ groupBox1;
+	private: System::Windows::Forms::Button^ quitButton;
+	private: System::Windows::Forms::Button^ searchBUtton;
+	private: System::Windows::Forms::Button^ rankButton;
+	private: System::Windows::Forms::Button^ commitButton;
 	public: socketMgnt^ socketManager;
 	public:
 		CommitterMainControl(Committer^ user, socketMgnt^ socketManager) :user(user), socketManager(socketManager)
@@ -52,8 +64,147 @@ namespace ClientGUI {
 		/// </summary>
 		void InitializeComponent(void)
 		{
+			this->countLabel = (gcnew System::Windows::Forms::Label());
+			this->label3 = (gcnew System::Windows::Forms::Label());
+			this->levelLabel = (gcnew System::Windows::Forms::Label());
+			this->label2 = (gcnew System::Windows::Forms::Label());
+			this->userNameLabel = (gcnew System::Windows::Forms::Label());
+			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
+			this->quitButton = (gcnew System::Windows::Forms::Button());
+			this->searchBUtton = (gcnew System::Windows::Forms::Button());
+			this->rankButton = (gcnew System::Windows::Forms::Button());
+			this->commitButton = (gcnew System::Windows::Forms::Button());
+			this->groupBox1->SuspendLayout();
+			this->SuspendLayout();
+			// 
+			// countLabel
+			// 
+			this->countLabel->AutoSize = true;
+			this->countLabel->Location = System::Drawing::Point(843, 35);
+			this->countLabel->Name = L"countLabel";
+			this->countLabel->Size = System::Drawing::Size(89, 29);
+			this->countLabel->TabIndex = 13;
+			this->countLabel->Text = L"{count}";
+			// 
+			// label3
+			// 
+			this->label3->AutoSize = true;
+			this->label3->Location = System::Drawing::Point(591, 35);
+			this->label3->Name = L"label3";
+			this->label3->Size = System::Drawing::Size(246, 29);
+			this->label3->TabIndex = 12;
+			this->label3->Text = L"Committed questions:";
+			// 
+			// levelLabel
+			// 
+			this->levelLabel->AutoSize = true;
+			this->levelLabel->Location = System::Drawing::Point(480, 35);
+			this->levelLabel->Name = L"levelLabel";
+			this->levelLabel->Size = System::Drawing::Size(82, 29);
+			this->levelLabel->TabIndex = 11;
+			this->levelLabel->Text = L"{level}";
+			// 
+			// label2
+			// 
+			this->label2->AutoSize = true;
+			this->label2->Location = System::Drawing::Point(412, 35);
+			this->label2->Name = L"label2";
+			this->label2->Size = System::Drawing::Size(77, 29);
+			this->label2->TabIndex = 10;
+			this->label2->Text = L"Level:";
+			// 
+			// userNameLabel
+			// 
+			this->userNameLabel->AutoSize = true;
+			this->userNameLabel->Location = System::Drawing::Point(243, 35);
+			this->userNameLabel->Name = L"userNameLabel";
+			this->userNameLabel->Size = System::Drawing::Size(138, 29);
+			this->userNameLabel->TabIndex = 9;
+			this->userNameLabel->Text = L"{username}";
+			// 
+			// label1
+			// 
+			this->label1->AutoSize = true;
+			this->label1->Location = System::Drawing::Point(170, 35);
+			this->label1->Name = L"label1";
+			this->label1->Size = System::Drawing::Size(84, 29);
+			this->label1->TabIndex = 8;
+			this->label1->Text = L"Name:";
+			// 
+			// groupBox1
+			// 
+			this->groupBox1->Controls->Add(this->quitButton);
+			this->groupBox1->Controls->Add(this->searchBUtton);
+			this->groupBox1->Controls->Add(this->rankButton);
+			this->groupBox1->Controls->Add(this->commitButton);
+			this->groupBox1->Location = System::Drawing::Point(93, 119);
+			this->groupBox1->Name = L"groupBox1";
+			this->groupBox1->Size = System::Drawing::Size(889, 369);
+			this->groupBox1->TabIndex = 14;
+			this->groupBox1->TabStop = false;
+			this->groupBox1->Text = L"Operations";
+			// 
+			// quitButton
+			// 
+			this->quitButton->Location = System::Drawing::Point(521, 215);
+			this->quitButton->Name = L"quitButton";
+			this->quitButton->Size = System::Drawing::Size(218, 82);
+			this->quitButton->TabIndex = 3;
+			this->quitButton->Text = L"Exit";
+			this->quitButton->UseVisualStyleBackColor = true;
+			// 
+			// searchBUtton
+			// 
+			this->searchBUtton->Location = System::Drawing::Point(122, 215);
+			this->searchBUtton->Name = L"searchBUtton";
+			this->searchBUtton->Size = System::Drawing::Size(218, 82);
+			this->searchBUtton->TabIndex = 2;
+			this->searchBUtton->Text = L"Search";
+			this->searchBUtton->UseVisualStyleBackColor = true;
+			// 
+			// rankButton
+			// 
+			this->rankButton->Location = System::Drawing::Point(521, 87);
+			this->rankButton->Name = L"rankButton";
+			this->rankButton->Size = System::Drawing::Size(218, 82);
+			this->rankButton->TabIndex = 1;
+			this->rankButton->Text = L"Ranks";
+			this->rankButton->UseVisualStyleBackColor = true;
+			// 
+			// commitButton
+			// 
+			this->commitButton->Location = System::Drawing::Point(122, 87);
+			this->commitButton->Name = L"commitButton";
+			this->commitButton->Size = System::Drawing::Size(218, 82);
+			this->commitButton->TabIndex = 0;
+			this->commitButton->Text = L"Commit";
+			this->commitButton->UseVisualStyleBackColor = true;
+			// 
+			// CommitterMainControl
+			// 
+			this->AutoScaleDimensions = System::Drawing::SizeF(14, 29);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+			this->Controls->Add(this->groupBox1);
+			this->Controls->Add(this->countLabel);
+			this->Controls->Add(this->label3);
+			this->Controls->Add(this->levelLabel);
+			this->Controls->Add(this->label2);
+			this->Controls->Add(this->userNameLabel);
+			this->Controls->Add(this->label1);
+			this->Name = L"CommitterMainControl";
+			this->Size = System::Drawing::Size(1072, 551);
+			this->Load += gcnew System::EventHandler(this, &CommitterMainControl::CommitterMainControl_Load);
+			this->groupBox1->ResumeLayout(false);
+			this->ResumeLayout(false);
+			this->PerformLayout();
+
 		}
 #pragma endregion
-	};
+	private: System::Void CommitterMainControl_Load(System::Object^ sender, System::EventArgs^ e) {
+		userNameLabel->Text = user->name + " (UID:" + user->id.ToString() + ")";
+		levelLabel->Text = user->level.ToString();
+		countLabel->Text = user->count.ToString();
+	}
+};
 }

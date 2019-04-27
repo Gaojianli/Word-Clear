@@ -19,7 +19,6 @@ namespace ClientGUI {
 	{
 	public: property User^ globalUser;
 	public: socketMgnt^ socketManager;
-	private: Panel^ panel;
 	public:
 		MainForm(void)
 		{
@@ -32,20 +31,6 @@ namespace ClientGUI {
 				this->Close();
 				System::Environment::Exit(2);
 			}
-			//fill the windows with the user control
-			System::Windows::Forms::UserControl^ control;
-			if (globalUser->isPlayer)
-				control = gcnew ClientGUI::PlayerMainControl(dynamic_cast<Player^>(globalUser), socketManager);
-			else
-				control= gcnew ClientGUI::CommitterMainControl(dynamic_cast<Committer^>(globalUser), socketManager);
-			control->Location = Point(0, 0);
-			this->panel = gcnew Panel();
-			this->panel->Controls->Add(control);
-			this->Width = control->Width;
-			this->Height = control->Height;
-			this->panel->Location = Point(0, panel->Location.Y);
-			this->panel->Size = control->Size;
-			this->Size = control->Size;
 			//
 			//TODO: Add the constructor code here
 			//
@@ -62,6 +47,8 @@ namespace ClientGUI {
 				delete components;
 			}
 		}
+	private: System::Windows::Forms::Panel^ panel1;
+	protected:
 
 	private:
 		/// <summary>
@@ -76,13 +63,24 @@ namespace ClientGUI {
 		/// </summary>
 		void InitializeComponent(void)
 		{
+			this->panel1 = (gcnew System::Windows::Forms::Panel());
 			this->SuspendLayout();
+			// 
+			// panel1
+			// 
+			this->panel1->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->panel1->Location = System::Drawing::Point(0, 0);
+			this->panel1->Name = L"panel1";
+			this->panel1->Size = System::Drawing::Size(650, 376);
+			this->panel1->TabIndex = 0;
 			// 
 			// MainForm
 			// 
-			this->AutoScaleDimensions = System::Drawing::SizeF(9, 20);
+			this->AutoScaleDimensions = System::Drawing::SizeF(14, 29);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(418, 259);
+			this->ClientSize = System::Drawing::Size(650, 376);
+			this->Controls->Add(this->panel1);
+			this->Margin = System::Windows::Forms::Padding(5, 4, 5, 4);
 			this->Name = L"MainForm";
 			this->Text = L"Word Clear Game";
 			this->Load += gcnew System::EventHandler(this, &MainForm::MainForm_Load);
@@ -91,6 +89,21 @@ namespace ClientGUI {
 		}
 #pragma endregion
 	private: System::Void MainForm_Load(System::Object^ sender, System::EventArgs^ e) {
+		//fill the windows with the user control
+		System::Windows::Forms::UserControl^ control;
+		if (globalUser->isPlayer)
+			control = gcnew ClientGUI::PlayerMainControl(dynamic_cast<Player^>(globalUser), socketManager);
+		else
+			control = gcnew ClientGUI::CommitterMainControl(dynamic_cast<Committer^>(globalUser), socketManager);
+		control->Location = Point(0, 0);
+		this->panel1->Controls->Add(control);
+		this->Width = control->Width;
+		this->Height = control->Height;
+		this->panel1->Location = Point(0, panel1->Location.Y);
+		this->panel1->Size = control->Size;
+		this->Size = control->Size;
+		this->Height = this->Height + 80;
+		GC::Collect();
 	}
 	};
 }

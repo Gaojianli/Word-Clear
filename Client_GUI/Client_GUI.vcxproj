@@ -142,10 +142,12 @@
   <ItemGroup>
     <ClCompile Include="client.cpp" />
     <ClCompile Include="MainForm.cpp" />
-    <ClCompile Include="PlayerMainControl.cpp" />
     <ClCompile Include="socketMgnt.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="commit.h">
+      <FileType>CppControl</FileType>
+    </ClInclude>
     <ClInclude Include="Committer.h" />
     <ClInclude Include="CommitterMainControl.h">
       <FileType>CppControl</FileType>
@@ -168,11 +170,20 @@
     <ClInclude Include="user.h" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="commit.resx">
+      <DependentUpon>commit.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommitterMainControl.resx">
+      <DependentUpon>CommitterMainControl.h</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="login.resx">
       <DependentUpon>login.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PlayerMainControl.resx">
+      <DependentUpon>PlayerMainControl.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="registe.resx">
       <DependentUpon>registe.h</DependentUpon>

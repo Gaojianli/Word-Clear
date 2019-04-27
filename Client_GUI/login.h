@@ -17,13 +17,11 @@ namespace ClientGUI {
 	public ref class login : public System::Windows::Forms::Form
 	{
 	private: System::Windows::Forms::Form^ parent;
-	public: User^ user;
+	public: property User^ user;
 	public: socketMgnt^ socketManager;
 	public:
 		login(System::Windows::Forms::Form^ parent, socketMgnt^ socketManager):parent(parent), socketManager(socketManager){
 			InitializeComponent();
-			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
-			loginButton->Enabled = false;
 			//
 			//TODO: Add the constructor code here
 			//
@@ -76,43 +74,49 @@ namespace ClientGUI {
 			// 
 			// userNameBox
 			// 
-			this->userNameBox->Location = System::Drawing::Point(133, 48);
+			this->userNameBox->Location = System::Drawing::Point(207, 70);
+			this->userNameBox->Margin = System::Windows::Forms::Padding(5, 4, 5, 4);
 			this->userNameBox->Name = L"userNameBox";
-			this->userNameBox->Size = System::Drawing::Size(222, 26);
+			this->userNameBox->Size = System::Drawing::Size(343, 35);
 			this->userNameBox->TabIndex = 0;
 			// 
 			// label1
 			// 
 			this->label1->AutoSize = true;
-			this->label1->Location = System::Drawing::Point(39, 51);
+			this->label1->Location = System::Drawing::Point(61, 74);
+			this->label1->Margin = System::Windows::Forms::Padding(5, 0, 5, 0);
 			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(87, 20);
+			this->label1->Size = System::Drawing::Size(130, 29);
 			this->label1->TabIndex = 1;
 			this->label1->Text = L"Username:";
 			// 
 			// label2
 			// 
 			this->label2->AutoSize = true;
-			this->label2->Location = System::Drawing::Point(44, 98);
+			this->label2->Location = System::Drawing::Point(68, 142);
+			this->label2->Margin = System::Windows::Forms::Padding(5, 0, 5, 0);
 			this->label2->Name = L"label2";
-			this->label2->Size = System::Drawing::Size(82, 20);
+			this->label2->Size = System::Drawing::Size(126, 29);
 			this->label2->TabIndex = 2;
 			this->label2->Text = L"Password:";
 			// 
 			// passwordBox
 			// 
-			this->passwordBox->Location = System::Drawing::Point(133, 95);
+			this->passwordBox->Location = System::Drawing::Point(207, 138);
+			this->passwordBox->Margin = System::Windows::Forms::Padding(5, 4, 5, 4);
 			this->passwordBox->Name = L"passwordBox";
 			this->passwordBox->PasswordChar = '*';
-			this->passwordBox->Size = System::Drawing::Size(222, 26);
+			this->passwordBox->Size = System::Drawing::Size(343, 35);
 			this->passwordBox->TabIndex = 3;
 			this->passwordBox->TextChanged += gcnew System::EventHandler(this, &login::PasswordBox_TextChanged);
 			// 
 			// loginButton
 			// 
-			this->loginButton->Location = System::Drawing::Point(133, 143);
+			this->loginButton->Enabled = false;
+			this->loginButton->Location = System::Drawing::Point(207, 207);
+			this->loginButton->Margin = System::Windows::Forms::Padding(5, 4, 5, 4);
 			this->loginButton->Name = L"loginButton";
-			this->loginButton->Size = System::Drawing::Size(81, 34);
+			this->loginButton->Size = System::Drawing::Size(126, 49);
 			this->loginButton->TabIndex = 4;
 			this->loginButton->Text = L"Sign in";
 			this->loginButton->UseVisualStyleBackColor = true;
@@ -120,9 +124,10 @@ namespace ClientGUI {
 			// 
 			// signButton
 			// 
-			this->signButton->Location = System::Drawing::Point(274, 143);
+			this->signButton->Location = System::Drawing::Point(426, 207);
+			this->signButton->Margin = System::Windows::Forms::Padding(5, 4, 5, 4);
 			this->signButton->Name = L"signButton";
-			this->signButton->Size = System::Drawing::Size(81, 34);
+			this->signButton->Size = System::Drawing::Size(126, 49);
 			this->signButton->TabIndex = 5;
 			this->signButton->Text = L"Sign up";
 			this->signButton->UseVisualStyleBackColor = true;
@@ -130,16 +135,21 @@ namespace ClientGUI {
 			// 
 			// login
 			// 
-			this->AutoScaleDimensions = System::Drawing::SizeF(9, 20);
+			this->AcceptButton = this->loginButton;
+			this->AutoScaleDimensions = System::Drawing::SizeF(14, 29);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(454, 207);
+			this->ClientSize = System::Drawing::Size(630, 300);
 			this->Controls->Add(this->signButton);
 			this->Controls->Add(this->loginButton);
 			this->Controls->Add(this->passwordBox);
 			this->Controls->Add(this->label2);
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->userNameBox);
+			this->Margin = System::Windows::Forms::Padding(5, 4, 5, 4);
+			this->MaximizeBox = false;
+			this->MinimizeBox = false;
 			this->Name = L"login";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->Text = L"Login";
 			this->ResumeLayout(false);
 			this->PerformLayout();
@@ -150,6 +160,9 @@ namespace ClientGUI {
 		auto sign = gcnew ClientGUI::registe(user,socketManager);
 		this->Hide();
 		if (sign->ShowDialog() == System::Windows::Forms::DialogResult::OK) {
+			auto t = parent->GetType();
+			auto parentUser = t->GetProperty("globalUser");
+			parentUser->SetValue(parent, user);
 			this->DialogResult = System::Windows::Forms::DialogResult::OK;
 		}
 		else {
@@ -160,12 +173,18 @@ private: System::Void LoginButton_Click(System::Object^ sender, System::EventArg
 	auto username = userNameBox->Text;
 	auto password = passwordBox->Text;
 	user = socketManager->login(username, password);
-	parent->Show();
-	this->Close();
+	if (user) {
+		auto t = parent->GetType();
+		auto parentUser = t->GetProperty("globalUser");
+		parentUser->SetValue(parent, user);
+		this->DialogResult = System::Windows::Forms::DialogResult::OK;
+	}
 }
 private: System::Void PasswordBox_TextChanged(System::Object^ sender, System::EventArgs^ e) {
 	if (userNameBox->Text != String::Empty && passwordBox->Text != String::Empty)
 		loginButton->Enabled = true;
+	else
+		loginButton->Enabled = false;
 }
 };
 }

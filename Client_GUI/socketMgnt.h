@@ -10,6 +10,7 @@ public:
 	static socketMgnt^ getInstance();
 	User^ login(String^ username, String^ password);
 	User^ signup(String^ username, String^ password, bool isPlayer);
+	bool commit(String^ word, int difficulty, User^ committer);
 private:
 	static socketMgnt^ _instance;
 	String^ sendAndRec(String^ toSend);

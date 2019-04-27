@@ -115,3 +115,28 @@ String^ socketMgnt::sendAndRec(String^ toSend) {
 	recStr += Encoding::Default->ASCII->GetString(recBytes, 0, bytes);
 	return recStr;
 }
+
+bool socketMgnt::commit(String^ word, int difficulty, User^ committer) {
+	auto json = JsonConvert::SerializeObject(gcnew schemaWithSession("commit", committer->session, gcnew commitSchema(word, difficulty)));
+	auto response = sendAndRec(json);
+	JObject^ jo;
+	try
+	{
+		jo = JObject::Parse(response);
+		if (int code = (int)jo["code"]; code == 200)
+			return true;
+		else {
+			if (code == 202) {
+				System::Windows::Forms::MessageBox::Show("Word is already existed!", "Error");
+				return false;
+			}
+			else {
+				throw gcnew Exception((String^)jo["msg"]);
+			}
+		}
+	}
+	catch (Exception^ e){
+		System::Windows::Forms::MessageBox::Show("Invaild response" + e->ToString(), "Error");
+		return false;
+	}
+}

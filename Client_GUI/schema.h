@@ -8,6 +8,14 @@ public:
 	Object^ data;
 };
 
+public ref class schemaWithSession{
+public:
+	schemaWithSession(String^ opt, String^ session, Object^ data) :operation(opt), session(session), data(data) {};
+	String^ operation;
+	String^ session;
+	Object^ data;
+};
+
 public ref class loginSchema {
 public:
 	loginSchema(String^ username, String^ password) :username(username), password(password) {};
@@ -21,3 +29,9 @@ public:
 	String^ password;
 	bool isPlayer;
  };
+public ref class commitSchema {
+public:
+	commitSchema(String^ word, int difficulty) :word(word), difficulty(difficulty) {};
+	String^ word;
+	int difficulty;
+};

@@ -51,6 +51,9 @@
     <ClInclude Include="CommitterMainControl.h">
       <Filter>Header Files\UserControl</Filter>
     </ClInclude>
+    <ClInclude Include="commit.h">
+      <Filter>Header Files\UserControl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainForm.cpp">
@@ -61,9 +64,6 @@
     </ClCompile>
     <ClCompile Include="socketMgnt.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerMainControl.cpp">
-      <Filter>Header Files\UserControl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
