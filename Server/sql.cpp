@@ -36,12 +36,9 @@ User sql::fetchUserByPropertiesExtremum(std::string properties, bool highest, bo
 
 bool sql::addWord(const char* word, int difficulty, int committerID) {
 	//check for duplicate
-	prepared_stmt stmt(_instance->con, "select committer from question where word like ?");
-	int committer = -1;//invaild id
-	stmt.bind_param(word);
-	stmt.bind_result(committer);//if word existed, the id will be override
-	stmt.execute();
-	if (stmt.fetch() || committer != -1) 
+	int committer = 1;
+	auto result=_instance->con.query("select committer from question where word like '%s'", word);
+	if (result.fetch(committer) || committer != -1)
 		return false;
 	else {
 		_instance->con.exec("INSERT INTO question(word, level, committer) VALUES('%s', %d, %d)", word, difficulty, committerID);

@@ -280,11 +280,21 @@ std::string handler::commit(user_ptr user, Document& dc) {
 	auto difficultyDC = data->value.FindMember("difficulty");
 	if (wordDC == data->value.MemberEnd() || difficultyDC == data->value.MemberEnd())
 		return utils::throwInfo("Not acceptable!", 406);
-	auto word = wordDC->value.GetString();
-	auto difficulty = difficultyDC->value.GetInt();
-	sql::addWord(word, difficulty, user->id);
-	sql::updateUserOneCol("count", user->count + 1, user->id);
-	return utils::throwInfo("Created", 201);
+	const char* word;
+	int difficulty;
+	try {
+		word = wordDC->value.GetString();
+		difficulty = difficultyDC->value.GetInt();
+	}
+	catch (...) {
+		return utils::throwInfo("Not acceptable!", 406);
+	}
+	if (sql::addWord(word, difficulty, user->id)) {
+		sql::updateUserOneCol("count", user->count + 1, user->id);
+		return utils::throwInfo("Created", 201);
+	}
+	else
+		return utils::throwInfo("Word existed!", 202);
 }
 
 //One can only update himself
