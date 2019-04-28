@@ -37,7 +37,7 @@ User sql::fetchUserByPropertiesExtremum(std::string properties, bool highest, bo
 bool sql::addWord(const char* word, int difficulty, int committerID) {
 	//check for duplicate
 	int committer = -1;
-	auto result=_instance->con.query("select committer from question where word like '%s'", word);
+	auto result = _instance->con.query("select committer from question where word like '%s'", word);
 	if (result.fetch(committer) || committer != -1)
 		return false;
 	else {

@@ -109,6 +109,8 @@ std::string handler::sessionOperationRouter(Document& dc, string& operation) {
 			return updateUser(user, dc);
 		else if (operation._Equal("fetchExtremum"))
 			return fetchExtremum(user, dc);
+		else if (operation._Equal("getUsersByCondition"))
+			return fetchUsersByCondition(user, dc);
 		else {
 			return utils::throwInfo("Operation can't be recognized", 404);
 		}
@@ -166,6 +168,80 @@ std::string handler::getQuesiontList(Document& dc) {
 	else
 		return utils::throwInfo("Not found", 404);
 }
+template<typename user_ptr>
+std::string handler::fetchUsersByCondition(user_ptr user, Document& dc) {
+	auto data = dc.FindMember("data");
+	if (data == dc.MemberEnd())
+		return utils::throwInfo("Not acceptable!", 406);
+	auto roleDC = data->value.FindMember("role");
+	auto propertyDC = data->value.FindMember("property");
+	auto valueDC = data->value.FindMember("value");
+	if (propertyDC == data->value.MemberEnd() || valueDC == data->value.MemberEnd())
+		return utils::throwInfo("Not acceptable!", 406);
+	bool isPlayer_request;//role
+	if (roleDC == data->value.MemberEnd())
+		isPlayer_request = user->isPlayer;
+	else {
+		string role = roleDC->value.GetString();
+		if (role._Equal("player"))
+			isPlayer_request = true;
+		else if (role._Equal("committer"))
+			isPlayer_request = false;
+		else
+			isPlayer_request = user->isPlayer;
+	}
+	std::vector<User>* result = nullptr;
+	string propertyToQuery = propertyDC->value.GetString();
+	if (propertyToQuery._Equal("name"))
+		result = sql::fetchUsersByCondition(propertyToQuery, valueDC->value.GetString());
+	else if (propertyToQuery._Equal("count") || propertyToQuery._Equal("level") || propertyToQuery._Equal("id"))
+		result = sql::fetchUsersByCondition(propertyToQuery, valueDC->value.GetInt());
+	else if (propertyToQuery._Equal("exp")) {//committer don't have exp
+		if (isPlayer_request)
+			result = sql::fetchUsersByCondition(propertyToQuery, valueDC->value.GetInt());
+		else
+			return utils::throwInfo("Invaild Property!", 406);
+	}
+	else
+		return utils::throwInfo("Invaild Property!", 406);
+	StringBuffer s;
+	Writer<StringBuffer, Document::EncodingType, ASCII<>> response(s);
+	response.StartObject();
+	response.Key("code");
+	response.Int(200);
+	response.Key("data");
+	response.StartObject();
+	response.Key("Users");
+	response.StartArray();
+	if (result != nullptr)
+		if (result->size() > 0) {
+			std::for_each(result->begin(), result->end(), [&response, isPlayer_request](User & item) {
+				if (item.isPlayer == isPlayer_request) {
+					response.StartObject();
+					response.Key("id");
+					response.Int(item.id);
+					response.Key("name");
+					response.String(item.name.c_str());
+					response.Key("isPlayer");
+					response.Bool(item.isPlayer);
+					response.Key("count");
+					response.Int(item.count);
+					if (item.isPlayer) {
+						response.Key("exp");
+						response.Int(item.exp);
+					}
+					response.Key("level");
+					response.Int(item.level);
+					response.EndObject();
+				}
+				});
+		}
+	response.EndArray();
+	response.EndObject();
+	response.EndObject();
+	delete result;
+	return s.GetString();
+}
 
 template<typename user_ptr>
 std::string handler::fetchExtremum(user_ptr user, Document& dc) {
@@ -188,13 +264,15 @@ std::string handler::fetchExtremum(user_ptr user, Document& dc) {
 	bool isPlayer;//role
 	if (roleDC == data->value.MemberEnd())
 		isPlayer = user->isPlayer;
-	string role = roleDC->value.GetString();
-	if (role._Equal("player"))
-		isPlayer = true;
-	else if (role._Equal("committer"))
-		isPlayer = false;
-	else
-		isPlayer = user->isPlayer;
+	else {
+		string role = roleDC->value.GetString();
+		if (role._Equal("player"))
+			isPlayer = true;
+		else if (role._Equal("committer"))
+			isPlayer = false;
+		else
+			isPlayer = user->isPlayer;
+	}
 	auto&& fetchResult = sql::fetchUserByPropertiesExtremum(propertiesDC->value.GetString(), highestFlag, isPlayer);
 	if (fetchResult.id == -1)
 		return utils::throwInfo("Not found", 404);
@@ -291,6 +369,8 @@ std::string handler::commit(user_ptr user, Document& dc) {
 	}
 	if (sql::addWord(word, difficulty, user->id)) {
 		sql::updateUserOneCol("count", user->count + 1, user->id);
+		if (++user->count / 10 > user->level)
+			sql::updateUserOneCol("level", user->level + 1, user->id);
 		return utils::throwInfo("Created", 201);
 	}
 	else

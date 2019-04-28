@@ -15,4 +15,6 @@ private:
 	static std::string updateUser(user_ptr user, Document& dc);
 	template<typename user_ptr>
 	static std::string fetchExtremum(user_ptr user,Document& dc);
+	template<typename user_ptr>
+	static std::string fetchUsersByCondition(user_ptr user,Document& dc);
 };
