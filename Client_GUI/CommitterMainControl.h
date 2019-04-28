@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "Committer.h"
+#include "RankForm.h"
 #include "commit.h"
 #include "socketMgnt.h"
 using namespace System;
@@ -27,7 +28,8 @@ namespace ClientGUI {
 	private: System::Windows::Forms::Label^ label1;
 	private: System::Windows::Forms::GroupBox^ groupBox1;
 	private: System::Windows::Forms::Button^ quitButton;
-	private: System::Windows::Forms::Button^ searchBUtton;
+	private: System::Windows::Forms::Button^ queryButton;
+
 	private: System::Windows::Forms::Button^ rankButton;
 	private: System::Windows::Forms::Button^ commitButton;
 	public: socketMgnt^ socketManager;
@@ -73,7 +75,7 @@ namespace ClientGUI {
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
 			this->quitButton = (gcnew System::Windows::Forms::Button());
-			this->searchBUtton = (gcnew System::Windows::Forms::Button());
+			this->queryButton = (gcnew System::Windows::Forms::Button());
 			this->rankButton = (gcnew System::Windows::Forms::Button());
 			this->commitButton = (gcnew System::Windows::Forms::Button());
 			this->groupBox1->SuspendLayout();
@@ -136,7 +138,7 @@ namespace ClientGUI {
 			// groupBox1
 			// 
 			this->groupBox1->Controls->Add(this->quitButton);
-			this->groupBox1->Controls->Add(this->searchBUtton);
+			this->groupBox1->Controls->Add(this->queryButton);
 			this->groupBox1->Controls->Add(this->rankButton);
 			this->groupBox1->Controls->Add(this->commitButton);
 			this->groupBox1->Location = System::Drawing::Point(97, 86);
@@ -156,14 +158,14 @@ namespace ClientGUI {
 			this->quitButton->UseVisualStyleBackColor = true;
 			this->quitButton->Click += gcnew System::EventHandler(this, &CommitterMainControl::QuitButton_Click);
 			// 
-			// searchBUtton
+			// queryButton
 			// 
-			this->searchBUtton->Location = System::Drawing::Point(122, 215);
-			this->searchBUtton->Name = L"searchBUtton";
-			this->searchBUtton->Size = System::Drawing::Size(218, 82);
-			this->searchBUtton->TabIndex = 2;
-			this->searchBUtton->Text = L"Search";
-			this->searchBUtton->UseVisualStyleBackColor = true;
+			this->queryButton->Location = System::Drawing::Point(122, 215);
+			this->queryButton->Name = L"queryButton";
+			this->queryButton->Size = System::Drawing::Size(218, 82);
+			this->queryButton->TabIndex = 2;
+			this->queryButton->Text = L"Query";
+			this->queryButton->UseVisualStyleBackColor = true;
 			// 
 			// rankButton
 			// 
@@ -173,6 +175,7 @@ namespace ClientGUI {
 			this->rankButton->TabIndex = 1;
 			this->rankButton->Text = L"Ranks";
 			this->rankButton->UseVisualStyleBackColor = true;
+			this->rankButton->Click += gcnew System::EventHandler(this, &CommitterMainControl::RankButton_Click);
 			// 
 			// commitButton
 			// 
@@ -231,5 +234,9 @@ namespace ClientGUI {
 	private: System::Void QuitButton_Click(System::Object^ sender, System::EventArgs^ e) {
 		Environment::Exit(0);
 	}
-	};
+	private: System::Void RankButton_Click(System::Object^ sender, System::EventArgs^ e) {
+		auto rank = gcnew RankForm(user, socketManager);
+		rank->Show();
+	}
+};
 }

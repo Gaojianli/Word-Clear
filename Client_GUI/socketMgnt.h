@@ -2,8 +2,10 @@
 #ifndef socket_H
 #define socket_H
 #include "Player.h"
+#include "schema.h"
 #include "Committer.h"
 using namespace System;
+using namespace System::Collections::Generic;
 public ref class socketMgnt
 {
 public:
@@ -11,6 +13,9 @@ public:
 	User^ login(String^ username, String^ password);
 	User^ signup(String^ username, String^ password, bool isPlayer);
 	bool commit(String^ word, int difficulty, User^ committer);
+	//get the users which have the same role
+	List<UserSchema^>^ getSameUser(User^ user);
+	List<UserSchema^>^ getDifferentUser(User^ user);
 private:
 	static socketMgnt^ _instance;
 	String^ sendAndRec(String^ toSend);

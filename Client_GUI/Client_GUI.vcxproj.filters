@@ -54,6 +54,9 @@
     <ClInclude Include="commit.h">
       <Filter>Header Files\UserControl</Filter>
     </ClInclude>
+    <ClInclude Include="RankForm.h">
+      <Filter>Header Files\Forms</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainForm.cpp">

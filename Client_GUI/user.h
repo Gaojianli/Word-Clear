@@ -12,10 +12,3 @@ public:
 	int id;
 };
 
-enum class property {
-	id,
-	name,
-	count,
-	level,
-	exp
-};

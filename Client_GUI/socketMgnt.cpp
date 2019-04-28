@@ -1,5 +1,4 @@
 #include "socketMgnt.h"
-#include "schema.h"
 using namespace System;
 using namespace System::Text;
 using namespace System::Net;
@@ -58,7 +57,7 @@ User^ socketMgnt::login(String^ username, String^ password) {
 		}
 	}
 	catch (Exception^ e) {
-		System::Windows::Forms::MessageBox::Show("Invaild response" + e->ToString(), "Error");
+		System::Windows::Forms::MessageBox::Show("Invaild response: " + e->ToString(), "Error");
 		System::Environment::Exit(255);
 	}
 	User^ user;
@@ -95,7 +94,7 @@ User^ socketMgnt::signup(String^ username, String^ password, bool isPlayer) {
 			throw gcnew Exception((String^)jo["msg"]);
 	}
 	catch (Exception^ e) {
-		System::Windows::Forms::MessageBox::Show("Invaild response" + e->ToString(), "Error");
+		System::Windows::Forms::MessageBox::Show("Invaild response: " + e->ToString(), "Error");
 		System::Environment::Exit(255);
 	}
 	User^ user;
@@ -136,7 +135,65 @@ bool socketMgnt::commit(String^ word, int difficulty, User^ committer) {
 		}
 	}
 	catch (Exception^ e){
-		System::Windows::Forms::MessageBox::Show("Invaild response" + e->ToString(), "Error");
+		System::Windows::Forms::MessageBox::Show("Invaild response: " + e->ToString(), "Error");
 		return false;
+	}
+}
+
+List<UserSchema^>^ socketMgnt::getSameUser(User^ user) {
+	auto json = JsonConvert::SerializeObject(gcnew schemaWithSession("getSameUsers", user->session, nullptr));
+	auto response = sendAndRec(json);
+	JObject^ jo;
+	List<UserSchema^>^ toReturn = nullptr;
+	try
+	{
+		jo = JObject::Parse(response);
+		if (int code = (int)jo["code"]; code == 200) {
+			auto data = (JObject^)jo["data"];
+			auto userArray = (JArray^)data["Users"];
+			toReturn = gcnew List<UserSchema^>();
+			for each (auto item in userArray){
+				if ((bool)item["isPlayer"])
+					toReturn->Add(gcnew PlayerSchema((String^)item["name"], (int)item["id"], (int)item["count"], (int)item["level"], (int)item["exp"]));
+				else
+					toReturn->Add(gcnew CommitterSchema((String^)item["name"], (int)item["id"], (int)item["count"], (int)item["level"]));
+			}
+			return toReturn;
+		}
+		else
+			throw gcnew Exception((String^)jo["msg"]);
+	}
+	catch (Exception^ e) {
+		System::Windows::Forms::MessageBox::Show("Invaild response: " + e->ToString(), "Error");
+		return nullptr;
+	}
+}
+
+List<UserSchema^>^ socketMgnt::getDifferentUser(User^ user) {
+	auto json = JsonConvert::SerializeObject(gcnew schemaWithSession("getDifferentUsers", user->session, nullptr));
+	auto response = sendAndRec(json);
+	JObject^ jo;
+	List<UserSchema^>^ toReturn = nullptr;
+	try
+	{
+		jo = JObject::Parse(response);
+		if (int code = (int)jo["code"]; code == 200) {
+			auto data = (JObject^)jo["data"];
+			auto userArray = (JArray^)data["Users"];
+			toReturn = gcnew List<UserSchema^>();
+			for each (auto item in userArray) {
+				if ((bool)item["isPlayer"])
+					toReturn->Add(gcnew PlayerSchema((String^)item["name"], (int)item["id"], (int)item["count"], (int)item["level"], (int)item["exp"]));
+				else
+					toReturn->Add(gcnew CommitterSchema((String^)item["name"], (int)item["id"], (int)item["count"], (int)item["level"]));
+			}
+			return toReturn;
+		}
+		else
+			throw gcnew Exception((String^)jo["msg"]);
+	}
+	catch (Exception^ e) {
+		System::Windows::Forms::MessageBox::Show("Invaild response: " + e->ToString(), "Error");
+		return nullptr;
 	}
 }

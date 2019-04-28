@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "Player.h"
+#include "RankForm.h"
 #include "socketMgnt.h"
 using namespace System;
 using namespace System::ComponentModel;
@@ -29,8 +30,10 @@ namespace ClientGUI {
 	private: System::Windows::Forms::GroupBox^ groupBox1;
 	private: System::Windows::Forms::Button^ startButton;
 	private: System::Windows::Forms::Button^ quitButton;
+	private: System::Windows::Forms::Button^ queryButton;
 
-	private: System::Windows::Forms::Button^ searchBUtton;
+
+
 	private: System::Windows::Forms::Button^ rankButton;
 
 
@@ -82,7 +85,7 @@ namespace ClientGUI {
 			this->expLabel = (gcnew System::Windows::Forms::Label());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
 			this->quitButton = (gcnew System::Windows::Forms::Button());
-			this->searchBUtton = (gcnew System::Windows::Forms::Button());
+			this->queryButton = (gcnew System::Windows::Forms::Button());
 			this->rankButton = (gcnew System::Windows::Forms::Button());
 			this->startButton = (gcnew System::Windows::Forms::Button());
 			this->groupBox1->SuspendLayout();
@@ -163,7 +166,7 @@ namespace ClientGUI {
 			// groupBox1
 			// 
 			this->groupBox1->Controls->Add(this->quitButton);
-			this->groupBox1->Controls->Add(this->searchBUtton);
+			this->groupBox1->Controls->Add(this->queryButton);
 			this->groupBox1->Controls->Add(this->rankButton);
 			this->groupBox1->Controls->Add(this->startButton);
 			this->groupBox1->Location = System::Drawing::Point(94, 86);
@@ -183,14 +186,14 @@ namespace ClientGUI {
 			this->quitButton->UseVisualStyleBackColor = true;
 			this->quitButton->Click += gcnew System::EventHandler(this, &PlayerMainControl::QuitButton_Click);
 			// 
-			// searchBUtton
+			// queryButton
 			// 
-			this->searchBUtton->Location = System::Drawing::Point(122, 215);
-			this->searchBUtton->Name = L"searchBUtton";
-			this->searchBUtton->Size = System::Drawing::Size(218, 82);
-			this->searchBUtton->TabIndex = 2;
-			this->searchBUtton->Text = L"Search";
-			this->searchBUtton->UseVisualStyleBackColor = true;
+			this->queryButton->Location = System::Drawing::Point(122, 215);
+			this->queryButton->Name = L"queryButton";
+			this->queryButton->Size = System::Drawing::Size(218, 82);
+			this->queryButton->TabIndex = 2;
+			this->queryButton->Text = L"Query";
+			this->queryButton->UseVisualStyleBackColor = true;
 			// 
 			// rankButton
 			// 
@@ -200,6 +203,7 @@ namespace ClientGUI {
 			this->rankButton->TabIndex = 1;
 			this->rankButton->Text = L"Ranks";
 			this->rankButton->UseVisualStyleBackColor = true;
+			this->rankButton->Click += gcnew System::EventHandler(this, &PlayerMainControl::RankButton_Click);
 			// 
 			// startButton
 			// 
@@ -242,5 +246,9 @@ namespace ClientGUI {
 		GC::Collect();
 		Environment::Exit(0);
 	}
-	};
+	private: System::Void RankButton_Click(System::Object^ sender, System::EventArgs^ e) {
+		auto rank = gcnew RankForm(user, socketManager);
+		rank->Show();
+	}
+};
 }

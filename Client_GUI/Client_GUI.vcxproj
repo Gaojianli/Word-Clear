@@ -162,6 +162,9 @@
     <ClInclude Include="PlayerMainControl.h">
       <FileType>CppControl</FileType>
     </ClInclude>
+    <ClInclude Include="RankForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="registe.h">
       <FileType>CppForm</FileType>
     </ClInclude>
@@ -184,6 +187,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="PlayerMainControl.resx">
       <DependentUpon>PlayerMainControl.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RankForm.resx">
+      <DependentUpon>RankForm.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="registe.resx">
       <DependentUpon>registe.h</DependentUpon>

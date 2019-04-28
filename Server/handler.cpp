@@ -99,8 +99,10 @@ std::string handler::sessionOperationRouter(Document& dc, string& operation) {
 	else {
 		if (operation._Equal("getQuestionList"))
 			return getQuesiontList(dc);
-		else if (operation._Equal("getUsers"))
+		else if (operation._Equal("getSameUsers"))
 			return getUsers("isPlayer", user->isPlayer);
+		else if(operation._Equal("getDifferentUsers"))
+			return getUsers("isPlayer", !user->isPlayer);
 		else if (operation._Equal("getAllUsers"))
 			return getUsers(NULL);
 		else if (operation._Equal("commit"))
