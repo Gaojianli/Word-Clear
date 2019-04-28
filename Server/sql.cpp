@@ -54,7 +54,9 @@ User* sql::addUser(const std::string& username, const std::string& password, boo
 sql::sql() {
 	con.open({ "localhost","wordclear","lazybones+each","word_clear_game" });
 	if (!con) {
-		std::cout << "Connection failed" << std::endl;
+		std::cout << "Connection failed!" << std::endl;
+		std::cout << "Press any key to exit" << std::endl;
+		getchar();
 		return;
 	}
 	std::cout << "Connect to database successfully!" << std::endl;
