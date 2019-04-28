@@ -291,6 +291,8 @@ std::string handler::commit(user_ptr user, Document& dc) {
 	}
 	if (sql::addWord(word, difficulty, user->id)) {
 		sql::updateUserOneCol("count", user->count + 1, user->id);
+		if (++user->count / 10 > user->level)
+			sql::updateUserOneCol("level", user->level + 1, user->id);
 		return utils::throwInfo("Created", 201);
 	}
 	else
