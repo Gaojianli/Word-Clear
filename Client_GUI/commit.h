@@ -51,7 +51,7 @@ namespace ClientGUI {
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		System::ComponentModel::Container ^components;
+		System::ComponentModel::Container^ components;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -103,7 +103,7 @@ namespace ClientGUI {
 			});
 			this->difficultySelect->Location = System::Drawing::Point(147, 123);
 			this->difficultySelect->Name = L"difficultySelect";
-			this->difficultySelect->Size = System::Drawing::Size(63, 37);
+			this->difficultySelect->Size = System::Drawing::Size(70, 37);
 			this->difficultySelect->TabIndex = 3;
 			this->difficultySelect->SelectedIndexChanged += gcnew System::EventHandler(this, &commit::ComboBox1_SelectedIndexChanged);
 			// 
@@ -116,6 +116,7 @@ namespace ClientGUI {
 			this->commitButton->TabIndex = 4;
 			this->commitButton->Text = L"Commit";
 			this->commitButton->UseVisualStyleBackColor = true;
+			this->commitButton->Click += gcnew System::EventHandler(this, &commit::CommitButton_Click);
 			// 
 			// commit
 			// 
@@ -137,9 +138,14 @@ namespace ClientGUI {
 		if (commitBox->Text != String::Empty)
 			commitButton->Enabled = true;
 	}
-private: System::Void CommitBox_TextChanged(System::Object^ sender, System::EventArgs^ e) {
-	if (commitBox->Text == String::Empty)
-		commitButton->Enabled = false;
-}
-};
+	private: System::Void CommitBox_TextChanged(System::Object^ sender, System::EventArgs^ e) {
+		if (commitBox->Text == String::Empty)
+			commitButton->Enabled = false;
+	}
+	private: System::Void CommitButton_Click(System::Object^ sender, System::EventArgs^ e) {
+		int difficulty = Convert::ToInt32(difficultySelect->SelectedItem->ToString);
+		if (socketManager->commit(commitBox->Text, difficulty, user))
+			((Form^)this->Parent)->DialogResult = System::Windows::Forms::DialogResult::OK;
+	}
+	};
 }

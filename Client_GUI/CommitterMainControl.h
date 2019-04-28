@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "Committer.h"
+#include "commit.h"
 #include "socketMgnt.h"
 using namespace System;
 using namespace System::ComponentModel;
@@ -180,6 +181,7 @@ namespace ClientGUI {
 			this->commitButton->TabIndex = 0;
 			this->commitButton->Text = L"Commit";
 			this->commitButton->UseVisualStyleBackColor = true;
+			this->commitButton->Click += gcnew System::EventHandler(this, &CommitterMainControl::CommitButton_Click);
 			// 
 			// CommitterMainControl
 			// 
@@ -206,5 +208,17 @@ namespace ClientGUI {
 		levelLabel->Text = user->level.ToString();
 		countLabel->Text = user->count.ToString();
 	}
+private: System::Void CommitButton_Click(System::Object^ sender, System::EventArgs^ e) {
+	auto commitForm = gcnew Form();
+	auto userControl = gcnew commit(user, socketManager);
+	userControl->Location = Point(0, 0);
+	commitForm->Size = userControl->Size;
+	commitForm->Controls->Add(userControl);
+	userControl->Location = Point(0, userControl->Location.Y);
+	commitForm->Height = userControl->Height + 80;
+	commitForm->Text = "Commit";
+	if (commitForm->ShowDialog() == Windows::Forms::DialogResult::OK)
+		MessageBox::Show("Commit finished!", "Successfully");
+}
 };
 }
