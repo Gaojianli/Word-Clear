@@ -158,6 +158,7 @@ namespace ClientGUI {
 #pragma endregion
 	private: System::Void SignButton_Click(System::Object^ sender, System::EventArgs^ e) {
 		auto sign = gcnew ClientGUI::registe(user,socketManager);
+		sign->setParent(this);
 		this->Hide();
 		if (sign->ShowDialog() == System::Windows::Forms::DialogResult::OK) {
 			auto t = parent->GetType();

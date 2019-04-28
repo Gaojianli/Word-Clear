@@ -143,7 +143,7 @@ namespace ClientGUI {
 			commitButton->Enabled = false;
 	}
 	private: System::Void CommitButton_Click(System::Object^ sender, System::EventArgs^ e) {
-		int difficulty = Convert::ToInt32(difficultySelect->SelectedItem->ToString);
+		int difficulty = Convert::ToInt32(difficultySelect->SelectedItem->ToString());
 		if (socketManager->commit(commitBox->Text, difficulty, user))
 			((Form^)this->Parent)->DialogResult = System::Windows::Forms::DialogResult::OK;
 	}

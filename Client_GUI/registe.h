@@ -88,27 +88,30 @@ namespace ClientGUI {
 			// label1
 			// 
 			this->label1->AutoSize = true;
-			this->label1->Location = System::Drawing::Point(47, 32);
+			this->label1->Location = System::Drawing::Point(73, 46);
+			this->label1->Margin = System::Windows::Forms::Padding(5, 0, 5, 0);
 			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(87, 20);
+			this->label1->Size = System::Drawing::Size(130, 29);
 			this->label1->TabIndex = 0;
 			this->label1->Text = L"Username:";
 			// 
 			// label2
 			// 
 			this->label2->AutoSize = true;
-			this->label2->Location = System::Drawing::Point(52, 69);
+			this->label2->Location = System::Drawing::Point(81, 100);
+			this->label2->Margin = System::Windows::Forms::Padding(5, 0, 5, 0);
 			this->label2->Name = L"label2";
-			this->label2->Size = System::Drawing::Size(82, 20);
+			this->label2->Size = System::Drawing::Size(126, 29);
 			this->label2->TabIndex = 1;
 			this->label2->Text = L"Password:";
 			// 
 			// label3
 			// 
 			this->label3->AutoSize = true;
-			this->label3->Location = System::Drawing::Point(88, 109);
+			this->label3->Location = System::Drawing::Point(137, 158);
+			this->label3->Margin = System::Windows::Forms::Padding(5, 0, 5, 0);
 			this->label3->Name = L"label3";
-			this->label3->Size = System::Drawing::Size(46, 20);
+			this->label3->Size = System::Drawing::Size(70, 29);
 			this->label3->TabIndex = 4;
 			this->label3->Text = L"Role:";
 			// 
@@ -125,16 +128,19 @@ namespace ClientGUI {
 			this->groupBox1->Controls->Add(this->label2);
 			this->groupBox1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->groupBox1->Location = System::Drawing::Point(0, 0);
+			this->groupBox1->Margin = System::Windows::Forms::Padding(5, 4, 5, 4);
 			this->groupBox1->Name = L"groupBox1";
-			this->groupBox1->Size = System::Drawing::Size(402, 206);
+			this->groupBox1->Padding = System::Windows::Forms::Padding(5, 4, 5, 4);
+			this->groupBox1->Size = System::Drawing::Size(625, 299);
 			this->groupBox1->TabIndex = 5;
 			this->groupBox1->TabStop = false;
 			// 
 			// cancelButton
 			// 
-			this->cancelButton->Location = System::Drawing::Point(245, 152);
+			this->cancelButton->Location = System::Drawing::Point(381, 220);
+			this->cancelButton->Margin = System::Windows::Forms::Padding(5, 4, 5, 4);
 			this->cancelButton->Name = L"cancelButton";
-			this->cancelButton->Size = System::Drawing::Size(77, 32);
+			this->cancelButton->Size = System::Drawing::Size(120, 46);
 			this->cancelButton->TabIndex = 11;
 			this->cancelButton->Text = L"Cancel";
 			this->cancelButton->UseVisualStyleBackColor = true;
@@ -143,9 +149,10 @@ namespace ClientGUI {
 			// signButton
 			// 
 			this->signButton->Enabled = false;
-			this->signButton->Location = System::Drawing::Point(136, 152);
+			this->signButton->Location = System::Drawing::Point(212, 220);
+			this->signButton->Margin = System::Windows::Forms::Padding(5, 4, 5, 4);
 			this->signButton->Name = L"signButton";
-			this->signButton->Size = System::Drawing::Size(77, 32);
+			this->signButton->Size = System::Drawing::Size(120, 46);
 			this->signButton->TabIndex = 10;
 			this->signButton->Text = L"Confirm";
 			this->signButton->UseVisualStyleBackColor = true;
@@ -154,9 +161,10 @@ namespace ClientGUI {
 			// playerRadio
 			// 
 			this->playerRadio->AutoSize = true;
-			this->playerRadio->Location = System::Drawing::Point(240, 109);
+			this->playerRadio->Location = System::Drawing::Point(373, 158);
+			this->playerRadio->Margin = System::Windows::Forms::Padding(5, 4, 5, 4);
 			this->playerRadio->Name = L"playerRadio";
-			this->playerRadio->Size = System::Drawing::Size(77, 24);
+			this->playerRadio->Size = System::Drawing::Size(112, 33);
 			this->playerRadio->TabIndex = 9;
 			this->playerRadio->Text = L"Player";
 			this->playerRadio->UseVisualStyleBackColor = true;
@@ -165,9 +173,10 @@ namespace ClientGUI {
 			// 
 			this->committerRadio->AutoSize = true;
 			this->committerRadio->Checked = true;
-			this->committerRadio->Location = System::Drawing::Point(140, 109);
+			this->committerRadio->Location = System::Drawing::Point(218, 158);
+			this->committerRadio->Margin = System::Windows::Forms::Padding(5, 4, 5, 4);
 			this->committerRadio->Name = L"committerRadio";
-			this->committerRadio->Size = System::Drawing::Size(94, 24);
+			this->committerRadio->Size = System::Drawing::Size(135, 33);
 			this->committerRadio->TabIndex = 8;
 			this->committerRadio->TabStop = true;
 			this->committerRadio->Text = L"Comitter";
@@ -176,9 +185,11 @@ namespace ClientGUI {
 			// passwordBox
 			// 
 			this->passwordBox->ImeMode = System::Windows::Forms::ImeMode::Off;
-			this->passwordBox->Location = System::Drawing::Point(140, 69);
+			this->passwordBox->Location = System::Drawing::Point(218, 100);
+			this->passwordBox->Margin = System::Windows::Forms::Padding(5, 4, 5, 4);
 			this->passwordBox->Name = L"passwordBox";
-			this->passwordBox->Size = System::Drawing::Size(182, 26);
+			this->passwordBox->PasswordChar = '*';
+			this->passwordBox->Size = System::Drawing::Size(281, 35);
 			this->passwordBox->TabIndex = 7;
 			this->passwordBox->WordWrap = false;
 			this->passwordBox->TextChanged += gcnew System::EventHandler(this, &registe::passwordBox_TextChanged);
@@ -186,19 +197,21 @@ namespace ClientGUI {
 			// usernameBox
 			// 
 			this->usernameBox->ImeMode = System::Windows::Forms::ImeMode::Off;
-			this->usernameBox->Location = System::Drawing::Point(140, 32);
+			this->usernameBox->Location = System::Drawing::Point(218, 46);
+			this->usernameBox->Margin = System::Windows::Forms::Padding(5, 4, 5, 4);
 			this->usernameBox->Name = L"usernameBox";
-			this->usernameBox->Size = System::Drawing::Size(182, 26);
+			this->usernameBox->Size = System::Drawing::Size(281, 35);
 			this->usernameBox->TabIndex = 5;
 			this->usernameBox->WordWrap = false;
 			// 
 			// registe
 			// 
 			this->AcceptButton = this->signButton;
-			this->AutoScaleDimensions = System::Drawing::SizeF(9, 20);
+			this->AutoScaleDimensions = System::Drawing::SizeF(14, 29);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(402, 206);
+			this->ClientSize = System::Drawing::Size(625, 299);
 			this->Controls->Add(this->groupBox1);
+			this->Margin = System::Windows::Forms::Padding(5, 4, 5, 4);
 			this->MaximizeBox = false;
 			this->MinimizeBox = false;
 			this->Name = L"registe";

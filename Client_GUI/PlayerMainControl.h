@@ -224,7 +224,7 @@ namespace ClientGUI {
 			this->Controls->Add(this->userNameLabel);
 			this->Controls->Add(this->label1);
 			this->Name = L"PlayerMainControl";
-			this->Size = System::Drawing::Size(1072, 551);
+			this->Size = System::Drawing::Size(1072, 523);
 			this->Load += gcnew System::EventHandler(this, &PlayerMainControl::PlayerMainControl_Load);
 			this->groupBox1->ResumeLayout(false);
 			this->ResumeLayout(false);

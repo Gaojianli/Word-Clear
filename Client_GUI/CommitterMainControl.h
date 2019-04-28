@@ -56,7 +56,7 @@ namespace ClientGUI {
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		System::ComponentModel::Container ^components;
+		System::ComponentModel::Container^ components;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -139,7 +139,7 @@ namespace ClientGUI {
 			this->groupBox1->Controls->Add(this->searchBUtton);
 			this->groupBox1->Controls->Add(this->rankButton);
 			this->groupBox1->Controls->Add(this->commitButton);
-			this->groupBox1->Location = System::Drawing::Point(93, 119);
+			this->groupBox1->Location = System::Drawing::Point(97, 86);
 			this->groupBox1->Name = L"groupBox1";
 			this->groupBox1->Size = System::Drawing::Size(889, 369);
 			this->groupBox1->TabIndex = 14;
@@ -154,6 +154,7 @@ namespace ClientGUI {
 			this->quitButton->TabIndex = 3;
 			this->quitButton->Text = L"Exit";
 			this->quitButton->UseVisualStyleBackColor = true;
+			this->quitButton->Click += gcnew System::EventHandler(this, &CommitterMainControl::QuitButton_Click);
 			// 
 			// searchBUtton
 			// 
@@ -195,7 +196,7 @@ namespace ClientGUI {
 			this->Controls->Add(this->userNameLabel);
 			this->Controls->Add(this->label1);
 			this->Name = L"CommitterMainControl";
-			this->Size = System::Drawing::Size(1072, 551);
+			this->Size = System::Drawing::Size(1072, 523);
 			this->Load += gcnew System::EventHandler(this, &CommitterMainControl::CommitterMainControl_Load);
 			this->groupBox1->ResumeLayout(false);
 			this->ResumeLayout(false);
@@ -208,17 +209,27 @@ namespace ClientGUI {
 		levelLabel->Text = user->level.ToString();
 		countLabel->Text = user->count.ToString();
 	}
-private: System::Void CommitButton_Click(System::Object^ sender, System::EventArgs^ e) {
-	auto commitForm = gcnew Form();
-	auto userControl = gcnew commit(user, socketManager);
-	userControl->Location = Point(0, 0);
-	commitForm->Size = userControl->Size;
-	commitForm->Controls->Add(userControl);
-	userControl->Location = Point(0, userControl->Location.Y);
-	commitForm->Height = userControl->Height + 80;
-	commitForm->Text = "Commit";
-	if (commitForm->ShowDialog() == Windows::Forms::DialogResult::OK)
-		MessageBox::Show("Commit finished!", "Successfully");
-}
-};
+	private: System::Void CommitButton_Click(System::Object^ sender, System::EventArgs^ e) {
+		auto commitForm = gcnew Form();
+		auto userControl = gcnew commit(user, socketManager);
+		userControl->Location = Point(0, 0);
+		commitForm->Size = userControl->Size;
+		commitForm->Controls->Add(userControl);
+		userControl->Location = Point(0, userControl->Location.Y);
+		commitForm->Height = userControl->Height + 80;
+		commitForm->Text = "Commit";
+		commitForm->StartPosition = Windows::Forms::FormStartPosition::CenterScreen;
+		if (commitForm->ShowDialog() == Windows::Forms::DialogResult::OK) {
+			MessageBox::Show("Commit successfully!", "Info");
+			user->count++;
+			if (user->count / 10 > user->level)
+				user->level++;
+		}
+		levelLabel->Text = user->level.ToString();
+		countLabel->Text = user->count.ToString();
+	}
+	private: System::Void QuitButton_Click(System::Object^ sender, System::EventArgs^ e) {
+		Environment::Exit(0);
+	}
+	};
 }

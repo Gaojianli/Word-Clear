@@ -123,7 +123,7 @@ bool socketMgnt::commit(String^ word, int difficulty, User^ committer) {
 	try
 	{
 		jo = JObject::Parse(response);
-		if (int code = (int)jo["code"]; code == 200)
+		if (int code = (int)jo["code"]; code == 201)
 			return true;
 		else {
 			if (code == 202) {
