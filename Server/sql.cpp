@@ -36,7 +36,7 @@ User sql::fetchUserByPropertiesExtremum(std::string properties, bool highest, bo
 
 bool sql::addWord(const char* word, int difficulty, int committerID) {
 	//check for duplicate
-	int committer = 1;
+	int committer = -1;
 	auto result=_instance->con.query("select committer from question where word like '%s'", word);
 	if (result.fetch(committer) || committer != -1)
 		return false;
@@ -57,6 +57,7 @@ sql::sql() {
 		std::cout << "Connection failed!" << std::endl;
 		std::cout << "Press any key to exit" << std::endl;
 		getchar();
+		exit(-1);
 		return;
 	}
 	std::cout << "Connect to database successfully!" << std::endl;
