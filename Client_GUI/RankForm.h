@@ -13,12 +13,6 @@ namespace ClientGUI {
 	/// <summary>
 	/// Summary for RankForm
 	/// </summary>
-	public ref class CompareUser : Generic::Comparer<UserSchema^>{
-	public:
-		virtual int Compare(UserSchema^ a, UserSchema^ b) override{
-			return a->count>b->count;//count larger come first
-		}
-	};
 	public ref class RankForm : public System::Windows::Forms::Form
 	{
 	public: User^ user;
@@ -67,7 +61,7 @@ namespace ClientGUI {
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		System::ComponentModel::Container ^components;
+		System::ComponentModel::Container^ components;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -228,6 +222,7 @@ namespace ClientGUI {
 			this->Controls->Add(this->tabControl1);
 			this->Name = L"RankForm";
 			this->Text = L"Ranks";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->Load += gcnew System::EventHandler(this, &RankForm::RankForm_Load);
 			this->tabControl1->ResumeLayout(false);
 			this->tabPage1->ResumeLayout(false);
@@ -236,42 +231,44 @@ namespace ClientGUI {
 
 		}
 #pragma endregion
-private: System::Void RankForm_Load(System::Object^ sender, System::EventArgs^ e) {
-	List<UserSchema^>^ PlayerList;
-	List<UserSchema^>^ CommitterList;
-	if (user->isPlayer) {
-		PlayerList = socketManager->getSameUser(user);
-		CommitterList = socketManager->getDifferentUser(user);
+	private: System::Void RankForm_Load(System::Object^ sender, System::EventArgs^ e) {
+		List<UserSchema^>^ PlayerList;
+		List<UserSchema^>^ CommitterList;
+		if (user->isPlayer) {
+			PlayerList = socketManager->getSameUser(user);
+			CommitterList = socketManager->getDifferentUser(user);
+		}
+		else {
+			CommitterList = socketManager->getSameUser(user);
+			PlayerList = socketManager->getDifferentUser(user);
+		}
+		PlayerList->Sort(gcnew CompareUser());
+		CommitterList->Sort(gcnew CompareUser());
+		if (PlayerList == nullptr || CommitterList == nullptr)
+			this->Close();
+		playerRanklistView->BeginUpdate();
+		for each (PlayerSchema ^ item in PlayerList) {
+			auto ltv = gcnew ListViewItem();
+			ltv->Text = item->id.ToString();
+			ltv->SubItems->Add(item->name);
+			ltv->SubItems->Add(item->count.ToString());
+			ltv->SubItems->Add(item->level.ToString());
+			ltv->SubItems->Add(item->exp.ToString());
+			playerRanklistView->Items->Add(ltv);
+		}
+		playerRanklistView->EndUpdate();
+		committerlistView->BeginUpdate();
+		for each (CommitterSchema ^ item in CommitterList) {
+			auto ltv = gcnew ListViewItem();
+			ltv->Text = item->id.ToString();
+			ltv->SubItems->Add(item->name);
+			ltv->SubItems->Add(item->count.ToString());
+			ltv->SubItems->Add(item->level.ToString());
+			committerlistView->Items->Add(ltv);
+		}
+		committerlistView->EndUpdate();
+		delete PlayerList;
+		delete CommitterList;
 	}
-	else {
-		CommitterList = socketManager->getSameUser(user);
-		PlayerList = socketManager->getDifferentUser(user);
-	}
-	PlayerList->Sort(gcnew CompareUser());
-	CommitterList->Sort(gcnew CompareUser());
-	if (PlayerList == nullptr || CommitterList == nullptr)
-		this->Close();
-	playerRanklistView->BeginUpdate();
-	for each (PlayerSchema^ item in PlayerList)	{
-		auto ltv = gcnew ListViewItem();
-		ltv->Text = item->id.ToString();
-		ltv->SubItems->Add(item->name);
-		ltv->SubItems->Add(item->count.ToString());
-		ltv->SubItems->Add(item->level.ToString());
-		ltv->SubItems->Add(item->exp.ToString());
-		playerRanklistView->Items->Add(ltv);
-	}
-	playerRanklistView->EndUpdate();
-	committerlistView->BeginUpdate();
-	for each (CommitterSchema^ item in CommitterList) {
-		auto ltv = gcnew ListViewItem();
-		ltv->Text = item->id.ToString();
-		ltv->SubItems->Add(item->name);
-		ltv->SubItems->Add(item->count.ToString());
-		ltv->SubItems->Add(item->level.ToString());
-		committerlistView->Items->Add(ltv);
-	}
-	committerlistView->EndUpdate();
-}
-};
+	};
 }

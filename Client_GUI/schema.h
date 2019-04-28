@@ -59,3 +59,10 @@ public ref class CommitterSchema :
 public:
 	CommitterSchema(String^ username, int id, int count, int level) :UserSchema(username, id, false, count, level) {};
 };
+
+public ref class CompareUser :System::Collections::Generic::Comparer<UserSchema^> {
+public:
+	virtual int Compare(UserSchema^ a, UserSchema^ b) override {
+		return a->count > b->count;//count larger come first
+	}
+};
