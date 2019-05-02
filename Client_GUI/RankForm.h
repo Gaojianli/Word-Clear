@@ -235,12 +235,12 @@ namespace ClientGUI {
 		List<UserSchema^>^ PlayerList;
 		List<UserSchema^>^ CommitterList;
 		if (user->isPlayer) {
-			PlayerList = socketManager->getSameUser(user);
-			CommitterList = socketManager->getDifferentUser(user);
+			PlayerList = socketManager->getSameRoleUser(user);
+			CommitterList = socketManager->getDifferentRoleUser(user);
 		}
 		else {
-			CommitterList = socketManager->getSameUser(user);
-			PlayerList = socketManager->getDifferentUser(user);
+			CommitterList = socketManager->getSameRoleUser(user);
+			PlayerList = socketManager->getDifferentRoleUser(user);
 		}
 		PlayerList->Sort(gcnew CompareUser());
 		CommitterList->Sort(gcnew CompareUser());

@@ -142,6 +142,8 @@
   <ItemGroup>
     <ClCompile Include="client.cpp" />
     <ClCompile Include="MainForm.cpp" />
+    <ClCompile Include="queryForm.cpp" />
+    <ClCompile Include="queryResult.cpp" />
     <ClCompile Include="socketMgnt.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -152,7 +154,7 @@
     <ClInclude Include="CommitterMainControl.h">
       <FileType>CppControl</FileType>
     </ClInclude>
-    <ClInclude Include="login.h">
+    <ClInclude Include="loginForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="MainForm.h">
@@ -160,6 +162,12 @@
     </ClInclude>
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerMainControl.h">
+      <FileType>CppControl</FileType>
+    </ClInclude>
+    <ClInclude Include="queryForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="queryResult.h">
       <FileType>CppControl</FileType>
     </ClInclude>
     <ClInclude Include="RankForm.h">
@@ -179,14 +187,17 @@
     <EmbeddedResource Include="CommitterMainControl.resx">
       <DependentUpon>CommitterMainControl.h</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="login.resx">
-      <DependentUpon>login.h</DependentUpon>
+    <EmbeddedResource Include="loginForm.resx">
+      <DependentUpon>loginForm.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PlayerMainControl.resx">
       <DependentUpon>PlayerMainControl.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="queryForm.resx">
+      <DependentUpon>queryForm.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RankForm.resx">
       <DependentUpon>RankForm.h</DependentUpon>

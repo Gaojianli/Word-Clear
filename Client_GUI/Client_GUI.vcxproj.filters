@@ -24,9 +24,6 @@
     <ClInclude Include="MainForm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="login.h">
-      <Filter>Header Files\Forms</Filter>
-    </ClInclude>
     <ClInclude Include="registe.h">
       <Filter>Header Files\UserControl</Filter>
     </ClInclude>
@@ -57,6 +54,15 @@
     <ClInclude Include="RankForm.h">
       <Filter>Header Files\Forms</Filter>
     </ClInclude>
+    <ClInclude Include="loginForm.h">
+      <Filter>Header Files\Forms</Filter>
+    </ClInclude>
+    <ClInclude Include="queryForm.h">
+      <Filter>Header Files\Forms</Filter>
+    </ClInclude>
+    <ClInclude Include="queryResult.h">
+      <Filter>Header Files\UserControl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainForm.cpp">
@@ -67,6 +73,12 @@
     </ClCompile>
     <ClCompile Include="socketMgnt.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="queryForm.cpp">
+      <Filter>Header Files\Forms</Filter>
+    </ClCompile>
+    <ClCompile Include="queryResult.cpp">
+      <Filter>Header Files\UserControl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

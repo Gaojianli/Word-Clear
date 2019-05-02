@@ -14,13 +14,13 @@ namespace ClientGUI {
 	/// <summary>
 	/// Summary for login
 	/// </summary>
-	public ref class login : public System::Windows::Forms::Form
+	public ref class loginForm : public System::Windows::Forms::Form
 	{
 	private: System::Windows::Forms::Form^ parent;
 	public: property User^ user;
 	public: socketMgnt^ socketManager;
 	public:
-		login(System::Windows::Forms::Form^ parent, socketMgnt^ socketManager):parent(parent), socketManager(socketManager){
+		loginForm(System::Windows::Forms::Form^ parent, socketMgnt^ socketManager):parent(parent), socketManager(socketManager){
 			InitializeComponent();
 			//
 			//TODO: Add the constructor code here
@@ -33,7 +33,7 @@ namespace ClientGUI {
 		/// <summary>
 		/// Clean up any resources being used.
 		/// </summary>
-		~login()
+		~loginForm()
 		{
 			if (components)
 			{
@@ -108,7 +108,7 @@ namespace ClientGUI {
 			this->passwordBox->PasswordChar = '*';
 			this->passwordBox->Size = System::Drawing::Size(343, 35);
 			this->passwordBox->TabIndex = 3;
-			this->passwordBox->TextChanged += gcnew System::EventHandler(this, &login::PasswordBox_TextChanged);
+			this->passwordBox->TextChanged += gcnew System::EventHandler(this, &loginForm::PasswordBox_TextChanged);
 			// 
 			// loginButton
 			// 
@@ -120,7 +120,7 @@ namespace ClientGUI {
 			this->loginButton->TabIndex = 4;
 			this->loginButton->Text = L"Sign in";
 			this->loginButton->UseVisualStyleBackColor = true;
-			this->loginButton->Click += gcnew System::EventHandler(this, &login::LoginButton_Click);
+			this->loginButton->Click += gcnew System::EventHandler(this, &loginForm::LoginButton_Click);
 			// 
 			// signButton
 			// 
@@ -131,7 +131,7 @@ namespace ClientGUI {
 			this->signButton->TabIndex = 5;
 			this->signButton->Text = L"Sign up";
 			this->signButton->UseVisualStyleBackColor = true;
-			this->signButton->Click += gcnew System::EventHandler(this, &login::SignButton_Click);
+			this->signButton->Click += gcnew System::EventHandler(this, &loginForm::SignButton_Click);
 			// 
 			// login
 			// 

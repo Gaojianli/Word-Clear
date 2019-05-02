@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "Player.h"
 #include "RankForm.h"
+#include "queryForm.h"
 #include "socketMgnt.h"
 using namespace System;
 using namespace System::ComponentModel;
@@ -94,7 +95,7 @@ namespace ClientGUI {
 			// label1
 			// 
 			this->label1->AutoSize = true;
-			this->label1->Location = System::Drawing::Point(115, 39);
+			this->label1->Location = System::Drawing::Point(89, 39);
 			this->label1->Name = L"label1";
 			this->label1->Size = System::Drawing::Size(84, 29);
 			this->label1->TabIndex = 0;
@@ -103,7 +104,7 @@ namespace ClientGUI {
 			// userNameLabel
 			// 
 			this->userNameLabel->AutoSize = true;
-			this->userNameLabel->Location = System::Drawing::Point(188, 39);
+			this->userNameLabel->Location = System::Drawing::Point(179, 39);
 			this->userNameLabel->Name = L"userNameLabel";
 			this->userNameLabel->Size = System::Drawing::Size(138, 29);
 			this->userNameLabel->TabIndex = 1;
@@ -121,7 +122,7 @@ namespace ClientGUI {
 			// levelLabel
 			// 
 			this->levelLabel->AutoSize = true;
-			this->levelLabel->Location = System::Drawing::Point(425, 39);
+			this->levelLabel->Location = System::Drawing::Point(440, 39);
 			this->levelLabel->Name = L"levelLabel";
 			this->levelLabel->Size = System::Drawing::Size(82, 29);
 			this->levelLabel->TabIndex = 3;
@@ -139,7 +140,7 @@ namespace ClientGUI {
 			// countLabel
 			// 
 			this->countLabel->AutoSize = true;
-			this->countLabel->Location = System::Drawing::Point(701, 39);
+			this->countLabel->Location = System::Drawing::Point(715, 39);
 			this->countLabel->Name = L"countLabel";
 			this->countLabel->Size = System::Drawing::Size(89, 29);
 			this->countLabel->TabIndex = 5;
@@ -157,7 +158,7 @@ namespace ClientGUI {
 			// expLabel
 			// 
 			this->expLabel->AutoSize = true;
-			this->expLabel->Location = System::Drawing::Point(871, 39);
+			this->expLabel->Location = System::Drawing::Point(884, 39);
 			this->expLabel->Name = L"expLabel";
 			this->expLabel->Size = System::Drawing::Size(70, 29);
 			this->expLabel->TabIndex = 7;
@@ -194,6 +195,7 @@ namespace ClientGUI {
 			this->queryButton->TabIndex = 2;
 			this->queryButton->Text = L"Query";
 			this->queryButton->UseVisualStyleBackColor = true;
+			this->queryButton->Click += gcnew System::EventHandler(this, &PlayerMainControl::QueryButton_Click);
 			// 
 			// rankButton
 			// 
@@ -250,5 +252,9 @@ namespace ClientGUI {
 		auto rank = gcnew RankForm(user, socketManager);
 		rank->Show();
 	}
+private: System::Void QueryButton_Click(System::Object^ sender, System::EventArgs^ e) {
+	auto query = gcnew queryForm(user, socketManager);
+	query->Show();
+}
 };
 }

@@ -140,7 +140,7 @@ bool socketMgnt::commit(String^ word, int difficulty, User^ committer) {
 	}
 }
 
-List<UserSchema^>^ socketMgnt::getSameUser(User^ user) {
+List<UserSchema^>^ socketMgnt::getSameRoleUser(User^ user) {
 	auto json = JsonConvert::SerializeObject(gcnew schemaWithSession("getSameUsers", user->session, nullptr));
 	auto response = sendAndRec(json);
 	JObject^ jo;
@@ -169,7 +169,7 @@ List<UserSchema^>^ socketMgnt::getSameUser(User^ user) {
 	}
 }
 
-List<UserSchema^>^ socketMgnt::getDifferentUser(User^ user) {
+List<UserSchema^>^ socketMgnt::getDifferentRoleUser(User^ user) {
 	auto json = JsonConvert::SerializeObject(gcnew schemaWithSession("getDifferentUsers", user->session, nullptr));
 	auto response = sendAndRec(json);
 	JObject^ jo;

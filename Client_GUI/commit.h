@@ -96,6 +96,7 @@ namespace ClientGUI {
 			// 
 			// difficultySelect
 			// 
+			this->difficultySelect->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
 			this->difficultySelect->FormattingEnabled = true;
 			this->difficultySelect->Items->AddRange(gcnew cli::array< System::Object^  >(10) {
 				L"1", L"2", L"3", L"4", L"5", L"6", L"7",

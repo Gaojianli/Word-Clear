@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "login.h"
+#include "loginForm.h"
 #include "user.h"
 #include "socketMgnt.h"
 #include "PlayerMainControl.h"
@@ -25,9 +25,9 @@ namespace ClientGUI {
 			InitializeComponent();
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			socketManager = socketMgnt::getInstance();
-			auto login = gcnew ClientGUI::login(this, socketManager);
-			login->init(globalUser);
-			if (login->ShowDialog() != System::Windows::Forms::DialogResult::OK) {
+			auto loginForm = gcnew ClientGUI::loginForm(this, socketManager);
+			loginForm->init(globalUser);
+			if (loginForm->ShowDialog() != System::Windows::Forms::DialogResult::OK) {
 				this->Close();
 				System::Environment::Exit(2);
 			}

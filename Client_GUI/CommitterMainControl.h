@@ -3,6 +3,8 @@
 #include "RankForm.h"
 #include "commit.h"
 #include "socketMgnt.h"
+#include "queryForm.h"
+
 using namespace System;
 using namespace System::ComponentModel;
 using namespace System::Collections;
@@ -102,7 +104,7 @@ namespace ClientGUI {
 			// levelLabel
 			// 
 			this->levelLabel->AutoSize = true;
-			this->levelLabel->Location = System::Drawing::Point(480, 35);
+			this->levelLabel->Location = System::Drawing::Point(495, 35);
 			this->levelLabel->Name = L"levelLabel";
 			this->levelLabel->Size = System::Drawing::Size(82, 29);
 			this->levelLabel->TabIndex = 11;
@@ -120,7 +122,7 @@ namespace ClientGUI {
 			// userNameLabel
 			// 
 			this->userNameLabel->AutoSize = true;
-			this->userNameLabel->Location = System::Drawing::Point(243, 35);
+			this->userNameLabel->Location = System::Drawing::Point(182, 35);
 			this->userNameLabel->Name = L"userNameLabel";
 			this->userNameLabel->Size = System::Drawing::Size(138, 29);
 			this->userNameLabel->TabIndex = 9;
@@ -129,7 +131,7 @@ namespace ClientGUI {
 			// label1
 			// 
 			this->label1->AutoSize = true;
-			this->label1->Location = System::Drawing::Point(170, 35);
+			this->label1->Location = System::Drawing::Point(92, 35);
 			this->label1->Name = L"label1";
 			this->label1->Size = System::Drawing::Size(84, 29);
 			this->label1->TabIndex = 8;
@@ -166,6 +168,7 @@ namespace ClientGUI {
 			this->queryButton->TabIndex = 2;
 			this->queryButton->Text = L"Query";
 			this->queryButton->UseVisualStyleBackColor = true;
+			this->queryButton->Click += gcnew System::EventHandler(this, &CommitterMainControl::QueryButton_Click);
 			// 
 			// rankButton
 			// 
@@ -238,5 +241,9 @@ namespace ClientGUI {
 		auto rank = gcnew RankForm(user, socketManager);
 		rank->Show();
 	}
+private: System::Void QueryButton_Click(System::Object^ sender, System::EventArgs^ e) {
+	auto query = gcnew queryForm(user, socketManager);
+	query->Show();
+}
 };
 }

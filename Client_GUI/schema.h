@@ -60,6 +60,15 @@ public:
 	CommitterSchema(String^ username, int id, int count, int level) :UserSchema(username, id, false, count, level) {};
 };
 
+template <typename T>
+public ref class querySchema{
+public:
+	querySchema(String^ role, String^ property, T value) :role(role), property(property), value(value) {};
+	String^ role;
+	String^ property;
+	T value;
+};
+
 public ref class CompareUser :System::Collections::Generic::Comparer<UserSchema^> {
 public:
 	virtual int Compare(UserSchema^ a, UserSchema^ b) override {
