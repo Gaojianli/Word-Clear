@@ -199,6 +199,9 @@
     <EmbeddedResource Include="queryForm.resx">
       <DependentUpon>queryForm.h</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="queryResult.resx">
+      <DependentUpon>queryResult.h</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="RankForm.resx">
       <DependentUpon>RankForm.h</DependentUpon>
     </EmbeddedResource>

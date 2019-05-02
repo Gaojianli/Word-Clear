@@ -94,7 +94,7 @@ namespace ClientGUI {
 			this->groupBox1->Controls->Add(this->committerRadio);
 			this->groupBox1->Controls->Add(this->playerRadio);
 			this->groupBox1->Controls->Add(this->label1);
-			this->groupBox1->Location = System::Drawing::Point(94, 36);
+			this->groupBox1->Location = System::Drawing::Point(52, 26);
 			this->groupBox1->Name = L"groupBox1";
 			this->groupBox1->Size = System::Drawing::Size(704, 265);
 			this->groupBox1->TabIndex = 0;
@@ -194,7 +194,7 @@ namespace ClientGUI {
 			this->AcceptButton = this->queryButton;
 			this->AutoScaleDimensions = System::Drawing::SizeF(14, 29);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(884, 339);
+			this->ClientSize = System::Drawing::Size(798, 321);
 			this->Controls->Add(this->groupBox1);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
 			this->MaximizeBox = false;
