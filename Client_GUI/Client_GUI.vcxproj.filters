@@ -63,6 +63,9 @@
     <ClInclude Include="queryResult.h">
       <Filter>Header Files\UserControl</Filter>
     </ClInclude>
+    <ClInclude Include="playForm.h">
+      <Filter>Header Files\Forms</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainForm.cpp">
@@ -79,6 +82,9 @@
     </ClCompile>
     <ClCompile Include="queryResult.cpp">
       <Filter>Header Files\UserControl</Filter>
+    </ClCompile>
+    <ClCompile Include="playForm.cpp">
+      <Filter>Header Files\Forms</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

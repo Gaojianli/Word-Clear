@@ -26,6 +26,12 @@ socketMgnt::socketMgnt() {
 	}
 }
 
+socketMgnt::~socketMgnt(){
+	if (connection->Connected)
+		connection->Close();
+	delete connection;
+}
+
 User^ socketMgnt::login(String^ username, String^ password) {
 	auto json = JsonConvert::SerializeObject(gcnew schema("login", (Object^)gcnew loginSchema(username, password)));
 	auto response = sendAndRec(json);
@@ -227,5 +233,48 @@ List<UserSchema^>^ socketMgnt::getDifferentRoleUser(User^ user) {
 	catch (Exception^ e) {
 		System::Windows::Forms::MessageBox::Show("Invaild response: " + e->ToString(), "Error");
 		return nullptr;
+	}
+}
+
+List<wordSchema^>^ socketMgnt::getQuestionsByLevel(User^ user, int difficulty){
+	auto json = JsonConvert::SerializeObject(gcnew schemaWithSession("getQuestionList", user->session, gcnew getQuestionListSchema(difficulty)));
+	auto response = sendAndRec(json);
+	JObject^ jo;
+	List<wordSchema^>^ toReturn = nullptr;
+	try
+	{
+		jo = JObject::Parse(response);
+		if (int code = (int)jo["code"]; code == 200) {
+			auto data = (JObject^)jo["data"];
+			auto userArray = (JArray^)data["Words"];
+			toReturn = gcnew List<wordSchema^>();
+			for each (auto item in userArray) {
+				toReturn->Add(gcnew wordSchema((String^)item["Word"], (int)item["level"]));
+			}
+			return toReturn;
+		}
+		else
+			throw gcnew Exception((String^)jo["msg"]);
+	}
+	catch (Exception^ e) {
+		System::Windows::Forms::MessageBox::Show("Invaild response: " + e->ToString(), "Error");
+		return nullptr;
+	}
+}
+
+void socketMgnt::updatePlayer(Player^ user) {
+	auto json = JsonConvert::SerializeObject(gcnew schemaWithSession("updateUser", user->session, gcnew updateUserSchema(user->count, user->exp, user->level)));
+	auto response = sendAndRec(json);
+	JObject^ jo;
+	try
+	{
+		jo = JObject::Parse(response);
+		if (int code = (int)jo["code"]; code == 202)
+			return;
+		else
+			throw gcnew Exception((String^)jo["msg"]);
+	}
+	catch (Exception^ e) {
+		System::Windows::Forms::MessageBox::Show("Invaild response: " + e->ToString(), "Error");
 	}
 }

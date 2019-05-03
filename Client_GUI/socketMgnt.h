@@ -18,6 +18,8 @@ public:
 	//get the users which have the same role
 	List<UserSchema^>^ getSameRoleUser(User^ user);
 	List<UserSchema^>^ getDifferentRoleUser(User^ user);
+	List<wordSchema^>^ getQuestionsByLevel(User^ user, int difficulty);
+	void updatePlayer(Player^ user);
 	template<typename T>
 	List<UserSchema^>^ customizeQuery(User^ user, String^ Property, bool isPlayer, T value);
 private:
@@ -26,6 +28,7 @@ private:
 	String^ sendAndRec(String^ toSend);
 	System::Net::Sockets::Socket^ connection;
 	socketMgnt();
+	~socketMgnt();
 };
 
 #endif // !socket_H

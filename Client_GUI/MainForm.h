@@ -31,6 +31,7 @@ namespace ClientGUI {
 				this->Close();
 				System::Environment::Exit(2);
 			}
+			delete loginForm;
 			//
 			//TODO: Add the constructor code here
 			//
@@ -92,7 +93,7 @@ namespace ClientGUI {
 		//fill the windows with the user control
 		System::Windows::Forms::UserControl^ control;
 		if (globalUser->isPlayer)
-			control = gcnew ClientGUI::PlayerMainControl(dynamic_cast<Player^>(globalUser), socketManager);
+			control = gcnew ClientGUI::PlayerMainControl(dynamic_cast<Player^>(globalUser), socketManager, this);
 		else
 			control = gcnew ClientGUI::CommitterMainControl(dynamic_cast<Committer^>(globalUser), socketManager);
 		control->Location = Point(0, 0);
@@ -102,7 +103,7 @@ namespace ClientGUI {
 		this->panel1->Location = Point(0, panel1->Location.Y);
 		this->panel1->Size = control->Size;
 		this->Size = control->Size;
-		this->Height = this->Height + 80;
+		this->Height = this->Height + 60;
 		GC::Collect();
 	}
 	};

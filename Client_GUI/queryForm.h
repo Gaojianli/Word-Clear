@@ -249,18 +249,7 @@ private: System::Void valueBox_TextChanged(System::Object^ sender, System::Event
 	else
 		queryButton->Enabled = true;
 }
-private: System::Void ValueBox_KeyPress(System::Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e) {
-	if (!propertyPicker->SelectedItem->Equals("Name")) //can type number only
-		if (e->KeyChar != '\b') 
-			if ((e->KeyChar < '0') || (e->KeyChar > '9')) {
-				errorProvider1->SetError(valueBox, "Can't input any non-numeric characters");
-				e->Handled = true;
-			}
-			else {
-				errorProvider1->Clear();
-			}
-	
-}
+private: System::Void ValueBox_KeyPress(System::Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e);
 private: System::Void PropertyPicker_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 	valueBox->Text = String::Empty;
 	valueBox->Enabled = true;

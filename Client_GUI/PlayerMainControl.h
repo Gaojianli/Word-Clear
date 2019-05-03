@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "RankForm.h"
 #include "queryForm.h"
+#include "playForm.h"
 #include "socketMgnt.h"
 using namespace System;
 using namespace System::ComponentModel;
@@ -36,14 +37,14 @@ namespace ClientGUI {
 
 
 	private: System::Windows::Forms::Button^ rankButton;
-
+	private: Form^ parent;
 
 
 
 
 	public: socketMgnt^ socketManager;
 	public:
-		PlayerMainControl(Player^ user, socketMgnt^ socketManager) :user(user), socketManager(socketManager)
+		PlayerMainControl(Player^ user, socketMgnt^ socketManager, Form^ parent) :user(user), socketManager(socketManager),parent(parent)
 		{
 			InitializeComponent();
 			//
@@ -215,6 +216,7 @@ namespace ClientGUI {
 			this->startButton->TabIndex = 0;
 			this->startButton->Text = L"Play";
 			this->startButton->UseVisualStyleBackColor = true;
+			this->startButton->Click += gcnew System::EventHandler(this, &PlayerMainControl::StartButton_Click);
 			// 
 			// PlayerMainControl
 			// 
@@ -245,7 +247,7 @@ namespace ClientGUI {
 		expLabel->Text = user->exp.ToString();
 	}
 	private: System::Void QuitButton_Click(System::Object^ sender, System::EventArgs^ e) {
-		GC::Collect();
+		delete socketManager;
 		Environment::Exit(0);
 	}
 	private: System::Void RankButton_Click(System::Object^ sender, System::EventArgs^ e) {
@@ -255,6 +257,20 @@ namespace ClientGUI {
 private: System::Void QueryButton_Click(System::Object^ sender, System::EventArgs^ e) {
 	auto query = gcnew queryForm(user, socketManager);
 	query->Show();
+}
+private: System::Void StartButton_Click(System::Object^ sender, System::EventArgs^ e) {
+	parent->Hide();
+	auto playerForm = gcnew playForm(user, socketManager);
+	if (auto result = playerForm->ShowDialog(); result == DialogResult::OK) {
+		parent->Show();
+		socketManager->updatePlayer(user);
+		levelLabel->Text = user->level.ToString();
+		countLabel->Text = user->count.ToString();
+		expLabel->Text = user->exp.ToString();
+	}
+	else
+		parent->Show();
+	delete playerForm;
 }
 };
 }

@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClCompile Include="client.cpp" />
     <ClCompile Include="MainForm.cpp" />
+    <ClCompile Include="playForm.cpp" />
     <ClCompile Include="queryForm.cpp" />
     <ClCompile Include="queryResult.cpp" />
     <ClCompile Include="socketMgnt.cpp" />
@@ -163,6 +164,9 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerMainControl.h">
       <FileType>CppControl</FileType>
+    </ClInclude>
+    <ClInclude Include="playForm.h">
+      <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="queryForm.h">
       <FileType>CppForm</FileType>
@@ -195,6 +199,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="PlayerMainControl.resx">
       <DependentUpon>PlayerMainControl.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="playForm.resx">
+      <DependentUpon>playForm.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="queryForm.resx">
       <DependentUpon>queryForm.h</DependentUpon>

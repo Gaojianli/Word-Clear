@@ -230,11 +230,13 @@ namespace ClientGUI {
 			user->count++;
 			if (user->count / 10 > user->level)
 				user->level++;
+			delete commitForm;
 		}
 		levelLabel->Text = user->level.ToString();
 		countLabel->Text = user->count.ToString();
 	}
 	private: System::Void QuitButton_Click(System::Object^ sender, System::EventArgs^ e) {
+		delete socketManager;
 		Environment::Exit(0);
 	}
 	private: System::Void RankButton_Click(System::Object^ sender, System::EventArgs^ e) {

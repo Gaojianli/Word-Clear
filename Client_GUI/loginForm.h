@@ -165,6 +165,7 @@ namespace ClientGUI {
 			auto parentUser = t->GetProperty("globalUser");
 			parentUser->SetValue(parent, user);
 			this->DialogResult = System::Windows::Forms::DialogResult::OK;
+			delete sign;
 		}
 		else {
 			this->Show();

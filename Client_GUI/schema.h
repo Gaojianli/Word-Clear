@@ -22,6 +22,7 @@ public:
 	String^ username;
 	String^ password;
 };
+
 public ref class signUpSchema {
 public:
 	signUpSchema(String^ username, String^ password, bool isPlayer) :username(username), password(password), isPlayer(isPlayer) {};
@@ -29,11 +30,25 @@ public:
 	String^ password;
 	bool isPlayer;
 };
+
 public ref class commitSchema {
 public:
 	commitSchema(String^ word, int difficulty) :word(word), difficulty(difficulty) {};
 	String^ word;
 	int difficulty;
+};
+
+public ref class wordSchema {
+public:
+	wordSchema(String^ word, int level) :word(word), level(level) {};
+	String^ word;
+	int level;
+};
+
+public ref class getQuestionListSchema {
+public:
+	getQuestionListSchema(int level) :level(level) {};
+	int level;
 };
 
 public ref  class UserSchema {
@@ -67,6 +82,14 @@ public:
 	String^ role;
 	String^ property;
 	T value;
+};
+
+public ref class updateUserSchema {
+public:
+	updateUserSchema(int count, int exp, int level) :count(count), exp(exp), level(level) {};
+	int count;
+	int exp;
+	int level;
 };
 
 public ref class CompareUser :System::Collections::Generic::Comparer<UserSchema^> {
