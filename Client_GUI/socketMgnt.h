@@ -22,6 +22,7 @@ public:
 	List<UserSchema^>^ customizeQuery(User^ user, String^ Property, bool isPlayer, T value);
 private:
 	static socketMgnt^ _instance;
+	bool socketConnected();
 	String^ sendAndRec(String^ toSend);
 	System::Net::Sockets::Socket^ connection;
 	socketMgnt();

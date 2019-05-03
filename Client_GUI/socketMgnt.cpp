@@ -13,7 +13,7 @@ socketMgnt^ socketMgnt::getInstance() {
 
 socketMgnt::socketMgnt() {
 	int port = 4000;
-	auto host=gcnew String("127.0.0.1");
+	auto host = gcnew String("127.0.0.1");
 	auto ip = IPAddress::Parse(host);
 	auto ipe = gcnew IPEndPoint(ip, port);
 	connection = gcnew Socket(AddressFamily::InterNetwork, SocketType::Stream, ProtocolType::Tcp);
@@ -40,7 +40,7 @@ User^ socketMgnt::login(String^ username, String^ password) {
 	try {
 		jo = JObject::Parse(response);
 		auto data = jo["data"];
-		switch (int code = (int)jo["code"];code){
+		switch (int code = (int)jo["code"]; code) {
 		case 200:
 			name = (String^)data["username"];
 			session = (String^)data["session"];
@@ -105,9 +105,41 @@ User^ socketMgnt::signup(String^ username, String^ password, bool isPlayer) {
 	return user;
 }
 
+bool socketMgnt::socketConnected() {
+	bool condition1 = connection->Poll(200, SelectMode::SelectRead);
+	bool condition2 = (connection->Available == 0);
+	if (condition1 && condition2)
+		return false;
+	else
+		return true;
+}
+
 String^ socketMgnt::sendAndRec(String^ toSend) {
+	//deal with connection lost
+	if (!socketConnected()) {
+		try {
+			connection->Close();
+			int port = 4000;
+			auto host = gcnew String("127.0.0.1");
+			auto ip = IPAddress::Parse(host);
+			auto ipe = gcnew IPEndPoint(ip, port);
+			connection = gcnew Socket(AddressFamily::InterNetwork, SocketType::Stream, ProtocolType::Tcp);
+			connection->Connect(ipe);
+		}
+		catch (SocketException^ e) {
+			System::Windows::Forms::MessageBox::Show("Can't connect to server!\n" + e->ToString(), "Error");
+			System::Environment::Exit(-1);
+		}
+	}
+	
 	auto sendByte = Encoding::Default->ASCII->GetBytes(toSend);
-	connection->Send(sendByte);
+	try {
+		connection->Send(sendByte);
+	}
+	catch (SocketException^ e) {
+		System::Windows::Forms::MessageBox::Show("Server error: " + e->ToString(), "Error");
+		System::Environment::Exit(-2);
+	}
 	auto recStr = gcnew String("");
 	auto recBytes = gcnew array<unsigned char>(4096);
 	int bytes = connection->Receive(recBytes);
@@ -134,7 +166,7 @@ bool socketMgnt::commit(String^ word, int difficulty, User^ committer) {
 			}
 		}
 	}
-	catch (Exception^ e){
+	catch (Exception^ e) {
 		System::Windows::Forms::MessageBox::Show("Invaild response: " + e->ToString(), "Error");
 		return false;
 	}
@@ -152,7 +184,7 @@ List<UserSchema^>^ socketMgnt::getSameRoleUser(User^ user) {
 			auto data = (JObject^)jo["data"];
 			auto userArray = (JArray^)data["Users"];
 			toReturn = gcnew List<UserSchema^>();
-			for each (auto item in userArray){
+			for each (auto item in userArray) {
 				if ((bool)item["isPlayer"])
 					toReturn->Add(gcnew PlayerSchema((String^)item["name"], (int)item["id"], (int)item["count"], (int)item["level"], (int)item["exp"]));
 				else
