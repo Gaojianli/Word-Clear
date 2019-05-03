@@ -9,6 +9,7 @@
 *.user
 *.userosscache
 *.sln.docstates
+*.exe
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -341,3 +342,4 @@ healthchecksdb
 
 Client/database.db
 *.db
+*.exe

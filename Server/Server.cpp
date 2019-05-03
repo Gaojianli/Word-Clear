@@ -14,15 +14,15 @@ using namespace rapidjson;
 void listen(uvw::Loop& loop, int port) {
 	std::shared_ptr<uvw::TCPHandle> tcp = loop.resource<uvw::TCPHandle>();
 	auto ErrorEventEmitter = tcp->on<uvw::ErrorEvent>([](const uvw::ErrorEvent & event, uvw::TCPHandle&) {
-		cout << "error occurred:" << event.what() << endl;
+		cout << "Error occurred:" << event.what() << endl;
 		});
 	auto ListenEventEmitter = tcp->on<uvw::ListenEvent>([](const uvw::ListenEvent&, uvw::TCPHandle & srv) {
 		std::shared_ptr<uvw::TCPHandle> client = srv.loop().resource<uvw::TCPHandle>();
 		srv.accept(*client);
 		uvw::Addr remote = client->peer();
-		std::cout << remote.ip << ":" << remote.port << " Connected" << std::endl;
+		std::cout << std::endl << remote.ip << ":" << remote.port << " Connected" << std::endl;
 		auto CloseEventEmitter = client->on<uvw::CloseEvent>([remote](const uvw::CloseEvent&, uvw::TCPHandle&) {
-			std::cout << "Connection from " << remote.ip << " closed." << std::endl;
+			std::cout << "Connection from " << remote.ip << " closed." << std::endl << std::endl;
 		});
 		auto EndEventEmitter = client->on<uvw::EndEvent>([](const uvw::EndEvent&, uvw::TCPHandle & client) { 
 			client.close(); 
@@ -39,27 +39,41 @@ void listen(uvw::Loop& loop, int port) {
 			memcpy_s(temp, event.length, event.data.get(), event.length);
 			temp[event.length] = '\0';
 			string response;
-			if (dc.Parse(temp).HasParseError() || !dc.IsObject())
-				response = utils::throwInfo("Invaild Request", 406);
-			else if (dc.HasMember("operation")) {
-				string operation = dc["operation"].GetString();
-				if (operation._Equal("close")) {//close connection
-					client.close();
-					return;
-				}
-				else if (operation._Equal("login")) {
-					response = handler::login(dc);
-				}
-				else if (dc.HasMember("session")) {
-					response = handler::sessionOperationRouter(dc,operation);
-				}
-				else {
-					response = utils::throwInfo("Forbidden", 403);
+			try {
+				if (dc.Parse(temp).HasParseError() || !dc.IsObject())
+					response = utils::throwInfo("Invaild JSON data", 406);
+				else if (dc.HasMember("operation")) {
+					string operation = dc["operation"].GetString();
+					if (operation._Equal("close")) {//close connection
+						client.close();
+						return;
+					}
+					else if (operation._Equal("login")) {
+						response = handler::login(dc);
+					}
+					else if (operation._Equal("register")) {
+						response = handler::signUP(dc);
+					}
+					else if (dc.HasMember("session")) {
+						response = handler::sessionOperationRouter(dc, operation);
+					}
+					else {
+						response = utils::throwInfo("Forbidden", 403);
 
+					}
 				}
+				else
+					response = utils::throwInfo("Invaild operation", 406);
 			}
-			else
-				response = utils::throwInfo("Invaild operation", 406);
+			catch (std::string& msg) {
+				response = utils::throwInfo(msg, 500);
+			}
+			catch (const char* msg) {
+				response = utils::throwInfo(msg, 500);
+			}
+			catch (...) {
+				response = utils::throwInfo("Unknown internal server error.", 500);
+			}
 			auto toWrite = new char[response.size()];
 			memcpy_s(toWrite, response.size(), response.c_str(), response.size());
 			client.tryWrite(toWrite, (unsigned)response.size());

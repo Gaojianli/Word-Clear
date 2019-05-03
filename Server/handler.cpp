@@ -47,6 +47,51 @@ std::string handler::login(Document& dc) {
 		return utils::throwInfo("Invaild credential", 403);
 }
 
+std::string handler::signUP(Document& dc) {
+	auto data = dc.FindMember("data");
+	if (data == dc.MemberEnd())
+		return utils::throwInfo("Not acceptable!", 406);
+	auto usernameItem = data->value.FindMember("username");
+	auto passwordItem = data->value.FindMember("password");
+	auto isPlayerDC = data->value.FindMember("isPlayer");
+	if (usernameItem == data->value.MemberEnd() || passwordItem == data->value.MemberEnd() || isPlayerDC == data->value.MemberEnd())
+		return utils::throwInfo("Not acceptable!", 406);
+	if (sql::checkDuplicateUser(usernameItem->value.GetString()))
+		return utils::throwInfo("User existed!", 401);
+	auto password = passwordItem->value.GetString();
+	auto username = usernameItem->value.GetString();
+	auto user = sql::addUser(username, password, isPlayerDC->value.GetBool());
+	auto session = std::move(MD5(user->name + password + std::to_string(time(nullptr))).toStr());
+	StringBuffer s;
+	Writer<StringBuffer, Document::EncodingType, ASCII<>> response(s);
+	response.StartObject();
+	response.Key("code");
+	response.Int(200);
+	response.Key("data");
+	//start data object
+	response.StartObject();
+	response.Key("id");
+	response.Int(user->id);
+	response.Key("username");
+	response.String(username);
+	response.Key("session");
+	response.String(session.c_str());
+	response.Key("isPlayer");
+	response.Bool(user->isPlayer);
+	response.Key("count");
+	response.Int(user->count);
+	response.Key("exp");
+	response.Int(user->exp);
+	response.Key("level");
+	response.Int(user->level);
+	response.EndObject();
+	response.EndObject();
+	sql::updateSession(session, user->id);
+	delete user;
+	return s.GetString();
+}
+
+
 std::string handler::sessionOperationRouter(Document& dc, string& operation) {
 	auto user = std::make_shared<User>(std::move(sql::fetchUserBySession(dc["session"].GetString())));
 	if (user == nullptr)
@@ -54,14 +99,20 @@ std::string handler::sessionOperationRouter(Document& dc, string& operation) {
 	else {
 		if (operation._Equal("getQuestionList"))
 			return getQuesiontList(dc);
-		else if (operation._Equal("getUsers"))
+		else if (operation._Equal("getSameUsers"))
 			return getUsers("isPlayer", user->isPlayer);
+		else if(operation._Equal("getDifferentUsers"))
+			return getUsers("isPlayer", !user->isPlayer);
 		else if (operation._Equal("getAllUsers"))
 			return getUsers(NULL);
 		else if (operation._Equal("commit"))
 			return commit(user, dc);
 		else if (operation._Equal("updateUser"))
 			return updateUser(user, dc);
+		else if (operation._Equal("fetchExtremum"))
+			return fetchExtremum(user, dc);
+		else if (operation._Equal("getUsersByCondition"))
+			return fetchUsersByCondition(user, dc);
 		else {
 			return utils::throwInfo("Operation can't be recognized", 404);
 		}
@@ -118,6 +169,139 @@ std::string handler::getQuesiontList(Document& dc) {
 	}
 	else
 		return utils::throwInfo("Not found", 404);
+}
+template<typename user_ptr>
+std::string handler::fetchUsersByCondition(user_ptr user, Document& dc) {
+	auto data = dc.FindMember("data");
+	if (data == dc.MemberEnd())
+		return utils::throwInfo("Not acceptable!", 406);
+	auto roleDC = data->value.FindMember("role");
+	auto propertyDC = data->value.FindMember("property");
+	auto valueDC = data->value.FindMember("value");
+	if (propertyDC == data->value.MemberEnd() || valueDC == data->value.MemberEnd())
+		return utils::throwInfo("Not acceptable!", 406);
+	bool isPlayer_request;//role
+	if (roleDC == data->value.MemberEnd())
+		isPlayer_request = user->isPlayer;
+	else {
+		string role = roleDC->value.GetString();
+		if (role._Equal("player"))
+			isPlayer_request = true;
+		else if (role._Equal("committer"))
+			isPlayer_request = false;
+		else
+			isPlayer_request = user->isPlayer;
+	}
+	std::vector<User>* result = nullptr;
+	string propertyToQuery = propertyDC->value.GetString();
+	if (propertyToQuery._Equal("name"))
+		result = sql::fetchUsersByCondition(propertyToQuery, valueDC->value.GetString());
+	else if (propertyToQuery._Equal("count") || propertyToQuery._Equal("level") || propertyToQuery._Equal("id"))
+		result = sql::fetchUsersByCondition(propertyToQuery, valueDC->value.GetInt());
+	else if (propertyToQuery._Equal("exp")) {//committer don't have exp
+		if (isPlayer_request)
+			result = sql::fetchUsersByCondition(propertyToQuery, valueDC->value.GetInt());
+		else
+			return utils::throwInfo("Invaild Property!", 406);
+	}
+	else
+		return utils::throwInfo("Invaild Property!", 406);
+	StringBuffer s;
+	Writer<StringBuffer, Document::EncodingType, ASCII<>> response(s);
+	response.StartObject();
+	response.Key("code");
+	response.Int(200);
+	response.Key("data");
+	response.StartObject();
+	response.Key("Users");
+	response.StartArray();
+	if (result != nullptr)
+		if (result->size() > 0) {
+			std::for_each(result->begin(), result->end(), [&response, isPlayer_request](User & item) {
+				if (item.isPlayer == isPlayer_request) {
+					response.StartObject();
+					response.Key("id");
+					response.Int(item.id);
+					response.Key("name");
+					response.String(item.name.c_str());
+					response.Key("isPlayer");
+					response.Bool(item.isPlayer);
+					response.Key("count");
+					response.Int(item.count);
+					if (item.isPlayer) {
+						response.Key("exp");
+						response.Int(item.exp);
+					}
+					response.Key("level");
+					response.Int(item.level);
+					response.EndObject();
+				}
+				});
+		}
+	response.EndArray();
+	response.EndObject();
+	response.EndObject();
+	delete result;
+	return s.GetString();
+}
+
+template<typename user_ptr>
+std::string handler::fetchExtremum(user_ptr user, Document& dc) {
+	auto data = dc.FindMember("data");
+	if (data == dc.MemberEnd())
+		return utils::throwInfo("Not acceptable!", 406);
+	auto roleDC = data->value.FindMember("role");
+	auto propertiesDC = data->value.FindMember("property");
+	auto typeDC = data->value.FindMember("type");
+	if (typeDC == data->value.MemberEnd() || propertiesDC == data->value.MemberEnd())
+		return utils::throwInfo("Not acceptable!", 406);
+	string type = typeDC->value.GetString();
+	bool highestFlag;
+	if (type._Equal("highest"))
+		highestFlag = true;
+	else if (type._Equal("lowest"))
+		highestFlag = false;
+	else
+		return utils::throwInfo("Unrecognizable type!", 406);
+	bool isPlayer;//role
+	if (roleDC == data->value.MemberEnd())
+		isPlayer = user->isPlayer;
+	else {
+		string role = roleDC->value.GetString();
+		if (role._Equal("player"))
+			isPlayer = true;
+		else if (role._Equal("committer"))
+			isPlayer = false;
+		else
+			isPlayer = user->isPlayer;
+	}
+	auto&& fetchResult = sql::fetchUserByPropertiesExtremum(propertiesDC->value.GetString(), highestFlag, isPlayer);
+	if (fetchResult.id == -1)
+		return utils::throwInfo("Not found", 404);
+	StringBuffer s;
+	Writer<StringBuffer, Document::EncodingType, ASCII<>> response(s);
+	response.StartObject();
+	response.Key("code");
+	response.Int(200);
+	response.Key("data");
+	response.StartObject();
+	response.Key("id");
+	response.Int(fetchResult.id);
+	response.Key("name");
+	response.String(fetchResult.name.c_str(), fetchResult.name.size(), false);
+	response.Key("isPlayer");
+	response.Bool(fetchResult.isPlayer);
+	response.Key("count");
+	response.Int(fetchResult.count);
+	if (fetchResult.isPlayer) {
+		response.Key("exp");
+		response.Int(fetchResult.exp);
+	}
+	response.Key("level");
+	response.Int(fetchResult.level);
+	response.EndObject();
+	response.EndObject();
+	return s.GetString();
 }
 
 template<typename ...T>//we don't need overload function!
@@ -176,10 +360,23 @@ std::string handler::commit(user_ptr user, Document& dc) {
 	auto difficultyDC = data->value.FindMember("difficulty");
 	if (wordDC == data->value.MemberEnd() || difficultyDC == data->value.MemberEnd())
 		return utils::throwInfo("Not acceptable!", 406);
-	auto word = wordDC->value.GetString();
-	auto difficulty = difficultyDC->value.GetInt();
-	sql::addWord(word, difficulty, user->id);
-	return utils::throwInfo("Created", 201);
+	const char* word;
+	int difficulty;
+	try {
+		word = wordDC->value.GetString();
+		difficulty = difficultyDC->value.GetInt();
+	}
+	catch (...) {
+		return utils::throwInfo("Not acceptable!", 406);
+	}
+	if (sql::addWord(word, difficulty, user->id)) {
+		sql::updateUserOneCol("count", user->count + 1, user->id);
+		if (++user->count / 10 > user->level)
+			sql::updateUserOneCol("level", user->level + 1, user->id);
+		return utils::throwInfo("Created", 201);
+	}
+	else
+		return utils::throwInfo("Word existed!", 202);
 }
 
 //One can only update himself

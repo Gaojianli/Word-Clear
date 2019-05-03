@@ -14,14 +14,50 @@ std::vector<User>* sql::fetchUsersByCondition() {
 	return toReturn;
 }
 
-void sql::addWord(const char* word, int difficulty, int committerID) {
-	_instance->con.exec("INSERT INTO question(word, level, committer) VALUES('%s', %d, %d)", word, difficulty, committerID);
+User sql::fetchUserByPropertiesExtremum(std::string properties, bool highest, bool isPlayer) {
+	//example: select id,name,isPlayer,count,exp,level from user where isPlayer=true order by exp DESC limit 1
+	string sqlCommand = "select id,name,count,exp,level from user where %s=";
+	sqlCommand.append(isPlayer ? "true " : "false ");
+	sqlCommand.append("order by %s ");
+	sqlCommand.append(highest ? "DESC " : "ASC ");
+	sqlCommand.append(" limit 1");
+	int id;
+	string name;
+	int count;
+	int exp;
+	int level;
+	auto result = _instance->con.query(sqlCommand.c_str(), "isPlayer", properties.c_str());
+	if (result.fetch(id, name, count, exp, level)) {
+		return User(name, id, isPlayer, count, exp, level);
+	}
+	else
+		return User("", -1);
+}
+
+bool sql::addWord(const char* word, int difficulty, int committerID) {
+	//check for duplicate
+	int committer = -1;
+	auto result = _instance->con.query("select committer from question where word like '%s'", word);
+	if (result.fetch(committer) || committer != -1)
+		return false;
+	else {
+		_instance->con.exec("INSERT INTO question(word, level, committer) VALUES('%s', %d, %d)", word, difficulty, committerID);
+		return true;
+	}
+}
+
+User* sql::addUser(const std::string& username, const std::string& password, bool isPlayer) {
+	_instance->con.exec("insert into user(name,password,isPlayer) values('%s','%s',%s)", username.c_str(), password.c_str(), isPlayer ? "true" : "false");
+	return fetchUserByName(username);
 }
 
 sql::sql() {
 	con.open({ "localhost","wordclear","lazybones+each","word_clear_game" });
 	if (!con) {
-		std::cout << "Connection failed" << std::endl;
+		std::cout << "Connection failed!" << std::endl;
+		std::cout << "Press any key to exit" << std::endl;
+		getchar();
+		exit(-1);
 		return;
 	}
 	std::cout << "Connect to database successfully!" << std::endl;
@@ -50,6 +86,18 @@ bool sql::queryPassword(const std::string username, const std::string password) 
 	prepared_stmt stmt(_instance->con, "select id from user where name like ? and password like ?");
 	int id = -1;//invaild id
 	stmt.bind_param(username, password);
+	stmt.bind_result(id);//if user existed, the id will be override
+	stmt.execute();
+	if (stmt.fetch() && id != -1)
+		return true;
+	else
+		return false;
+}
+
+bool sql::checkDuplicateUser(const std::string& username) {
+	prepared_stmt stmt(_instance->con, "select id from user where name like ?");
+	int id = -1;//invaild id
+	stmt.bind_param(username);
 	stmt.bind_result(id);//if user existed, the id will be override
 	stmt.execute();
 	if (stmt.fetch() && id != -1)
