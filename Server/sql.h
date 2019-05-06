@@ -33,7 +33,7 @@ inline std::vector<User>* sql::fetchUsersByCondition(std::string properties, con
 	string sqlCommand = "select id,name,isPlayer,count,exp,level from user where %s like ";
 	if constexpr (std::is_same_v<std::decay_t<T>, string>
 		|| std::is_same_v<std::decay_t<T>,const char*>)
-		sqlCommand.append("'");
+		sqlCommand.append("'%%");
 	if constexpr (std::is_same_v<std::decay_t<T>, bool>)
 		sqlCommand += value ? "true" : "false";
 	else if constexpr (std::is_same_v<std::decay_t<T>, string>
@@ -43,7 +43,7 @@ inline std::vector<User>* sql::fetchUsersByCondition(std::string properties, con
 		sqlCommand += std::to_string((int)value);
 	if constexpr (std::is_same_v<std::decay_t<T>, string>
 		|| std::is_same_v<std::decay_t<T>,const char*>)
-		sqlCommand.append("'");
+		sqlCommand.append("%%'");
 	_instance->con.query(sqlCommand.c_str(), properties.c_str()).each([&toReturn](int id, string name, bool isPlayer, int count, int exp, int level) {
 		if (toReturn == nullptr)
 			toReturn = new std::vector<User>();
