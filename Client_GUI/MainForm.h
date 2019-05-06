@@ -23,15 +23,24 @@ namespace ClientGUI {
 		MainForm(void)
 		{
 			InitializeComponent();
+			loginForm^ loginfrom;
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
-			socketManager = socketMgnt::getInstance();
-			auto loginForm = gcnew ClientGUI::loginForm(this, socketManager);
-			loginForm->init(globalUser);
-			if (loginForm->ShowDialog() != System::Windows::Forms::DialogResult::OK) {
-				this->Close();
-				System::Environment::Exit(2);
+			try {
+				socketManager = socketMgnt::getInstance();
+				loginfrom = gcnew ClientGUI::loginForm(this, socketManager);
+				loginfrom->init(globalUser);
+				if (loginfrom->ShowDialog() != System::Windows::Forms::DialogResult::OK) {
+					System::Environment::Exit(2);
+				}
 			}
-			delete loginForm;
+			catch (Exception^ e) {
+				MessageBox::Show(e->ToString(), "Error");
+				Environment::Exit(e->GetHashCode());
+			}
+			finally{
+				if(loginfrom)
+				delete loginfrom;
+			}
 			//
 			//TODO: Add the constructor code here
 			//

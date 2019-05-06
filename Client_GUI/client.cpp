@@ -1,8 +1,9 @@
 #include "MainForm.h"
 
 using namespace ClientGUI;
-
-
+using namespace System::Reflection;
+[assembly:AssemblyVersionAttribute("3.0.2")] ;
+[STAThread]
 int main(array<System::String^>^ args)
 {
 	Application::EnableVisualStyles();
