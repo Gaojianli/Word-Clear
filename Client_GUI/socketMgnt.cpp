@@ -86,7 +86,7 @@ User^ socketMgnt::signup(String^ username, String^ password, bool isPlayer) {
 	int exp;
 	try {
 		jo = JObject::Parse(response);
-		if ((int)jo["code"] == 200) {
+		if (int code = (int)jo["code"];code == 200) {
 			auto data = jo["data"];
 			name = (String^)data["username"];
 			session = (String^)data["session"];
@@ -95,6 +95,10 @@ User^ socketMgnt::signup(String^ username, String^ password, bool isPlayer) {
 			id = (int)data["id"];
 			if (isPlayer)
 				exp = (int)data["exp"];
+		}
+		else if (code == 401) {
+			System::Windows::Forms::MessageBox::Show((String^)jo["msg"], "Error");
+			return nullptr;
 		}
 		else
 			throw gcnew Exception((String^)jo["msg"]);
