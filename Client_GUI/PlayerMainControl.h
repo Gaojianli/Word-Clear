@@ -105,7 +105,7 @@ namespace ClientGUI {
 			// userNameLabel
 			// 
 			this->userNameLabel->AutoSize = true;
-			this->userNameLabel->Location = System::Drawing::Point(179, 39);
+			this->userNameLabel->Location = System::Drawing::Point(165, 39);
 			this->userNameLabel->Name = L"userNameLabel";
 			this->userNameLabel->Size = System::Drawing::Size(138, 29);
 			this->userNameLabel->TabIndex = 1;
@@ -114,7 +114,7 @@ namespace ClientGUI {
 			// label2
 			// 
 			this->label2->AutoSize = true;
-			this->label2->Location = System::Drawing::Point(357, 39);
+			this->label2->Location = System::Drawing::Point(379, 39);
 			this->label2->Name = L"label2";
 			this->label2->Size = System::Drawing::Size(77, 29);
 			this->label2->TabIndex = 2;
@@ -123,7 +123,7 @@ namespace ClientGUI {
 			// levelLabel
 			// 
 			this->levelLabel->AutoSize = true;
-			this->levelLabel->Location = System::Drawing::Point(440, 39);
+			this->levelLabel->Location = System::Drawing::Point(462, 39);
 			this->levelLabel->Name = L"levelLabel";
 			this->levelLabel->Size = System::Drawing::Size(82, 29);
 			this->levelLabel->TabIndex = 3;
@@ -132,7 +132,7 @@ namespace ClientGUI {
 			// label3
 			// 
 			this->label3->AutoSize = true;
-			this->label3->Location = System::Drawing::Point(536, 39);
+			this->label3->Location = System::Drawing::Point(550, 39);
 			this->label3->Name = L"label3";
 			this->label3->Size = System::Drawing::Size(173, 29);
 			this->label3->TabIndex = 4;
@@ -141,7 +141,7 @@ namespace ClientGUI {
 			// countLabel
 			// 
 			this->countLabel->AutoSize = true;
-			this->countLabel->Location = System::Drawing::Point(715, 39);
+			this->countLabel->Location = System::Drawing::Point(729, 39);
 			this->countLabel->Name = L"countLabel";
 			this->countLabel->Size = System::Drawing::Size(89, 29);
 			this->countLabel->TabIndex = 5;

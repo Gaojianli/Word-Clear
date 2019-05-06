@@ -74,6 +74,7 @@ namespace ClientGUI {
 			// 
 			// userNameBox
 			// 
+			this->userNameBox->ImeMode = System::Windows::Forms::ImeMode::Off;
 			this->userNameBox->Location = System::Drawing::Point(207, 70);
 			this->userNameBox->Margin = System::Windows::Forms::Padding(5, 4, 5, 4);
 			this->userNameBox->Name = L"userNameBox";
@@ -133,7 +134,7 @@ namespace ClientGUI {
 			this->signButton->UseVisualStyleBackColor = true;
 			this->signButton->Click += gcnew System::EventHandler(this, &loginForm::SignButton_Click);
 			// 
-			// login
+			// loginForm
 			// 
 			this->AcceptButton = this->loginButton;
 			this->AutoScaleDimensions = System::Drawing::SizeF(14, 29);
@@ -148,7 +149,7 @@ namespace ClientGUI {
 			this->Margin = System::Windows::Forms::Padding(5, 4, 5, 4);
 			this->MaximizeBox = false;
 			this->MinimizeBox = false;
-			this->Name = L"login";
+			this->Name = L"loginForm";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->Text = L"Login";
 			this->ResumeLayout(false);
