@@ -28,7 +28,7 @@ void listen(uvw::Loop& loop, int port) {
 			client.close(); 
 			});
 		auto ErrorEventEmitter = client->on<uvw::ErrorEvent>([](const uvw::ErrorEvent & event, uvw::TCPHandle& client) {
-			cout << "error occurred:" << event.what() << endl;
+			cout << "Error occurred:" << event.what() << endl;
 			client.close();
 			});
 		auto DataEventEmitter = client->on<uvw::DataEvent>([](const uvw::DataEvent & event, uvw::TCPHandle & client) {
