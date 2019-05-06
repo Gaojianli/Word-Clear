@@ -91,6 +91,47 @@ std::string handler::signUP(Document& dc) {
 	return s.GetString();
 }
 
+std::string handler::mainHandler(const char * stream, uvw::TCPHandle& client) {
+	string response;
+	Document dc;
+	try {
+		if (dc.Parse(stream).HasParseError() || !dc.IsObject())
+			response = utils::throwInfo("Invaild JSON data", 406);
+		else if (dc.HasMember("operation")) {
+			string operation = dc["operation"].GetString();
+			if (operation._Equal("close")) {//close connection
+				client.close();
+				return "";
+			}
+			else if (operation._Equal("login")) {
+				response = handler::login(dc);
+			}
+			else if (operation._Equal("register")) {
+				response = handler::signUP(dc);
+			}
+			else if (dc.HasMember("session")) {
+				response = handler::sessionOperationRouter(dc, operation);
+			}
+			else {
+				response = utils::throwInfo("Forbidden", 403);
+
+			}
+		}
+		else
+			response = utils::throwInfo("Invaild operation", 406);
+	}
+	catch (std::string& msg) {
+		response = utils::throwInfo(msg, 500);
+	}
+	catch (const char* msg) {
+		response = utils::throwInfo(msg, 500);
+	}
+	catch (...) {
+		response = utils::throwInfo("Unknown internal server error.", 500);
+	}
+	return response;
+}
+
 
 std::string handler::sessionOperationRouter(Document& dc, string& operation) {
 	auto user = std::make_shared<User>(std::move(sql::fetchUserBySession(dc["session"].GetString())));
