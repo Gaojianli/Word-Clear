@@ -152,6 +152,7 @@ namespace ClientGUI {
 			this->Name = L"loginForm";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->Text = L"Login";
+			this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &loginForm::LoginForm_FormClosing);
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -188,6 +189,12 @@ private: System::Void PasswordBox_TextChanged(System::Object^ sender, System::Ev
 		loginButton->Enabled = true;
 	else
 		loginButton->Enabled = false;
+}
+private: System::Void LoginForm_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e) {
+	if (user == nullptr) {
+		delete socketManager;
+		Environment::Exit(0);
+	}
 }
 };
 }

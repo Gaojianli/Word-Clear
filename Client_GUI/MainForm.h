@@ -93,6 +93,7 @@ namespace ClientGUI {
 			this->Margin = System::Windows::Forms::Padding(5, 4, 5, 4);
 			this->Name = L"MainForm";
 			this->Text = L"Word Clear Game";
+			this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &MainForm::MainForm_FormClosing);
 			this->Load += gcnew System::EventHandler(this, &MainForm::MainForm_Load);
 			this->ResumeLayout(false);
 
@@ -115,5 +116,9 @@ namespace ClientGUI {
 		this->Height = this->Height + 60;
 		GC::Collect();
 	}
-	};
+	private: System::Void MainForm_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e) {
+		delete socketManager;
+		Environment::Exit(0);
+	}
+};
 }
