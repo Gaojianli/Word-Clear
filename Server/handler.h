@@ -1,11 +1,13 @@
 #pragma once
 using namespace rapidjson;
+using namespace std;
 struct handler{
 public:
+	static std::string mainHandler(const char* stream, uvw::TCPHandle& client);
+private:
 	static std::string login(Document& dc);
 	static std::string signUP(Document& dc);
 	static std::string sessionOperationRouter(Document& dc,string & operation);
-private:
 	static std::string getQuesiontList(Document& dc);
 	template<typename ...T>
 	static std::string getUsers(const char* condition, T... args);
