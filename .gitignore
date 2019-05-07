@@ -343,3 +343,12 @@ healthchecksdb
 Client/database.db
 *.db
 *.exe
+
+# Cmake files
+CMakeCache.txt
+CMakeFiles
+Makefile
+cmake_install.cmake
+
+/build
+/bin
