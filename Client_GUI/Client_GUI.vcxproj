@@ -145,6 +145,7 @@
     <ClCompile Include="playForm.cpp" />
     <ClCompile Include="queryForm.cpp" />
     <ClCompile Include="queryResult.cpp" />
+    <ClCompile Include="setServerForm.cpp" />
     <ClCompile Include="socketMgnt.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -181,6 +182,9 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="schema.h" />
+    <ClInclude Include="setServerForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="socketMgnt.h" />
     <ClInclude Include="user.h" />
   </ItemGroup>
@@ -214,6 +218,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="registe.resx">
       <DependentUpon>registe.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="setServerForm.resx">
+      <DependentUpon>setServerForm.h</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

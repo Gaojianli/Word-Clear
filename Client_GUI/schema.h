@@ -99,3 +99,10 @@ public:
 		return a->count > b->count;//count larger come first
 	}
 };
+
+public ref class connectInfo {
+public:
+	connectInfo(int port, String^ serverName):port(port),serverName(serverName) {};
+	int port;
+	String^ serverName;
+};

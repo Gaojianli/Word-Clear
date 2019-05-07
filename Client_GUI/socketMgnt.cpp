@@ -1,4 +1,5 @@
 #include "socketMgnt.h"
+#include "setServerForm.h"
 using namespace System;
 using namespace System::Text;
 using namespace System::Net;
@@ -12,9 +13,10 @@ socketMgnt^ socketMgnt::getInstance() {
 }
 
 socketMgnt::socketMgnt() {
-	int port = 4000;
-	auto host = gcnew String("127.0.0.1");
-	auto ip = IPAddress::Parse(host);
+	auto connect = gcnew connectInfo(10083, "us.gaojianli.me");//default server
+	int port = connect->port;
+	auto host = Dns::GetHostEntry(connect->serverName);
+	auto ip = host->AddressList[0];
 	auto ipe = gcnew IPEndPoint(ip, port);
 	connection = gcnew Socket(AddressFamily::InterNetwork, SocketType::Stream, ProtocolType::Tcp);
 	try {
@@ -22,7 +24,21 @@ socketMgnt::socketMgnt() {
 	}
 	catch (...) {
 		System::Windows::Forms::MessageBox::Show("Can't connect to server!", "Error");
-		System::Environment::Exit(-1);
+		auto setForm = gcnew ClientGUI::setServerForm(connect);
+		if(setForm->ShowDialog()!=Windows::Forms::DialogResult::OK)
+			System::Environment::Exit(-1);
+		else {
+			auto ipe = gcnew IPEndPoint(Dns::GetHostEntry(connect->serverName)->AddressList[0], connect->port);
+			connection->Close();
+			connection = gcnew Socket(AddressFamily::InterNetwork, SocketType::Stream, ProtocolType::Tcp);
+			try {
+				connection->Connect(ipe);
+			}
+			catch (...) {
+				System::Windows::Forms::MessageBox::Show("Can't connect to server!", "Error");
+				System::Environment::Exit(-1);
+			}
+		}
 	}
 }
 

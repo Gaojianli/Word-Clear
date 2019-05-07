@@ -66,6 +66,9 @@
     <ClInclude Include="playForm.h">
       <Filter>Header Files\Forms</Filter>
     </ClInclude>
+    <ClInclude Include="setServerForm.h">
+      <Filter>Header Files\Forms</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainForm.cpp">
@@ -84,6 +87,9 @@
       <Filter>Header Files\UserControl</Filter>
     </ClCompile>
     <ClCompile Include="playForm.cpp">
+      <Filter>Header Files\Forms</Filter>
+    </ClCompile>
+    <ClCompile Include="setServerForm.cpp">
       <Filter>Header Files\Forms</Filter>
     </ClCompile>
   </ItemGroup>
