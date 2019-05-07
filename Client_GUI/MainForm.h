@@ -23,15 +23,24 @@ namespace ClientGUI {
 		MainForm(void)
 		{
 			InitializeComponent();
+			loginForm^ loginfrom;
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
-			socketManager = socketMgnt::getInstance();
-			auto loginForm = gcnew ClientGUI::loginForm(this, socketManager);
-			loginForm->init(globalUser);
-			if (loginForm->ShowDialog() != System::Windows::Forms::DialogResult::OK) {
-				this->Close();
-				System::Environment::Exit(2);
+			try {
+				socketManager = socketMgnt::getInstance();
+				loginfrom = gcnew ClientGUI::loginForm(this, socketManager);
+				loginfrom->init(globalUser);
+				if (loginfrom->ShowDialog() != System::Windows::Forms::DialogResult::OK) {
+					System::Environment::Exit(2);
+				}
 			}
-			delete loginForm;
+			catch (Exception^ e) {
+				MessageBox::Show(e->ToString(), "Error");
+				Environment::Exit(e->GetHashCode());
+			}
+			finally{
+				if(loginfrom)
+				delete loginfrom;
+			}
 			//
 			//TODO: Add the constructor code here
 			//
@@ -84,6 +93,7 @@ namespace ClientGUI {
 			this->Margin = System::Windows::Forms::Padding(5, 4, 5, 4);
 			this->Name = L"MainForm";
 			this->Text = L"Word Clear Game";
+			this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &MainForm::MainForm_FormClosing);
 			this->Load += gcnew System::EventHandler(this, &MainForm::MainForm_Load);
 			this->ResumeLayout(false);
 
@@ -106,5 +116,9 @@ namespace ClientGUI {
 		this->Height = this->Height + 60;
 		GC::Collect();
 	}
-	};
+	private: System::Void MainForm_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e) {
+		delete socketManager;
+		Environment::Exit(0);
+	}
+};
 }

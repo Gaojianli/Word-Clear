@@ -217,6 +217,7 @@ namespace ClientGUI {
 	}
 	private: System::Void PlayerRadio_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
 		propertyPicker->Items->Clear();
+		valueBox->Enabled = false;
 		valueBox->Text = String::Empty;
 		propertyPicker->Items->Add("UID");
 		propertyPicker->Items->Add("Name");
@@ -231,6 +232,7 @@ namespace ClientGUI {
 	}
 	private: System::Void CommitterRadio_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
 		propertyPicker->Items->Clear();
+		valueBox->Enabled = false;
 		valueBox->Text = String::Empty;
 		propertyPicker->Items->Add("UID");
 		propertyPicker->Items->Add("Name");

@@ -199,6 +199,7 @@ namespace ClientGUI {
 			this->usernameBox->ImeMode = System::Windows::Forms::ImeMode::Off;
 			this->usernameBox->Location = System::Drawing::Point(218, 46);
 			this->usernameBox->Margin = System::Windows::Forms::Padding(5, 4, 5, 4);
+			this->usernameBox->MaxLength = 20;
 			this->usernameBox->Name = L"usernameBox";
 			this->usernameBox->Size = System::Drawing::Size(281, 35);
 			this->usernameBox->TabIndex = 5;

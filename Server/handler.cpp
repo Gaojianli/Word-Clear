@@ -91,27 +91,68 @@ std::string handler::signUP(Document& dc) {
 	return s.GetString();
 }
 
+std::string handler::mainHandler(const char* stream, uvw::TCPHandle& client) {
+	string response;
+	Document dc;
+	try {
+		if (dc.Parse(stream).HasParseError() || !dc.IsObject())
+			response = utils::throwInfo("Invaild JSON data", 406);
+		else if (dc.HasMember("operation")) {
+			string operation = dc["operation"].GetString();
+			if (operation == "close") {//close connection
+				client.close();
+				return "";
+			}
+			else if (operation == "login") {
+				response = handler::login(dc);
+			}
+			else if (operation == "register") {
+				response = handler::signUP(dc);
+			}
+			else if (dc.HasMember("session")) {
+				response = handler::sessionOperationRouter(dc, operation);
+			}
+			else {
+				response = utils::throwInfo("Forbidden", 403);
+
+			}
+		}
+		else
+			response = utils::throwInfo("Invaild operation", 406);
+	}
+	catch (std::string& msg) {
+		response = utils::throwInfo(msg, 500);
+	}
+	catch (const char* msg) {
+		response = utils::throwInfo(msg, 500);
+	}
+	catch (...) {
+		response = utils::throwInfo("Unknown internal server error.", 500);
+	}
+	return response;
+}
+
 
 std::string handler::sessionOperationRouter(Document& dc, string& operation) {
 	auto user = std::make_shared<User>(std::move(sql::fetchUserBySession(dc["session"].GetString())));
 	if (user == nullptr)
 		return utils::throwInfo("Session invaild, please login again.", 419);
 	else {
-		if (operation._Equal("getQuestionList"))
+		if (operation == "getQuestionList")
 			return getQuesiontList(dc);
-		else if (operation._Equal("getSameUsers"))
+		else if (operation == "getSameUsers")
 			return getUsers("isPlayer", user->isPlayer);
-		else if(operation._Equal("getDifferentUsers"))
+		else if (operation == "getDifferentUsers")
 			return getUsers("isPlayer", !user->isPlayer);
-		else if (operation._Equal("getAllUsers"))
+		else if (operation == "getAllUsers")
 			return getUsers(NULL);
-		else if (operation._Equal("commit"))
+		else if (operation == "commit")
 			return commit(user, dc);
-		else if (operation._Equal("updateUser"))
+		else if (operation == "updateUser")
 			return updateUser(user, dc);
-		else if (operation._Equal("fetchExtremum"))
+		else if (operation == "fetchExtremum")
 			return fetchExtremum(user, dc);
-		else if (operation._Equal("getUsersByCondition"))
+		else if (operation == "getUsersByCondition")
 			return fetchUsersByCondition(user, dc);
 		else {
 			return utils::throwInfo("Operation can't be recognized", 404);
@@ -185,20 +226,20 @@ std::string handler::fetchUsersByCondition(user_ptr user, Document& dc) {
 		isPlayer_request = user->isPlayer;
 	else {
 		string role = roleDC->value.GetString();
-		if (role._Equal("player"))
+		if (role == "player")
 			isPlayer_request = true;
-		else if (role._Equal("committer"))
+		else if (role == "committer")
 			isPlayer_request = false;
 		else
 			isPlayer_request = user->isPlayer;
 	}
 	std::vector<User>* result = nullptr;
 	string propertyToQuery = propertyDC->value.GetString();
-	if (propertyToQuery._Equal("name"))
+	if (propertyToQuery == "name")
 		result = sql::fetchUsersByCondition(propertyToQuery, valueDC->value.GetString());
-	else if (propertyToQuery._Equal("count") || propertyToQuery._Equal("level") || propertyToQuery._Equal("id"))
+	else if (propertyToQuery == "count" || propertyToQuery == "level" || propertyToQuery == "id")
 		result = sql::fetchUsersByCondition(propertyToQuery, valueDC->value.GetInt());
-	else if (propertyToQuery._Equal("exp")) {//committer don't have exp
+	else if (propertyToQuery == "exp") {//committer don't have exp
 		if (isPlayer_request)
 			result = sql::fetchUsersByCondition(propertyToQuery, valueDC->value.GetInt());
 		else
@@ -257,9 +298,9 @@ std::string handler::fetchExtremum(user_ptr user, Document& dc) {
 		return utils::throwInfo("Not acceptable!", 406);
 	string type = typeDC->value.GetString();
 	bool highestFlag;
-	if (type._Equal("highest"))
+	if (type == "highest")
 		highestFlag = true;
-	else if (type._Equal("lowest"))
+	else if (type == "lowest")
 		highestFlag = false;
 	else
 		return utils::throwInfo("Unrecognizable type!", 406);
@@ -268,9 +309,9 @@ std::string handler::fetchExtremum(user_ptr user, Document& dc) {
 		isPlayer = user->isPlayer;
 	else {
 		string role = roleDC->value.GetString();
-		if (role._Equal("player"))
+		if (role == "player")
 			isPlayer = true;
-		else if (role._Equal("committer"))
+		else if (role == "committer")
 			isPlayer = false;
 		else
 			isPlayer = user->isPlayer;

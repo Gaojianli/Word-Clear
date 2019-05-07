@@ -92,7 +92,8 @@ public:
 	int level;
 };
 
-public ref class CompareUser :System::Collections::Generic::Comparer<UserSchema^> {
+
+ref class CompareUser :System::Collections::Generic::Comparer<UserSchema^> {
 public:
 	virtual int Compare(UserSchema^ a, UserSchema^ b) override {
 		return a->count > b->count;//count larger come first

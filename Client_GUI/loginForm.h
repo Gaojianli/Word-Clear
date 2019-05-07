@@ -74,6 +74,7 @@ namespace ClientGUI {
 			// 
 			// userNameBox
 			// 
+			this->userNameBox->ImeMode = System::Windows::Forms::ImeMode::Off;
 			this->userNameBox->Location = System::Drawing::Point(207, 70);
 			this->userNameBox->Margin = System::Windows::Forms::Padding(5, 4, 5, 4);
 			this->userNameBox->Name = L"userNameBox";
@@ -133,7 +134,7 @@ namespace ClientGUI {
 			this->signButton->UseVisualStyleBackColor = true;
 			this->signButton->Click += gcnew System::EventHandler(this, &loginForm::SignButton_Click);
 			// 
-			// login
+			// loginForm
 			// 
 			this->AcceptButton = this->loginButton;
 			this->AutoScaleDimensions = System::Drawing::SizeF(14, 29);
@@ -148,9 +149,10 @@ namespace ClientGUI {
 			this->Margin = System::Windows::Forms::Padding(5, 4, 5, 4);
 			this->MaximizeBox = false;
 			this->MinimizeBox = false;
-			this->Name = L"login";
+			this->Name = L"loginForm";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->Text = L"Login";
+			this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &loginForm::LoginForm_FormClosing);
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -187,6 +189,12 @@ private: System::Void PasswordBox_TextChanged(System::Object^ sender, System::Ev
 		loginButton->Enabled = true;
 	else
 		loginButton->Enabled = false;
+}
+private: System::Void LoginForm_FormClosing(System::Object^ sender, System::Windows::Forms::FormClosingEventArgs^ e) {
+	if (user == nullptr) {
+		delete socketManager;
+		Environment::Exit(0);
+	}
 }
 };
 }
