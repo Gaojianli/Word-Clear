@@ -60,7 +60,7 @@ void listen(uvw::Loop& loop, int port) {
 			});
 		client->read();
 		});
-	tcp->bind("[::]", port);
+	tcp->bind<uvw::IPv6>("[::]", port);
 	tcp->listen();
 }
 std::shared_ptr<uvw::Loop> loop;
