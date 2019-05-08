@@ -2,7 +2,7 @@
 
 using namespace ClientGUI;
 using namespace System::Reflection;
-[assembly:AssemblyVersionAttribute("3.0.2")] ;
+[assembly:AssemblyVersionAttribute("3.0.3")] ;
 [STAThread]
 int main(array<System::String^>^ args)
 {
