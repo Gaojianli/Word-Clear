@@ -60,7 +60,7 @@ void listen(uvw::Loop& loop, int port) {
 			});
 		client->read();
 		});
-	tcp->bind("0.0.0.0", port);
+	tcp->bind("[::]", port);
 	tcp->listen();
 }
 std::shared_ptr<uvw::Loop> loop;
@@ -97,6 +97,7 @@ int main(int argc, char* argv[]) {
 	loop = uvw::Loop::getDefault();
 	listen(*loop, port);
 	cout << "listen at 0.0.0.0:" << port << endl;
+	cout << "listen at [::]:" << port << endl;
 	loop->run();
 }
 
