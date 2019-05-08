@@ -32,6 +32,7 @@ void listen(uvw::Loop& loop, int port) {
 				<< std::endl;
 			});
 #endif // DEBUG
+
 		auto EndEventEmitter = client->on<uvw::EndEvent>([](const uvw::EndEvent&, uvw::TCPHandle & client) {
 			client.close();
 			});
