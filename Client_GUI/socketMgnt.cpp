@@ -13,24 +13,25 @@ socketMgnt^ socketMgnt::getInstance() {
 }
 
 socketMgnt::socketMgnt() {
-	auto connect = gcnew connectInfo(10083, "us.gaojianli.me");//default server
+	connect = gcnew connectInfo(10083, "us6.gaojianli.me");//default server
 	int port = connect->port;
 	auto host = Dns::GetHostEntry(connect->serverName);
 	auto ip = host->AddressList[0];
 	auto ipe = gcnew IPEndPoint(ip, port);
-	connection = gcnew Socket(AddressFamily::InterNetwork, SocketType::Stream, ProtocolType::Tcp);
+	connection = gcnew Socket(ip->AddressFamily, SocketType::Stream, ProtocolType::Tcp);
 	try {
 		connection->Connect(ipe);
 	}
 	catch (...) {
 		System::Windows::Forms::MessageBox::Show("Can't connect to server!", "Error");
 		auto setForm = gcnew ClientGUI::setServerForm(connect);
-		if(setForm->ShowDialog()!=Windows::Forms::DialogResult::OK)
+		if (setForm->ShowDialog() != Windows::Forms::DialogResult::OK)
 			System::Environment::Exit(-1);
 		else {
-			auto ipe = gcnew IPEndPoint(Dns::GetHostEntry(connect->serverName)->AddressList[0], connect->port);
+			auto ip = Dns::GetHostEntry(connect->serverName)->AddressList[0];
+			auto ipe = gcnew IPEndPoint(ip, connect->port);
 			connection->Close();
-			connection = gcnew Socket(AddressFamily::InterNetwork, SocketType::Stream, ProtocolType::Tcp);
+			connection = gcnew Socket(ip->AddressFamily, SocketType::Stream, ProtocolType::Tcp);
 			try {
 				connection->Connect(ipe);
 			}
@@ -42,7 +43,7 @@ socketMgnt::socketMgnt() {
 	}
 }
 
-socketMgnt::~socketMgnt(){
+socketMgnt::~socketMgnt() {
 	if (connection->Connected)
 		connection->Close();
 	delete connection;
@@ -102,7 +103,7 @@ User^ socketMgnt::signup(String^ username, String^ password, bool isPlayer) {
 	int exp;
 	try {
 		jo = JObject::Parse(response);
-		if (int code = (int)jo["code"];code == 200) {
+		if (int code = (int)jo["code"]; code == 200) {
 			auto data = jo["data"];
 			name = (String^)data["username"];
 			session = (String^)data["session"];
@@ -145,11 +146,10 @@ String^ socketMgnt::sendAndRec(String^ toSend) {
 	if (!socketConnected()) {
 		try {
 			connection->Close();
-			int port = 4000;
-			auto host = gcnew String("127.0.0.1");
-			auto ip = IPAddress::Parse(host);
-			auto ipe = gcnew IPEndPoint(ip, port);
-			connection = gcnew Socket(AddressFamily::InterNetwork, SocketType::Stream, ProtocolType::Tcp);
+			auto ip = Dns::GetHostEntry(connect->serverName)->AddressList[0];
+			auto ipe = gcnew IPEndPoint(ip, connect->port);
+			connection->Close();
+			connection = gcnew Socket(ip->AddressFamily, SocketType::Stream, ProtocolType::Tcp);
 			connection->Connect(ipe);
 		}
 		catch (SocketException^ e) {
@@ -157,7 +157,7 @@ String^ socketMgnt::sendAndRec(String^ toSend) {
 			System::Environment::Exit(-1);
 		}
 	}
-	
+
 	auto sendByte = Encoding::Default->ASCII->GetBytes(toSend);
 	try {
 		connection->Send(sendByte);
@@ -256,7 +256,7 @@ List<UserSchema^>^ socketMgnt::getDifferentRoleUser(User^ user) {
 	}
 }
 
-List<wordSchema^>^ socketMgnt::getQuestionsByLevel(User^ user, int difficulty){
+List<wordSchema^>^ socketMgnt::getQuestionsByLevel(User^ user, int difficulty) {
 	auto json = JsonConvert::SerializeObject(gcnew schemaWithSession("getQuestionList", user->session, gcnew getQuestionListSchema(difficulty)));
 	auto response = sendAndRec(json);
 	JObject^ jo;

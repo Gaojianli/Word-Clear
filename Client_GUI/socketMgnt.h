@@ -27,6 +27,7 @@ private:
 	bool socketConnected();
 	String^ sendAndRec(String^ toSend);
 	System::Net::Sockets::Socket^ connection;
+	connectInfo^ connect;
 	socketMgnt();
 	~socketMgnt();
 };

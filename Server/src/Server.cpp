@@ -23,6 +23,7 @@ void listen(uvw::Loop& loop, int port) {
 	auto ListenEventEmitter = tcp->on<uvw::ListenEvent>([](const uvw::ListenEvent&, uvw::TCPHandle & srv) {
 		std::shared_ptr<uvw::TCPHandle> client = srv.loop().resource<uvw::TCPHandle>();
 		srv.accept(*client);
+#ifdef DEBUG
 		uvw::Addr remote = client->peer();
 		std::cout << std::endl
 			<< remote.ip << ":" << remote.port << " Connected" << std::endl;
@@ -30,6 +31,7 @@ void listen(uvw::Loop& loop, int port) {
 			std::cout << "Connection from " << remote.ip << " closed." << std::endl
 				<< std::endl;
 			});
+#endif // DEBUG
 		auto EndEventEmitter = client->on<uvw::EndEvent>([](const uvw::EndEvent&, uvw::TCPHandle & client) {
 			client.close();
 			});
