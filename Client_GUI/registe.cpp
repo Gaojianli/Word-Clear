@@ -1,0 +1,2 @@
+﻿#include "registe.h"
+
