@@ -7,6 +7,7 @@ To build server, you need `cmake` and a compiler which support C++17. For compil
 Also you need to install [libuv](libuv.org) and [UVW](https://github.com/skypjack/uvw), and then add them to your include path.
 To build:
 ```
+cd Server
 cmake .
 make -j4
 ```
