@@ -13,7 +13,7 @@ namespace ClientGUI {
 	using namespace System::Data;
 	using namespace System::Drawing;
 	/// <summary>
-	/// Summary for MainForm
+	/// MainForm container
 	/// </summary>
 	public ref class MainForm : public System::Windows::Forms::Form
 	{

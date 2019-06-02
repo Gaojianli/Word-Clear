@@ -11,7 +11,7 @@ using namespace System::Drawing;
 namespace ClientGUI {
 
 	/// <summary>
-	/// Summary for commit
+	/// commit form
 	/// </summary>
 	public ref class commit : public System::Windows::Forms::UserControl
 	{

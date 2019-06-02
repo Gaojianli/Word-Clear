@@ -283,23 +283,26 @@ List<UserSchema^>^ socketMgnt::getDifferentRoleUser(User^ user) {
 }
 
 List<wordSchema^>^ socketMgnt::getQuestionsByLevel(User^ user, int difficulty) {
+	//make request json
 	auto json = JsonConvert::SerializeObject(gcnew schemaWithSession("getQuestionList", user->session, gcnew getQuestionListSchema(difficulty)));
 	auto response = sendAndRec(json);
 	JObject^ jo;
 	List<wordSchema^>^ toReturn = nullptr;
 	try
 	{
+		//parse json to jobject
 		jo = JObject::Parse(response);
 		if (int code = (int)jo["code"]; code == 200) {
 			auto data = (JObject^)jo["data"];
-			auto userArray = (JArray^)data["Words"];
+			auto wordArray = (JArray^)data["Words"];
 			toReturn = gcnew List<wordSchema^>();
-			for each (auto item in userArray) {
-				toReturn->Add(gcnew wordSchema((String^)item["Word"], (int)item["level"]));
+			for each (auto item in wordArray) {
+				toReturn->Add(gcnew wordSchema((String^)item["Word"], (int)item["level"]));//add to list
 			}
 			return toReturn;
 		}
 		else if (code == 419) {
+			//session revoked
 			System::Windows::Forms::MessageBox::Show((String^)jo["msg"], "Error");
 			restart();
 			return nullptr;

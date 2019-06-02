@@ -16,7 +16,7 @@ using namespace System::Drawing;
 namespace ClientGUI {
 
 	/// <summary>
-	/// Summary for CommitterMainControl
+	/// main control for committer
 	/// </summary>
 	public ref class CommitterMainControl : public System::Windows::Forms::UserControl
 	{

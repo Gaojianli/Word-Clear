@@ -159,7 +159,7 @@ std::string handler::sessionOperationRouter(Document &dc, string &operation)
 	else
 	{
 		if (operation == "getQuestionList")
-			return getQuesiontList(dc);
+			return getQuestiontList(dc);
 		else if (operation == "getSameUsers")
 			return getUsers("isPlayer", user->isPlayer);
 		else if (operation == "getDifferentUsers")
@@ -183,7 +183,7 @@ std::string handler::sessionOperationRouter(Document &dc, string &operation)
 	}
 }
 
-std::string handler::getQuesiontList(Document &dc)
+std::string handler::getQuestiontList(Document &dc)
 {
 	int difficulty = -1;
 	auto data = dc.FindMember("data");

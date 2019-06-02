@@ -8,7 +8,7 @@ private:
 	static std::string login(Document& dc);
 	static std::string signUP(Document& dc);
 	static std::string sessionOperationRouter(Document& dc,string & operation);
-	static std::string getQuesiontList(Document& dc);
+	static std::string getQuestiontList(Document& dc);
 	template<typename ...T>
 	static std::string getUsers(const char* condition, T... args);
 	template<typename user_ptr>

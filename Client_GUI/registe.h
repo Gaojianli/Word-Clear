@@ -12,7 +12,7 @@ namespace ClientGUI {
 	using namespace System::Drawing;
 
 	/// <summary>
-	/// Summary for registe
+	/// register userForm
 	/// </summary>
 	public ref class registe : public System::Windows::Forms::Form
 	{

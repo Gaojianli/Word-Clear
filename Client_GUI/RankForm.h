@@ -11,7 +11,7 @@ namespace ClientGUI {
 	using namespace System::Drawing;
 
 	/// <summary>
-	/// Summary for RankForm
+	/// Rank Form
 	/// </summary>
 	public ref class RankForm : public System::Windows::Forms::Form
 	{

@@ -11,7 +11,7 @@ namespace ClientGUI {
 	using namespace System::Drawing;
 
 	/// <summary>
-	/// Summary for playForm
+	/// The form used for play
 	/// </summary>
 	public ref class playForm : public System::Windows::Forms::Form
 	{

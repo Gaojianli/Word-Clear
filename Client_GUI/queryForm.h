@@ -12,7 +12,7 @@ namespace ClientGUI {
 	using namespace System::Drawing;
 
 	/// <summary>
-	/// Summary for queryForm
+	/// The form use for query user
 	/// </summary>
 	public ref class queryForm : public System::Windows::Forms::Form
 	{

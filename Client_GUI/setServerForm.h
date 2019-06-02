@@ -10,7 +10,7 @@ namespace ClientGUI {
 	using namespace System::Drawing;
 
 	/// <summary>
-	/// Summary for setServerForm
+	/// set server host and port
 	/// </summary>
 	public ref class setServerForm : public System::Windows::Forms::Form
 	{

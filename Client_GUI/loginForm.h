@@ -12,7 +12,7 @@ namespace ClientGUI {
 	using namespace System::Drawing;
 
 	/// <summary>
-	/// Summary for login
+	/// The login form
 	/// </summary>
 	public ref class loginForm : public System::Windows::Forms::Form
 	{

@@ -11,7 +11,7 @@ namespace ClientGUI {
 	using namespace System::Drawing;
 
 	/// <summary>
-	/// Summary for questionListForm
+	/// The list question form
 	/// </summary>
 	public ref class questionListForm : public System::Windows::Forms::Form
 	{

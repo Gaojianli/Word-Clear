@@ -16,7 +16,7 @@ using namespace System::Drawing;
 namespace ClientGUI {
 
 	/// <summary>
-	/// Summary for PlayerMainControl
+	/// main control for player
 	/// </summary>
 	public ref class PlayerMainControl : public System::Windows::Forms::UserControl
 	{

@@ -11,7 +11,7 @@ using namespace System::Drawing;
 namespace ClientGUI {
 
 	/// <summary>
-	/// Summary for queryResult
+	/// query result
 	/// </summary>
 	public ref class queryResult : public System::Windows::Forms::UserControl
 	{
